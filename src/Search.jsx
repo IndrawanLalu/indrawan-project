@@ -28,10 +28,10 @@ const Search = () => {
         onChange={handleSearch}
         placeholder="Cari nama..."
       />
-      <ul>
+      <ul className="bg-gray-200">
         {results.map((item) => (
           <li key={item.id}>
-            {item.name} - Age: {item.age}
+            {item.name} - Barcode: {item.barcode} - Harga: {item.Harga}
           </li>
         ))}
       </ul>

@@ -1,6 +1,3180 @@
 [
-    { "id": 1, "name": "John Doe", "age": 30 },
-    { "id": 2, "name": "Jane Doe", "age": 25 },
-    { "id": 3, "name": "Alice", "age": 28 }
+    {
+        "id": "1",
+        "name": "Jeans GEO CK",
+        "varian": "Sz 161820",
+        "barcode": "DK-73421",
+        "Harga": "85000"
+    },
+    {
+        "id": "2",
+        "name": "3SECOND DEWASA",
+        "varian": "",
+        "barcode": "DK-55446",
+        "Harga": "70000"
+    },
+    {
+        "id": "3",
+        "name": "Alca pants junior",
+        "varian": "",
+        "barcode": "DK-10131",
+        "Harga": "55000"
+    },
+    {
+        "id": "4",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK ANAK SET XS",
+        "barcode": "DK-27396",
+        "Harga": "150000"
+    },
+    {
+        "id": "5",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK ANAK SET SML",
+        "barcode": "DK-17393",
+        "Harga": "170000"
+    },
+    {
+        "id": "6",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK ANAK SET XL",
+        "barcode": "DK-46297",
+        "Harga": "170000"
+    },
+    {
+        "id": "7",
+        "name": "ALMYRA SET",
+        "varian": "KOKO ANAK SET XS",
+        "barcode": "DK-35482",
+        "Harga": "110000"
+    },
+    {
+        "id": "8",
+        "name": "ALMYRA SET",
+        "varian": "KOKO ANAK SET SMLXL",
+        "barcode": "DK-26040",
+        "Harga": "110000"
+    },
+    {
+        "id": "9",
+        "name": "ALMYRA SET",
+        "varian": "KOKO ANAK SET XXL-XXXL",
+        "barcode": "DK-79508",
+        "Harga": "115000"
+    },
+    {
+        "id": "10",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK IBU SET S-M",
+        "barcode": "DK-68254",
+        "Harga": "250000"
+    },
+    {
+        "id": "11",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK IBU SET L-XXL",
+        "barcode": "DK-40966",
+        "Harga": "255000"
+    },
+    {
+        "id": "12",
+        "name": "ALMYRA SET",
+        "varian": "KOKO AYAH SET S-M",
+        "barcode": "DK-37075",
+        "Harga": "125000"
+    },
+    {
+        "id": "13",
+        "name": "ALMYRA SET",
+        "varian": "KOKO AYAH SET L-XL",
+        "barcode": "DK-68550",
+        "Harga": "135000"
+    },
+    {
+        "id": "14",
+        "name": "ALMYRA SET",
+        "varian": "KOKO AYAH SET XXL",
+        "barcode": "DK-91399",
+        "Harga": "145000"
+    },
+    {
+        "id": "15",
+        "name": "ALMYRA SET",
+        "varian": "TUNIK ANAK XXL-XXXL",
+        "barcode": "DK-60751",
+        "Harga": "180000"
+    },
+    {
+        "id": "16",
+        "name": "AMMIGOS GIRL TEE SET",
+        "varian": "",
+        "barcode": "DK-67595",
+        "Harga": "90000"
+    },
+    {
+        "id": "17",
+        "name": "Ammigoz Longpants Set Boy",
+        "varian": "",
+        "barcode": "DK-17663",
+        "Harga": "110000"
+    },
+    {
+        "id": "18",
+        "name": "Annabelle dress",
+        "varian": "",
+        "barcode": "DK-86614",
+        "Harga": "80000"
+    },
+    {
+        "id": "19",
+        "name": "Atasan Fashion premium",
+        "varian": "",
+        "barcode": "DK-93649",
+        "Harga": "85000"
+    },
+    {
+        "id": "20",
+        "name": "ATASAN HNM GIRL",
+        "varian": "",
+        "barcode": "DK-70734",
+        "Harga": "60000"
+    },
+    {
+        "id": "21",
+        "name": "ATASAN KATUN CNJ",
+        "varian": "",
+        "barcode": "DK-39511",
+        "Harga": "70000"
+    },
+    {
+        "id": "22",
+        "name": "ATASAN POLO Premium",
+        "varian": "KIDS 468",
+        "barcode": "DK-27240",
+        "Harga": "70000"
+    },
+    {
+        "id": "23",
+        "name": "ATASAN POLO Premium",
+        "varian": "JUNIOR 101214",
+        "barcode": "DK-36319",
+        "Harga": "80000"
+    },
+    {
+        "id": "24",
+        "name": "ATASAN TOMMY HIGLER",
+        "varian": "",
+        "barcode": "DK-79790",
+        "Harga": "70000"
+    },
+    {
+        "id": "25",
+        "name": "ATASAN+BUCKET HUT",
+        "varian": "",
+        "barcode": "DK-44161",
+        "Harga": "70000"
+    },
+    {
+        "id": "26",
+        "name": "AXEL & ZEA TOP",
+        "varian": "SML",
+        "barcode": "DK-45555",
+        "Harga": "65000"
+    },
+    {
+        "id": "27",
+        "name": "AXEL & ZEA TOP",
+        "varian": "XL",
+        "barcode": "DK-29266",
+        "Harga": "70000"
+    },
+    {
+        "id": "28",
+        "name": "Ayash dan Aira",
+        "varian": "AYASH JUNIOR no 456",
+        "barcode": "DK-17664",
+        "Harga": "95000"
+    },
+    {
+        "id": "29",
+        "name": "BABY CHEF",
+        "varian": "",
+        "barcode": "DK-66413",
+        "Harga": "80000"
+    },
+    {
+        "id": "30",
+        "name": "Baby Gap Cowok",
+        "varian": "",
+        "barcode": "DK-10584",
+        "Harga": "45000"
+    },
+    {
+        "id": "31",
+        "name": "Baby victory BOY",
+        "varian": "",
+        "barcode": "DK-10682",
+        "Harga": "35000"
+    },
+    {
+        "id": "32",
+        "name": "BAJU RENANG BOY&GIRL Premium",
+        "varian": "",
+        "barcode": "DK-56862",
+        "Harga": "60000"
+    },
+    {
+        "id": "33",
+        "name": "BAJU RENANG MINNIE",
+        "varian": "",
+        "barcode": "DK-10688",
+        "Harga": "70000"
+    },
+    {
+        "id": "34",
+        "name": "Baju renang panjang Premium",
+        "varian": "",
+        "barcode": "DK-29069",
+        "Harga": "90000"
+    },
+    {
+        "id": "35",
+        "name": "BAJU RENANG UNISEX",
+        "varian": "",
+        "barcode": "DK-74489",
+        "Harga": "55000"
+    },
+    {
+        "id": "36",
+        "name": "BAMBIE DEER",
+        "varian": "",
+        "barcode": "DK-35416",
+        "Harga": "80000"
+    },
+    {
+        "id": "37",
+        "name": "BANDO GEMESSS",
+        "varian": "",
+        "barcode": "DK-14690",
+        "Harga": "28500"
+    },
+    {
+        "id": "38",
+        "name": "BANTAL+GULING QUEEN",
+        "varian": "",
+        "barcode": "DK-20085",
+        "Harga": "50000"
+    },
+    {
+        "id": "39",
+        "name": "Basic tuxedo",
+        "varian": "",
+        "barcode": "DK-57246",
+        "Harga": "110000"
+    },
+    {
+        "id": "40",
+        "name": "BELLA RUFFLE TEE",
+        "varian": "KIDS",
+        "barcode": "DK-36156",
+        "Harga": "50000"
+    },
+    {
+        "id": "41",
+        "name": "BELLA RUFFLE TEE",
+        "varian": "JUNIOR",
+        "barcode": "DK-50779",
+        "Harga": "50000"
+    },
+    {
+        "id": "42",
+        "name": "BIANCA DRESS PREMIUM",
+        "varian": "",
+        "barcode": "DK-70922",
+        "Harga": "85000"
+    },
+    {
+        "id": "43",
+        "name": "BIANCA SET",
+        "varian": "",
+        "barcode": "DK-97463",
+        "Harga": "110000"
+    },
+    {
+        "id": "44",
+        "name": "BODY LOTION MOEL",
+        "varian": "",
+        "barcode": "DK-60231",
+        "Harga": "75000"
+    },
+    {
+        "id": "45",
+        "name": "BODY WASH MOEL",
+        "varian": "",
+        "barcode": "DK-92207",
+        "Harga": "70000"
+    },
+    {
+        "id": "46",
+        "name": "BOTOL MINUM bentuk panjang",
+        "varian": "",
+        "barcode": "DK-61941",
+        "Harga": "50000"
+    },
+    {
+        "id": "47",
+        "name": "BOTOL MINUM SANRIO",
+        "varian": "",
+        "barcode": "DK-46631",
+        "Harga": "50000"
+    },
+    {
+        "id": "48",
+        "name": "BOTOL SANRIO 2 versi",
+        "varian": "",
+        "barcode": "DK-72020",
+        "Harga": "50000"
+    },
+    {
+        "id": "49",
+        "name": "BOY SHORT NEVADA",
+        "varian": "",
+        "barcode": "DK-10128",
+        "Harga": "65000"
+    },
+    {
+        "id": "50",
+        "name": "Cardy Korean",
+        "varian": "",
+        "barcode": "DK-25939",
+        "Harga": "90000"
+    },
+    {
+        "id": "51",
+        "name": "CAT N JACK celana joger",
+        "varian": "",
+        "barcode": "DK-17668",
+        "Harga": "95000"
+    },
+    {
+        "id": "52",
+        "name": "CD ANAK BOY POLOS +KARAKTER",
+        "varian": "",
+        "barcode": "DK-38655",
+        "Harga": "7000"
+    },
+    {
+        "id": "53",
+        "name": "CD LIBBY NEW",
+        "varian": "",
+        "barcode": "DK-50454",
+        "Harga": "7000"
+    },
+    {
+        "id": "54",
+        "name": "CELANA AXEL & ZEA",
+        "varian": "SML",
+        "barcode": "DK-95011",
+        "Harga": "65000"
+    },
+    {
+        "id": "55",
+        "name": "CELANA AXEL & ZEA",
+        "varian": "XL",
+        "barcode": "DK-77845",
+        "Harga": "70000"
+    },
+    {
+        "id": "56",
+        "name": "Celana Chinos Oldnavy Dewasa",
+        "varian": "",
+        "barcode": "DK-38916",
+        "Harga": "80000"
+    },
+    {
+        "id": "57",
+        "name": "celpen barbie",
+        "varian": "",
+        "barcode": "DK-26151",
+        "Harga": "40000"
+    },
+    {
+        "id": "58",
+        "name": "CELPEN CARGO CNJ",
+        "varian": "",
+        "barcode": "DK-59886",
+        "Harga": "65000"
+    },
+    {
+        "id": "59",
+        "name": "CELPEN CARGO LITTLE BEE",
+        "varian": "",
+        "barcode": "DK-94863",
+        "Harga": "55000"
+    },
+    {
+        "id": "60",
+        "name": "CELPEN CARGO NEXT Junior",
+        "varian": "",
+        "barcode": "DK-20932",
+        "Harga": "80000"
+    },
+    {
+        "id": "61",
+        "name": "CELPEN CHINOS NEVADA",
+        "varian": "",
+        "barcode": "DK-94407",
+        "Harga": "85000"
+    },
+    {
+        "id": "62",
+        "name": "CELPEN DENIM ZARA",
+        "varian": "",
+        "barcode": "DK-78877",
+        "Harga": "90000"
+    },
+    {
+        "id": "63",
+        "name": "CELPEN Flecee Bear G",
+        "varian": "",
+        "barcode": "DK-72898",
+        "Harga": "45000"
+    },
+    {
+        "id": "64",
+        "name": "Celpen Harley",
+        "varian": "",
+        "barcode": "DK-10751",
+        "Harga": "65000"
+    },
+    {
+        "id": "65",
+        "name": "CELPEN JEANS AERO",
+        "varian": "",
+        "barcode": "DK-66325",
+        "Harga": "90000"
+    },
+    {
+        "id": "66",
+        "name": "Celpen jeans cargo NEW",
+        "varian": "",
+        "barcode": "DK-99231",
+        "Harga": "70000"
+    },
+    {
+        "id": "67",
+        "name": "Celpen jeans monster",
+        "varian": "",
+        "barcode": "DK-10589",
+        "Harga": "70000"
+    },
+    {
+        "id": "68",
+        "name": "CELPEN MAX NEW",
+        "varian": "",
+        "barcode": "DK-47911",
+        "Harga": "85000"
+    },
+    {
+        "id": "69",
+        "name": "CELPEN MOTHERCARE",
+        "varian": "",
+        "barcode": "DK-17688",
+        "Harga": "75000"
+    },
+    {
+        "id": "70",
+        "name": "CELPEN NEVADA MARVEL",
+        "varian": "",
+        "barcode": "DK-66328",
+        "Harga": "65000"
+    },
+    {
+        "id": "71",
+        "name": "CELPEN OLDNAVY TERRY BOS",
+        "varian": "",
+        "barcode": "DK-73032",
+        "Harga": "75000"
+    },
+    {
+        "id": "72",
+        "name": "Cherocke pendek",
+        "varian": "",
+        "barcode": "DK-60004",
+        "Harga": "55000"
+    },
+    {
+        "id": "73",
+        "name": "Cherokee panjang",
+        "varian": "",
+        "barcode": "DK-60003",
+        "Harga": "60000"
+    },
+    {
+        "id": "74",
+        "name": "CHINOS CARGO panjang",
+        "varian": "468",
+        "barcode": "DK-53828",
+        "Harga": "80000"
+    },
+    {
+        "id": "75",
+        "name": "CHINOS CARGO panjang",
+        "varian": "101214",
+        "barcode": "DK-24139",
+        "Harga": "80000"
+    },
+    {
+        "id": "76",
+        "name": "CHINOS CARGO panjang",
+        "varian": "161820",
+        "barcode": "DK-22909",
+        "Harga": "80000"
+    },
+    {
+        "id": "77",
+        "name": "Chinos gymbore panjang",
+        "varian": "kids",
+        "barcode": "DK-38911",
+        "Harga": "75000"
+    },
+    {
+        "id": "78",
+        "name": "Chinos gymbore panjang",
+        "varian": "Junior",
+        "barcode": "DK-38917",
+        "Harga": "75000"
+    },
+    {
+        "id": "79",
+        "name": "CHINOS JERAPAH BABY",
+        "varian": "",
+        "barcode": "DK-21596",
+        "Harga": "75000"
+    },
+    {
+        "id": "80",
+        "name": "CHINOS OSHKOS 14,16,18",
+        "varian": "",
+        "barcode": "DK-37832",
+        "Harga": "65000"
+    },
+    {
+        "id": "81",
+        "name": "CHINOS OSHKOS 2,4,6",
+        "varian": "",
+        "barcode": "DK-90410",
+        "Harga": "60000"
+    },
+    {
+        "id": "82",
+        "name": "CHINOS OSHKOS 20,22,24",
+        "varian": "",
+        "barcode": "DK-25621",
+        "Harga": "65000"
+    },
+    {
+        "id": "83",
+        "name": "CHINOS OSHKOS 26,28,30",
+        "varian": "",
+        "barcode": "DK-81176",
+        "Harga": "70000"
+    },
+    {
+        "id": "84",
+        "name": "CHINOS OSHKOS 8,10,12",
+        "varian": "",
+        "barcode": "DK-81849",
+        "Harga": "60000"
+    },
+    {
+        "id": "85",
+        "name": "CHINOS PANJANG VIKO",
+        "varian": "NO 101214",
+        "barcode": "DK-32546",
+        "Harga": "80000"
+    },
+    {
+        "id": "86",
+        "name": "CHINOS PANJANG VIKO",
+        "varian": "NO 222426",
+        "barcode": "DK-32500",
+        "Harga": "80000"
+    },
+    {
+        "id": "87",
+        "name": "CHINOS PANJANG VIKO",
+        "varian": "161820",
+        "barcode": "DK-23263",
+        "Harga": "80000"
+    },
+    {
+        "id": "88",
+        "name": "CHINOS PANJANG VIKO",
+        "varian": "468",
+        "barcode": "DK-48852",
+        "Harga": "80000"
+    },
+    {
+        "id": "89",
+        "name": "Chinos Rib Combad Diamon",
+        "varian": "",
+        "barcode": "DK-53385",
+        "Harga": "80000"
+    },
+    {
+        "id": "90",
+        "name": "Cutbray Scuba",
+        "varian": "",
+        "barcode": "DK-60006",
+        "Harga": "50000"
+    },
+    {
+        "id": "91",
+        "name": "Denim CO",
+        "varian": "",
+        "barcode": "DK-52466",
+        "Harga": "85000"
+    },
+    {
+        "id": "92",
+        "name": "DENIM PANJANG ZARA ORI",
+        "varian": "",
+        "barcode": "DK-29720",
+        "Harga": "115000"
+    },
+    {
+        "id": "93",
+        "name": "Dione set",
+        "varian": "",
+        "barcode": "DK-40174",
+        "Harga": "60000"
+    },
+    {
+        "id": "94",
+        "name": "DOUBLE DEEKER",
+        "varian": "",
+        "barcode": "DK-30267",
+        "Harga": "75000"
+    },
+    {
+        "id": "95",
+        "name": "Dress Alana",
+        "varian": "",
+        "barcode": "DK-97599",
+        "Harga": "55000"
+    },
+    {
+        "id": "96",
+        "name": "Dress amora hitam",
+        "varian": "",
+        "barcode": "DK-12386",
+        "Harga": "175000"
+    },
+    {
+        "id": "97",
+        "name": "Dress Aosta Betty",
+        "varian": "",
+        "barcode": "DK-66395",
+        "Harga": "70000"
+    },
+    {
+        "id": "98",
+        "name": "Dress baby doll baby gap",
+        "varian": "",
+        "barcode": "DK-60007",
+        "Harga": "45000"
+    },
+    {
+        "id": "99",
+        "name": "DRESS BABY GAP",
+        "varian": "",
+        "barcode": "DK-91788",
+        "Harga": "50000"
+    },
+    {
+        "id": "100",
+        "name": "DRESS BRUKAT ALANA",
+        "varian": "",
+        "barcode": "DK-31480",
+        "Harga": "130000"
+    },
+    {
+        "id": "101",
+        "name": "DRESS BRUKAT DOLL PREMIUM",
+        "varian": "1/4",
+        "barcode": "DK-82162",
+        "Harga": "125000"
+    },
+    {
+        "id": "102",
+        "name": "DRESS BRUKAT DOLL PREMIUM",
+        "varian": "5/8",
+        "barcode": "DK-54565",
+        "Harga": "125000"
+    },
+    {
+        "id": "103",
+        "name": "DRESS BRUKAT LP",
+        "varian": "1/4",
+        "barcode": "DK-71936",
+        "Harga": "140000"
+    },
+    {
+        "id": "104",
+        "name": "DRESS BRUKAT LP",
+        "varian": "5/8",
+        "barcode": "DK-71791",
+        "Harga": "140000"
+    },
+    {
+        "id": "105",
+        "name": "DRESS BRUKAT LP",
+        "varian": "9/12",
+        "barcode": "DK-43456",
+        "Harga": "140000"
+    },
+    {
+        "id": "106",
+        "name": "DRESS JUMPING BEANS disney",
+        "varian": "",
+        "barcode": "DK-46947",
+        "Harga": "80000"
+    },
+    {
+        "id": "107",
+        "name": "Dress Sanrio",
+        "varian": "",
+        "barcode": "DK-93376",
+        "Harga": "55000"
+    },
+    {
+        "id": "108",
+        "name": "DRESS SHAFIRA/ FLORA",
+        "varian": "S",
+        "barcode": "DK-70238",
+        "Harga": "145000"
+    },
+    {
+        "id": "109",
+        "name": "DRESS SHAFIRA/ FLORA",
+        "varian": "M",
+        "barcode": "DK-59404",
+        "Harga": "155000"
+    },
+    {
+        "id": "110",
+        "name": "DRESS SHAFIRA/ FLORA",
+        "varian": "L",
+        "barcode": "DK-35364",
+        "Harga": "165000"
+    },
+    {
+        "id": "111",
+        "name": "DRESS SHAFIRA/ FLORA",
+        "varian": "XL",
+        "barcode": "DK-99431",
+        "Harga": "175000"
+    },
+    {
+        "id": "112",
+        "name": "DRESS SHAFIRA/ FLORA",
+        "varian": "XXL",
+        "barcode": "DK-54578",
+        "Harga": "190000"
+    },
+    {
+        "id": "113",
+        "name": "DRESS TEA ORI",
+        "varian": "",
+        "barcode": "DK-15227",
+        "Harga": "75000"
+    },
+    {
+        "id": "114",
+        "name": "Dress tutu Malwee",
+        "varian": "",
+        "barcode": "DK-90717",
+        "Harga": "85000"
+    },
+    {
+        "id": "115",
+        "name": "DRESS VANIA",
+        "varian": "S",
+        "barcode": "DK-84088",
+        "Harga": "175000"
+    },
+    {
+        "id": "116",
+        "name": "DRESS VANIA",
+        "varian": "M",
+        "barcode": "DK-19466",
+        "Harga": "185000"
+    },
+    {
+        "id": "117",
+        "name": "DRESS VANIA",
+        "varian": "L",
+        "barcode": "DK-95140",
+        "Harga": "195000"
+    },
+    {
+        "id": "118",
+        "name": "DRESS ZEA",
+        "varian": "SML",
+        "barcode": "DK-68517",
+        "Harga": "75000"
+    },
+    {
+        "id": "119",
+        "name": "DRESS ZEA",
+        "varian": "XL",
+        "barcode": "DK-23714",
+        "Harga": "80000"
+    },
+    {
+        "id": "120",
+        "name": "DULUX 539 E",
+        "varian": "",
+        "barcode": "DK-77501",
+        "Harga": "45000"
+    },
+    {
+        "id": "121",
+        "name": "Ecko jeans",
+        "varian": "",
+        "barcode": "DK-43283",
+        "Harga": "85000"
+    },
+    {
+        "id": "122",
+        "name": "FENDI TEE IMPORT",
+        "varian": "468",
+        "barcode": "DK-62886",
+        "Harga": "75000"
+    },
+    {
+        "id": "123",
+        "name": "FENDI TEE IMPORT",
+        "varian": "101214",
+        "barcode": "DK-32991",
+        "Harga": "75000"
+    },
+    {
+        "id": "124",
+        "name": "Flora Gamis",
+        "varian": "",
+        "barcode": "DK-50531",
+        "Harga": "90000"
+    },
+    {
+        "id": "125",
+        "name": "FULL ON JEANS WN",
+        "varian": "",
+        "barcode": "DK-66326",
+        "Harga": "90000"
+    },
+    {
+        "id": "126",
+        "name": "Gamis ADIBA RAYON",
+        "varian": "",
+        "barcode": "DK-47078",
+        "Harga": "110000"
+    },
+    {
+        "id": "127",
+        "name": "GAMIS Alayya",
+        "varian": "",
+        "barcode": "DK-13175",
+        "Harga": "130000"
+    },
+    {
+        "id": "128",
+        "name": "Gamis April",
+        "varian": "",
+        "barcode": "DK-76880",
+        "Harga": "100000"
+    },
+    {
+        "id": "129",
+        "name": "GAMIS ASIAH NAJWA",
+        "varian": "",
+        "barcode": "DK-95302",
+        "Harga": "195000"
+    },
+    {
+        "id": "130",
+        "name": "GAMIS BELALUNA PREMIUM",
+        "varian": "",
+        "barcode": "DK-50154",
+        "Harga": "195000"
+    },
+    {
+        "id": "131",
+        "name": "GAMIS JEANS ALANA",
+        "varian": "GAMIS JEANS ALANA S,M,L",
+        "barcode": "DK-66331",
+        "Harga": "90000"
+    },
+    {
+        "id": "132",
+        "name": "GAMIS JEANS ALANA",
+        "varian": "GAMIS JEANS ALANA 8,10,12",
+        "barcode": "DK-66327",
+        "Harga": "95000"
+    },
+    {
+        "id": "133",
+        "name": "GAMIS JEANS FULL KANCING",
+        "varian": "",
+        "barcode": "DK-21271",
+        "Harga": "95000"
+    },
+    {
+        "id": "134",
+        "name": "GAMIS JEANS IMPORT",
+        "varian": "",
+        "barcode": "DK-52121",
+        "Harga": "175000"
+    },
+    {
+        "id": "135",
+        "name": "Gamis Madina Candy",
+        "varian": "gamis candy sz XXL",
+        "barcode": "DK-66360",
+        "Harga": "100000"
+    },
+    {
+        "id": "136",
+        "name": "GAMIS MARYAM",
+        "varian": "",
+        "barcode": "DK-55295",
+        "Harga": "85000"
+    },
+    {
+        "id": "137",
+        "name": "Gamis Nagita",
+        "varian": "",
+        "barcode": "DK-63005",
+        "Harga": "100000"
+    },
+    {
+        "id": "138",
+        "name": "Gamis Namira warnawarni",
+        "varian": "",
+        "barcode": "DK-10132",
+        "Harga": "90000"
+    },
+    {
+        "id": "139",
+        "name": "Gamis Naura Junior new",
+        "varian": "",
+        "barcode": "DK-10680",
+        "Harga": "115000"
+    },
+    {
+        "id": "140",
+        "name": "Gamis Naura Putih",
+        "varian": "",
+        "barcode": "DK-83086",
+        "Harga": "85000"
+    },
+    {
+        "id": "141",
+        "name": "GAMIS NUHA",
+        "varian": "",
+        "barcode": "DK-24379",
+        "Harga": "80000"
+    },
+    {
+        "id": "142",
+        "name": "Gamis Putih Madina candy",
+        "varian": "JUNIOR",
+        "barcode": "DK-10186",
+        "Harga": "90000"
+    },
+    {
+        "id": "143",
+        "name": "Gamis Putih Madina candy",
+        "varian": "KIDS SML",
+        "barcode": "DK-10185",
+        "Harga": "90000"
+    },
+    {
+        "id": "144",
+        "name": "GAMIS TUTU CHERRY",
+        "varian": "246",
+        "barcode": "DK-45705",
+        "Harga": "180000"
+    },
+    {
+        "id": "145",
+        "name": "GAMIS TUTU CHERRY",
+        "varian": "8101214",
+        "barcode": "DK-85367",
+        "Harga": "180000"
+    },
+    {
+        "id": "146",
+        "name": "GAPKIDS LP BOY",
+        "varian": "",
+        "barcode": "DK-66329",
+        "Harga": "55000"
+    },
+    {
+        "id": "147",
+        "name": "Grace dress",
+        "varian": "",
+        "barcode": "DK-27383",
+        "Harga": "50000"
+    },
+    {
+        "id": "148",
+        "name": "GUMI SHORT",
+        "varian": "KIDS",
+        "barcode": "DK-98639",
+        "Harga": "65000"
+    },
+    {
+        "id": "149",
+        "name": "GUMI SHORT",
+        "varian": "JUNIOR",
+        "barcode": "DK-97061",
+        "Harga": "75000"
+    },
+    {
+        "id": "150",
+        "name": "GUMI SHORT",
+        "varian": "TEENS",
+        "barcode": "DK-38732",
+        "Harga": "85000"
+    },
+    {
+        "id": "151",
+        "name": "HAIR LOTION MOELL",
+        "varian": "",
+        "barcode": "DK-94944",
+        "Harga": "70000"
+    },
+    {
+        "id": "152",
+        "name": "Hampers rotan premium",
+        "varian": "",
+        "barcode": "DK-63285",
+        "Harga": "155000"
+    },
+    {
+        "id": "153",
+        "name": "Hana Hijab",
+        "varian": "",
+        "barcode": "DK-33616",
+        "Harga": "45000"
+    },
+    {
+        "id": "154",
+        "name": "HANDUK KARAKTER",
+        "varian": "",
+        "barcode": "DK-52525",
+        "Harga": "45000"
+    },
+    {
+        "id": "155",
+        "name": "HIFA HAFI COUPLE",
+        "varian": "",
+        "barcode": "DK-26141",
+        "Harga": "70000"
+    },
+    {
+        "id": "156",
+        "name": "HNM GIRL ORI NEW",
+        "varian": "",
+        "barcode": "DK-10282",
+        "Harga": "60000"
+    },
+    {
+        "id": "157",
+        "name": "HNM SET MICKEYMOUSE",
+        "varian": "KIDS",
+        "barcode": "DK-68153",
+        "Harga": "90000"
+    },
+    {
+        "id": "158",
+        "name": "HNM SET MICKEYMOUSE",
+        "varian": "JUNIOR",
+        "barcode": "DK-43254",
+        "Harga": "100000"
+    },
+    {
+        "id": "159",
+        "name": "HOODIE JEANS ZEVENS",
+        "varian": "",
+        "barcode": "DK-77668",
+        "Harga": "125000"
+    },
+    {
+        "id": "160",
+        "name": "HOODIE KENZO POCKET SET import",
+        "varian": "",
+        "barcode": "DK-71522",
+        "Harga": "105000"
+    },
+    {
+        "id": "161",
+        "name": "HOODIE OLDNAVY",
+        "varian": "",
+        "barcode": "DK-24469",
+        "Harga": "85000"
+    },
+    {
+        "id": "162",
+        "name": "HOODIE ZIPPER DINO",
+        "varian": "",
+        "barcode": "DK-83095",
+        "Harga": "65000"
+    },
+    {
+        "id": "163",
+        "name": "Hotpants full print gymboree",
+        "varian": "",
+        "barcode": "DK-80772",
+        "Harga": "45000"
+    },
+    {
+        "id": "164",
+        "name": "HOTPANTS GIRL import",
+        "varian": "",
+        "barcode": "DK-66323",
+        "Harga": "60000"
+    },
+    {
+        "id": "165",
+        "name": "HOTPANTS IMPORT HP",
+        "varian": "",
+        "barcode": "DK-57678",
+        "Harga": "55000"
+    },
+    {
+        "id": "166",
+        "name": "HOTPANTS IMPORT XIA",
+        "varian": "",
+        "barcode": "DK-15928",
+        "Harga": "55000"
+    },
+    {
+        "id": "167",
+        "name": "Hotpants Queen",
+        "varian": "Hotpants Queen 246",
+        "barcode": "DK-10136",
+        "Harga": "55000"
+    },
+    {
+        "id": "168",
+        "name": "Hotpants Queen",
+        "varian": "Hotpants Queen 81012",
+        "barcode": "DK-10139",
+        "Harga": "55000"
+    },
+    {
+        "id": "169",
+        "name": "HOTPANTS UNICORN",
+        "varian": "HOTPANTS UNICORN 246",
+        "barcode": "DK-74660",
+        "Harga": "55000"
+    },
+    {
+        "id": "170",
+        "name": "HOTPANTS UNICORN",
+        "varian": "HOTPANTS UNICORN 81012",
+        "barcode": "DK-73281",
+        "Harga": "55000"
+    },
+    {
+        "id": "171",
+        "name": "HUNTER JUMPER",
+        "varian": "",
+        "barcode": "DK-27065",
+        "Harga": "80000"
+    },
+    {
+        "id": "172",
+        "name": "HUT PADDLE PENDEK",
+        "varian": "",
+        "barcode": "DK-33286",
+        "Harga": "65000"
+    },
+    {
+        "id": "173",
+        "name": "JAKET BOMBER ZARA",
+        "varian": "",
+        "barcode": "DK-24503",
+        "Harga": "110000"
+    },
+    {
+        "id": "174",
+        "name": "JAKET HONEY BEE",
+        "varian": "",
+        "barcode": "DK-49363",
+        "Harga": "75000"
+    },
+    {
+        "id": "175",
+        "name": "Jaket JB",
+        "varian": "",
+        "barcode": "DK-91297",
+        "Harga": "75000"
+    },
+    {
+        "id": "176",
+        "name": "Jaket UNIQLO DEWASA",
+        "varian": "",
+        "barcode": "DK-26155",
+        "Harga": "100000"
+    },
+    {
+        "id": "177",
+        "name": "JAM TANGAN SANRIO",
+        "varian": "",
+        "barcode": "DK-56647",
+        "Harga": "35000"
+    },
+    {
+        "id": "178",
+        "name": "JB GIRL tee mix malwee tee",
+        "varian": "",
+        "barcode": "DK-93658",
+        "Harga": "55000"
+    },
+    {
+        "id": "179",
+        "name": "JEANS GEO HITAM",
+        "varian": "468",
+        "barcode": "DK-18103",
+        "Harga": "80000"
+    },
+    {
+        "id": "180",
+        "name": "JEANS GEO HITAM",
+        "varian": "101214",
+        "barcode": "DK-45712",
+        "Harga": "80000"
+    },
+    {
+        "id": "181",
+        "name": "JEANS GEO HITAM",
+        "varian": "161820",
+        "barcode": "DK-93177",
+        "Harga": "80000"
+    },
+    {
+        "id": "182",
+        "name": "JEANS GEO PL",
+        "varian": "",
+        "barcode": "DK-16394",
+        "Harga": "80000"
+    },
+    {
+        "id": "183",
+        "name": "JEANS LOVE IMPORT",
+        "varian": "",
+        "barcode": "DK-26157",
+        "Harga": "70000"
+    },
+    {
+        "id": "184",
+        "name": "JEANS NANCY JUNIOR",
+        "varian": "",
+        "barcode": "DK-91787",
+        "Harga": "75000"
+    },
+    {
+        "id": "185",
+        "name": "JEANS NANCY KIDS",
+        "varian": "",
+        "barcode": "DK-50845",
+        "Harga": "75000"
+    },
+    {
+        "id": "186",
+        "name": "JEANS PANJANG UNICORN",
+        "varian": "JEANS BORDIR UNICORN 246",
+        "barcode": "DK-72797",
+        "Harga": "70000"
+    },
+    {
+        "id": "187",
+        "name": "JEANS PANJANG UNICORN",
+        "varian": "JEANS BORDIR UNICORN 81012",
+        "barcode": "DK-39911",
+        "Harga": "70000"
+    },
+    {
+        "id": "188",
+        "name": "JEANS SCO biowash",
+        "varian": "246",
+        "barcode": "DK-83663",
+        "Harga": "80000"
+    },
+    {
+        "id": "189",
+        "name": "JEANS SCO biowash",
+        "varian": "81012",
+        "barcode": "DK-99405",
+        "Harga": "80000"
+    },
+    {
+        "id": "190",
+        "name": "Jeje set",
+        "varian": "",
+        "barcode": "DK-78259",
+        "Harga": "60000"
+    },
+    {
+        "id": "191",
+        "name": "JENNIE DRESS",
+        "varian": "",
+        "barcode": "DK-32285",
+        "Harga": "145000"
+    },
+    {
+        "id": "192",
+        "name": "jepit rambut pita 2 set",
+        "varian": "",
+        "barcode": "DK-18325",
+        "Harga": "15000"
+    },
+    {
+        "id": "193",
+        "name": "JILBAB ALESA & REMPEL TALI",
+        "varian": "KIDS sml",
+        "barcode": "DK-69059",
+        "Harga": "45000"
+    },
+    {
+        "id": "194",
+        "name": "JILBAB ALESA & REMPEL TALI",
+        "varian": "JUNIOR XXL",
+        "barcode": "DK-64239",
+        "Harga": "50000"
+    },
+    {
+        "id": "195",
+        "name": "Jilbab casila",
+        "varian": "",
+        "barcode": "DK-60023",
+        "Harga": "80000"
+    },
+    {
+        "id": "196",
+        "name": "Jilbab EMILY",
+        "varian": "KIDS",
+        "barcode": "DK-26957",
+        "Harga": "65000"
+    },
+    {
+        "id": "197",
+        "name": "Jilbab EMILY",
+        "varian": "XXL",
+        "barcode": "DK-26955",
+        "Harga": "70000"
+    },
+    {
+        "id": "198",
+        "name": "Jilbab Kids Diary",
+        "varian": "",
+        "barcode": "DK-26156",
+        "Harga": "50000"
+    },
+    {
+        "id": "199",
+        "name": "Jilbab Prilly",
+        "varian": "KIDS",
+        "barcode": "DK-26937",
+        "Harga": "65000"
+    },
+    {
+        "id": "200",
+        "name": "Jilbab Prilly",
+        "varian": "XXL",
+        "barcode": "DK-26938",
+        "Harga": "70000"
+    },
+    {
+        "id": "201",
+        "name": "JILBAB SEKOLAH CANDY",
+        "varian": "sz L",
+        "barcode": "DK-10770",
+        "Harga": "50000"
+    },
+    {
+        "id": "202",
+        "name": "JILBAB SEKOLAH CANDY",
+        "varian": "Sz XL dan XXL",
+        "barcode": "DK-40291",
+        "Harga": "55000"
+    },
+    {
+        "id": "203",
+        "name": "Jilbab Trio K",
+        "varian": "",
+        "barcode": "DK-67441",
+        "Harga": "65000"
+    },
+    {
+        "id": "204",
+        "name": "JOGER CHAMPION",
+        "varian": "",
+        "barcode": "DK-42848",
+        "Harga": "80000"
+    },
+    {
+        "id": "205",
+        "name": "Joger Dewasa",
+        "varian": "",
+        "barcode": "DK-60025",
+        "Harga": "70000"
+    },
+    {
+        "id": "206",
+        "name": "Joger GAP colour",
+        "varian": "",
+        "barcode": "DK-93903",
+        "Harga": "50000"
+    },
+    {
+        "id": "207",
+        "name": "Joger HnM girl",
+        "varian": "",
+        "barcode": "DK-69659",
+        "Harga": "75000"
+    },
+    {
+        "id": "208",
+        "name": "JOGER MARVEL by Nevada",
+        "varian": "",
+        "barcode": "DK-11980",
+        "Harga": "75000"
+    },
+    {
+        "id": "209",
+        "name": "JOGER MAX NEW",
+        "varian": "",
+        "barcode": "DK-70347",
+        "Harga": "90000"
+    },
+    {
+        "id": "210",
+        "name": "JOGER OLDNAVY NEW",
+        "varian": "",
+        "barcode": "DK-94837",
+        "Harga": "95000"
+    },
+    {
+        "id": "211",
+        "name": "Joger Oldnavy Unisex",
+        "varian": "XXL 16-18th",
+        "barcode": "DK-80417",
+        "Harga": "70000"
+    },
+    {
+        "id": "212",
+        "name": "Joger Zara dewasa",
+        "varian": "",
+        "barcode": "DK-17602",
+        "Harga": "80000"
+    },
+    {
+        "id": "213",
+        "name": "Jumper Branded",
+        "varian": "",
+        "barcode": "DK-54134",
+        "Harga": "45000"
+    },
+    {
+        "id": "214",
+        "name": "Kacamata bear import",
+        "varian": "",
+        "barcode": "DK-81148",
+        "Harga": "35000"
+    },
+    {
+        "id": "215",
+        "name": "Kacamata Doff import",
+        "varian": "",
+        "barcode": "DK-49303",
+        "Harga": "20000"
+    },
+    {
+        "id": "216",
+        "name": "KAIA tee",
+        "varian": "",
+        "barcode": "DK-76359",
+        "Harga": "45000"
+    },
+    {
+        "id": "217",
+        "name": "KAMA SET",
+        "varian": "",
+        "barcode": "DK-54375",
+        "Harga": "85000"
+    },
+    {
+        "id": "218",
+        "name": "kaos Amigos Sayap",
+        "varian": "",
+        "barcode": "DK-60027",
+        "Harga": "55000"
+    },
+    {
+        "id": "219",
+        "name": "KAOS AMMIGOS SUPERHERO",
+        "varian": "",
+        "barcode": "DK-10126",
+        "Harga": "60000"
+    },
+    {
+        "id": "220",
+        "name": "Kaos ANIMAL NEW",
+        "varian": "",
+        "barcode": "DK-52126",
+        "Harga": "45000"
+    },
+    {
+        "id": "221",
+        "name": "Kaos dewasa sz L",
+        "varian": "",
+        "barcode": "DK-60028",
+        "Harga": "40000"
+    },
+    {
+        "id": "222",
+        "name": "KAOS DINO little space",
+        "varian": "",
+        "barcode": "DK-62019",
+        "Harga": "50000"
+    },
+    {
+        "id": "223",
+        "name": "KAOS FULLPRINT MOMVIE",
+        "varian": "",
+        "barcode": "DK-17029",
+        "Harga": "55000"
+    },
+    {
+        "id": "224",
+        "name": "KAOS HUT CALLYSTA",
+        "varian": "KIDS 1-5",
+        "barcode": "DK-16345",
+        "Harga": "55000"
+    },
+    {
+        "id": "225",
+        "name": "KAOS HUT CALLYSTA",
+        "varian": "JUNIOR 2-10",
+        "barcode": "DK-79334",
+        "Harga": "55000"
+    },
+    {
+        "id": "226",
+        "name": "KAOS HUT PANJANG",
+        "varian": "",
+        "barcode": "DK-66333",
+        "Harga": "50000"
+    },
+    {
+        "id": "227",
+        "name": "KAOS HUT PENDEK",
+        "varian": "",
+        "barcode": "DK-66321",
+        "Harga": "50000"
+    },
+    {
+        "id": "228",
+        "name": "KAOS KAKI IMPORT",
+        "varian": "",
+        "barcode": "DK-33759",
+        "Harga": "32500"
+    },
+    {
+        "id": "229",
+        "name": "KAOS KAKI IMPORT KIDS",
+        "varian": "",
+        "barcode": "DK-26147",
+        "Harga": "22000"
+    },
+    {
+        "id": "230",
+        "name": "Kaos little M boy",
+        "varian": "",
+        "barcode": "DK-92525",
+        "Harga": "50000"
+    },
+    {
+        "id": "231",
+        "name": "KAOS LP CHAMPION",
+        "varian": "",
+        "barcode": "DK-20874",
+        "Harga": "50000"
+    },
+    {
+        "id": "232",
+        "name": "KAOS OSKOSH SUPERHERO SERIES",
+        "varian": "",
+        "barcode": "DK-65925",
+        "Harga": "55000"
+    },
+    {
+        "id": "233",
+        "name": "Kaos Polo cnj",
+        "varian": "",
+        "barcode": "DK-29026",
+        "Harga": "55000"
+    },
+    {
+        "id": "234",
+        "name": "Kaos ZARA DEWASA",
+        "varian": "",
+        "barcode": "DK-72685",
+        "Harga": "55000"
+    },
+    {
+        "id": "235",
+        "name": "Kemeja Ajmal",
+        "varian": "KIDS",
+        "barcode": "DK-83348",
+        "Harga": "90000"
+    },
+    {
+        "id": "236",
+        "name": "Kemeja Ajmal",
+        "varian": "TEENS",
+        "barcode": "DK-60030",
+        "Harga": "115000"
+    },
+    {
+        "id": "237",
+        "name": "Kemeja Awesome",
+        "varian": "",
+        "barcode": "DK-60031",
+        "Harga": "80000"
+    },
+    {
+        "id": "238",
+        "name": "Kemeja Ecko",
+        "varian": "",
+        "barcode": "DK-49148",
+        "Harga": "70000"
+    },
+    {
+        "id": "239",
+        "name": "KEMEJA HNM ORI",
+        "varian": "",
+        "barcode": "DK-16054",
+        "Harga": "90000"
+    },
+    {
+        "id": "240",
+        "name": "KEMEJA LITTLE M",
+        "varian": "",
+        "barcode": "DK-98100",
+        "Harga": "75000"
+    },
+    {
+        "id": "241",
+        "name": "KEMEJA OKAIDI",
+        "varian": "",
+        "barcode": "DK-76947",
+        "Harga": "90000"
+    },
+    {
+        "id": "242",
+        "name": "Kemeja oxford premium",
+        "varian": "",
+        "barcode": "DK-87933",
+        "Harga": "70000"
+    },
+    {
+        "id": "243",
+        "name": "KEMEJA PLANEL panjang",
+        "varian": "",
+        "barcode": "DK-86610",
+        "Harga": "85000"
+    },
+    {
+        "id": "244",
+        "name": "KEMEJA POPEYE",
+        "varian": "",
+        "barcode": "DK-55009",
+        "Harga": "80000"
+    },
+    {
+        "id": "245",
+        "name": "KEMKO AMMIGOS",
+        "varian": "",
+        "barcode": "DK-16814",
+        "Harga": "95000"
+    },
+    {
+        "id": "246",
+        "name": "KEMKO HAZIM",
+        "varian": "",
+        "barcode": "DK-95532",
+        "Harga": "85000"
+    },
+    {
+        "id": "247",
+        "name": "KEMKO NARENDRA SET",
+        "varian": "",
+        "barcode": "DK-14472",
+        "Harga": "170000"
+    },
+    {
+        "id": "248",
+        "name": "KEMKO SAKA PANJANG",
+        "varian": "",
+        "barcode": "DK-72563",
+        "Harga": "70000"
+    },
+    {
+        "id": "249",
+        "name": "KEMKO SAKA PENDEK",
+        "varian": "",
+        "barcode": "DK-49740",
+        "Harga": "60000"
+    },
+    {
+        "id": "250",
+        "name": "Kertas kado",
+        "varian": "",
+        "barcode": "DK-32707",
+        "Harga": "5000"
+    },
+    {
+        "id": "251",
+        "name": "KIDS SOCKS+ SOCK SUPERHERO",
+        "varian": "",
+        "barcode": "DK-29520",
+        "Harga": "15000"
+    },
+    {
+        "id": "252",
+        "name": "koko Abdurrahman",
+        "varian": "",
+        "barcode": "DK-60034",
+        "Harga": "110000"
+    },
+    {
+        "id": "253",
+        "name": "KOKO ADAM KIDS",
+        "varian": "",
+        "barcode": "DK-70106",
+        "Harga": "150000"
+    },
+    {
+        "id": "254",
+        "name": "Koko Alkhata paddle",
+        "varian": "",
+        "barcode": "DK-79293",
+        "Harga": "130000"
+    },
+    {
+        "id": "255",
+        "name": "KOKO ALMAIR AYAH",
+        "varian": "",
+        "barcode": "DK-25530",
+        "Harga": "135000"
+    },
+    {
+        "id": "256",
+        "name": "Koko Almair Kids",
+        "varian": "",
+        "barcode": "DK-27456",
+        "Harga": "75000"
+    },
+    {
+        "id": "257",
+        "name": "Koko Almair Teens",
+        "varian": "",
+        "barcode": "DK-94979",
+        "Harga": "95000"
+    },
+    {
+        "id": "258",
+        "name": "KOKO AMAR",
+        "varian": "KOKO AMAR KIDS",
+        "barcode": "DK-60035",
+        "Harga": "150000"
+    },
+    {
+        "id": "259",
+        "name": "KOKO AMAR",
+        "varian": "KOKO AMAR JUNIOR XL",
+        "barcode": "DK-59432",
+        "Harga": "160000"
+    },
+    {
+        "id": "260",
+        "name": "KOKO AMAR",
+        "varian": "KOKO AMAR JUNIOR XXXL/XXXXL",
+        "barcode": "DK-97966",
+        "Harga": "160000"
+    },
+    {
+        "id": "261",
+        "name": "KOKO AZIZ",
+        "varian": "",
+        "barcode": "DK-31819",
+        "Harga": "80000"
+    },
+    {
+        "id": "262",
+        "name": "KOKO BAIQ BORDIR baby",
+        "varian": "",
+        "barcode": "DK-49125",
+        "Harga": "75000"
+    },
+    {
+        "id": "263",
+        "name": "KOKO ERLAN SET",
+        "varian": "KIDS S-xxxl",
+        "barcode": "DK-54033",
+        "Harga": "170000"
+    },
+    {
+        "id": "264",
+        "name": "KOKO ERLAN SET",
+        "varian": "TEENS 161820",
+        "barcode": "DK-11476",
+        "Harga": "180000"
+    },
+    {
+        "id": "265",
+        "name": "KOKO FAWWAZ",
+        "varian": "",
+        "barcode": "DK-22395",
+        "Harga": "80000"
+    },
+    {
+        "id": "266",
+        "name": "KOKO HABIBI PUTIH",
+        "varian": "",
+        "barcode": "DK-60039",
+        "Harga": "90000"
+    },
+    {
+        "id": "267",
+        "name": "KOKO Hafiz",
+        "varian": "",
+        "barcode": "DK-40904",
+        "Harga": "80000"
+    },
+    {
+        "id": "268",
+        "name": "KOKO JUBAH KENAN",
+        "varian": "",
+        "barcode": "DK-11390",
+        "Harga": "85000"
+    },
+    {
+        "id": "269",
+        "name": "Koko Kemal new",
+        "varian": "",
+        "barcode": "DK-96847",
+        "Harga": "130000"
+    },
+    {
+        "id": "270",
+        "name": "KOKO PUTIH KIANO",
+        "varian": "KIDS",
+        "barcode": "DK-68236",
+        "Harga": "115000"
+    },
+    {
+        "id": "271",
+        "name": "KOKO PUTIH KIANO",
+        "varian": "JUNIOR",
+        "barcode": "DK-57722",
+        "Harga": "125000"
+    },
+    {
+        "id": "272",
+        "name": "KOKO RAFATHAR SET",
+        "varian": "",
+        "barcode": "DK-79202",
+        "Harga": "165000"
+    },
+    {
+        "id": "273",
+        "name": "KOKO RAYHAN",
+        "varian": "",
+        "barcode": "DK-13724",
+        "Harga": "80000"
+    },
+    {
+        "id": "274",
+        "name": "KOKO STARMOON",
+        "varian": "",
+        "barcode": "DK-15577",
+        "Harga": "115000"
+    },
+    {
+        "id": "275",
+        "name": "KULOT DENIM CARGO",
+        "varian": "",
+        "barcode": "DK-68358",
+        "Harga": "85000"
+    },
+    {
+        "id": "276",
+        "name": "Kulot Jeans",
+        "varian": "kids no 20",
+        "barcode": "DK-95797",
+        "Harga": "85000"
+    },
+    {
+        "id": "277",
+        "name": "Kulot Jeans",
+        "varian": "kids no 22",
+        "barcode": "DK-85888",
+        "Harga": "85000"
+    },
+    {
+        "id": "278",
+        "name": "Kulot Jeans",
+        "varian": "kids no 24",
+        "barcode": "DK-85823",
+        "Harga": "85000"
+    },
+    {
+        "id": "279",
+        "name": "Kulot Jeans",
+        "varian": "junior no 26",
+        "barcode": "DK-13144",
+        "Harga": "85000"
+    },
+    {
+        "id": "280",
+        "name": "Kulot Jeans",
+        "varian": "junior no 28",
+        "barcode": "DK-23067",
+        "Harga": "85000"
+    },
+    {
+        "id": "281",
+        "name": "Kulot Jeans",
+        "varian": "junior no 30",
+        "barcode": "DK-99878",
+        "Harga": "85000"
+    },
+    {
+        "id": "282",
+        "name": "KULOT JEANS IMPORT NEW",
+        "varian": "",
+        "barcode": "DK-58356",
+        "Harga": "90000"
+    },
+    {
+        "id": "283",
+        "name": "Kulot Uniqlo Girl",
+        "varian": "",
+        "barcode": "DK-60042",
+        "Harga": "100000"
+    },
+    {
+        "id": "284",
+        "name": "KURTA RAYHAN KIDS",
+        "varian": "",
+        "barcode": "DK-66318",
+        "Harga": "95000"
+    },
+    {
+        "id": "285",
+        "name": "KYOTO CARGO",
+        "varian": "",
+        "barcode": "DK-10867",
+        "Harga": "85000"
+    },
+    {
+        "id": "286",
+        "name": "KYOTO CARGO TEENS",
+        "varian": "",
+        "barcode": "DK-91072",
+        "Harga": "105000"
+    },
+    {
+        "id": "287",
+        "name": "LACOSTE DEWASA",
+        "varian": "",
+        "barcode": "DK-25271",
+        "Harga": "55000"
+    },
+    {
+        "id": "288",
+        "name": "Laura dress",
+        "varian": "",
+        "barcode": "DK-28577",
+        "Harga": "50000"
+    },
+    {
+        "id": "289",
+        "name": "Leging IMPORT",
+        "varian": "",
+        "barcode": "DK-26144",
+        "Harga": "40000"
+    },
+    {
+        "id": "290",
+        "name": "LEGING IMPORT MUTE",
+        "varian": "",
+        "barcode": "DK-27984",
+        "Harga": "45000"
+    },
+    {
+        "id": "291",
+        "name": "LEGING IMPORT Wayne polos",
+        "varian": "",
+        "barcode": "DK-83682",
+        "Harga": "45000"
+    },
+    {
+        "id": "292",
+        "name": "Leging Kaos Kaki",
+        "varian": "",
+        "barcode": "DK-86530",
+        "Harga": "45000"
+    },
+    {
+        "id": "293",
+        "name": "Leging Motif+Polos",
+        "varian": "XS",
+        "barcode": "DK-13171",
+        "Harga": "30000"
+    },
+    {
+        "id": "294",
+        "name": "Leging Motif+Polos",
+        "varian": "S",
+        "barcode": "DK-90634",
+        "Harga": "30000"
+    },
+    {
+        "id": "295",
+        "name": "Leging Motif+Polos",
+        "varian": "M",
+        "barcode": "DK-97010",
+        "Harga": "30000"
+    },
+    {
+        "id": "296",
+        "name": "Leging Motif+Polos",
+        "varian": "L",
+        "barcode": "DK-15525",
+        "Harga": "30000"
+    },
+    {
+        "id": "297",
+        "name": "Leging Motif+Polos",
+        "varian": "XL",
+        "barcode": "DK-83839",
+        "Harga": "30000"
+    },
+    {
+        "id": "298",
+        "name": "Leging Motif+Polos",
+        "varian": "XXL",
+        "barcode": "DK-40529",
+        "Harga": "40000"
+    },
+    {
+        "id": "299",
+        "name": "Leging Motif+Polos",
+        "varian": "XXXL",
+        "barcode": "DK-53040",
+        "Harga": "40000"
+    },
+    {
+        "id": "300",
+        "name": "LENGAN PANJANG AMMIGOS",
+        "varian": "",
+        "barcode": "DK-26143",
+        "Harga": "70000"
+    },
+    {
+        "id": "301",
+        "name": "LITTLE SPACE SPIDERMAN",
+        "varian": "",
+        "barcode": "DK-10188",
+        "Harga": "50000"
+    },
+    {
+        "id": "302",
+        "name": "Loka Bomber Zipper",
+        "varian": "XXL",
+        "barcode": "DK-59513",
+        "Harga": "95000"
+    },
+    {
+        "id": "303",
+        "name": "Loka Bomber Zipper",
+        "varian": "SMLXL",
+        "barcode": "DK-71973",
+        "Harga": "95000"
+    },
+    {
+        "id": "304",
+        "name": "LONG PANTS chinos M&S",
+        "varian": "",
+        "barcode": "DK-60044",
+        "Harga": "95000"
+    },
+    {
+        "id": "305",
+        "name": "LONGPANTS chinos nevada",
+        "varian": "",
+        "barcode": "DK-24266",
+        "Harga": "95000"
+    },
+    {
+        "id": "306",
+        "name": "LONGPANTS CHINOS ZARA",
+        "varian": "",
+        "barcode": "DK-96511",
+        "Harga": "90000"
+    },
+    {
+        "id": "307",
+        "name": "LONGPANTS MAX SPIDER",
+        "varian": "",
+        "barcode": "DK-52907",
+        "Harga": "95000"
+    },
+    {
+        "id": "308",
+        "name": "Longsleeve Barbie",
+        "varian": "",
+        "barcode": "DK-26159",
+        "Harga": "80000"
+    },
+    {
+        "id": "309",
+        "name": "LUNCH BOX POLOS",
+        "varian": "",
+        "barcode": "DK-80450",
+        "Harga": "45000"
+    },
+    {
+        "id": "310",
+        "name": "MADONNA DRESS",
+        "varian": "",
+        "barcode": "DK-73834",
+        "Harga": "80000"
+    },
+    {
+        "id": "311",
+        "name": "MALIKA SET FAM PREMIUM",
+        "varian": "GAMIS IBU",
+        "barcode": "DK-11484",
+        "Harga": "295000"
+    },
+    {
+        "id": "312",
+        "name": "MALIKA SET FAM PREMIUM",
+        "varian": "KOKO AYAH",
+        "barcode": "DK-29902",
+        "Harga": "199000"
+    },
+    {
+        "id": "313",
+        "name": "MALIKA SET FAM PREMIUM",
+        "varian": "KOKO ANAK",
+        "barcode": "DK-94237",
+        "Harga": "199000"
+    },
+    {
+        "id": "314",
+        "name": "MALIKA SET FAM PREMIUM",
+        "varian": "TUNIK ANAK",
+        "barcode": "DK-19043",
+        "Harga": "235000"
+    },
+    {
+        "id": "315",
+        "name": "MARISKA gaun dress",
+        "varian": "",
+        "barcode": "DK-68085",
+        "Harga": "70000"
+    },
+    {
+        "id": "316",
+        "name": "MUKENA anak rayon L & XL",
+        "varian": "L",
+        "barcode": "DK-20958",
+        "Harga": "115000"
+    },
+    {
+        "id": "317",
+        "name": "MUKENA anak rayon L & XL",
+        "varian": "XL",
+        "barcode": "DK-67768",
+        "Harga": "115000"
+    },
+    {
+        "id": "318",
+        "name": "MUKENA KAREEM PREMIUM",
+        "varian": "Sz S",
+        "barcode": "DK-20375",
+        "Harga": "165000"
+    },
+    {
+        "id": "319",
+        "name": "MUKENA KAREEM PREMIUM",
+        "varian": "sz L",
+        "barcode": "DK-16146",
+        "Harga": "165000"
+    },
+    {
+        "id": "320",
+        "name": "Mukena katun mikro",
+        "varian": "",
+        "barcode": "DK-58011",
+        "Harga": "115000"
+    },
+    {
+        "id": "321",
+        "name": "Mukena lucuna new",
+        "varian": "",
+        "barcode": "DK-46722",
+        "Harga": "95000"
+    },
+    {
+        "id": "322",
+        "name": "Mukena rayon tanggung",
+        "varian": "",
+        "barcode": "DK-60664",
+        "Harga": "135000"
+    },
+    {
+        "id": "323",
+        "name": "NEVADA CARGO NEW",
+        "varian": "",
+        "barcode": "DK-86736",
+        "Harga": "115000"
+    },
+    {
+        "id": "324",
+        "name": "NEVADA PULL ON PENDEK",
+        "varian": "",
+        "barcode": "DK-10124",
+        "Harga": "85000"
+    },
+    {
+        "id": "325",
+        "name": "OLD SOCKs",
+        "varian": "",
+        "barcode": "DK-31039",
+        "Harga": "18000"
+    },
+    {
+        "id": "326",
+        "name": "OSHKOS KEMERDEKAAN JUNIOR",
+        "varian": "",
+        "barcode": "DK-10187",
+        "Harga": "55000"
+    },
+    {
+        "id": "327",
+        "name": "PANTS ZARA GOMMA",
+        "varian": "",
+        "barcode": "DK-76781",
+        "Harga": "115000"
+    },
+    {
+        "id": "328",
+        "name": "Pasmina Sivana",
+        "varian": "",
+        "barcode": "DK-38524",
+        "Harga": "45000"
+    },
+    {
+        "id": "329",
+        "name": "PASTAN NEW",
+        "varian": "",
+        "barcode": "DK-60048",
+        "Harga": "45000"
+    },
+    {
+        "id": "330",
+        "name": "PIYAMA DINO + TSUM",
+        "varian": "",
+        "barcode": "DK-35003",
+        "Harga": "60000"
+    },
+    {
+        "id": "331",
+        "name": "PLACE JUNIOR",
+        "varian": "",
+        "barcode": "DK-84145",
+        "Harga": "50000"
+    },
+    {
+        "id": "332",
+        "name": "POLO NEW",
+        "varian": "",
+        "barcode": "DK-87732",
+        "Harga": "65000"
+    },
+    {
+        "id": "333",
+        "name": "POLOS kaos bobo",
+        "varian": "",
+        "barcode": "DK-16757",
+        "Harga": "45000"
+    },
+    {
+        "id": "334",
+        "name": "QUINCY CARGO CHINOS",
+        "varian": "KIDS",
+        "barcode": "DK-58413",
+        "Harga": "95000"
+    },
+    {
+        "id": "335",
+        "name": "QUINCY CARGO CHINOS",
+        "varian": "TEENS",
+        "barcode": "DK-94851",
+        "Harga": "115000"
+    },
+    {
+        "id": "336",
+        "name": "QUINCY CHINOS",
+        "varian": "KIDS",
+        "barcode": "DK-87823",
+        "Harga": "95000"
+    },
+    {
+        "id": "337",
+        "name": "QUINCY CHINOS",
+        "varian": "TEENS",
+        "barcode": "DK-15677",
+        "Harga": "110000"
+    },
+    {
+        "id": "338",
+        "name": "QUINCY JOGER",
+        "varian": "KIDS L-10",
+        "barcode": "DK-60051",
+        "Harga": "90000"
+    },
+    {
+        "id": "339",
+        "name": "QUINCY JOGER",
+        "varian": "TEENS 12 14 16",
+        "barcode": "DK-60052",
+        "Harga": "110000"
+    },
+    {
+        "id": "340",
+        "name": "ROCCO POLO SHIRT",
+        "varian": "",
+        "barcode": "DK-60049",
+        "Harga": "70000"
+    },
+    {
+        "id": "341",
+        "name": "Rok denim Noemi",
+        "varian": "",
+        "barcode": "DK-95348",
+        "Harga": "65000"
+    },
+    {
+        "id": "342",
+        "name": "ROK JEANS ALANA PANJANG",
+        "varian": "",
+        "barcode": "DK-49552",
+        "Harga": "80000"
+    },
+    {
+        "id": "343",
+        "name": "ROK SNOWWASH",
+        "varian": "KIDS 246",
+        "barcode": "DK-13918",
+        "Harga": "55000"
+    },
+    {
+        "id": "344",
+        "name": "ROK SNOWWASH",
+        "varian": "JUNIOR 81012",
+        "barcode": "DK-18659",
+        "Harga": "55000"
+    },
+    {
+        "id": "345",
+        "name": "ROKCELANA",
+        "varian": "",
+        "barcode": "DK-56885",
+        "Harga": "60000"
+    },
+    {
+        "id": "346",
+        "name": "SABRINA TEE GIRL",
+        "varian": "",
+        "barcode": "DK-22958",
+        "Harga": "45000"
+    },
+    {
+        "id": "347",
+        "name": "Sakura Jeans Aroqu",
+        "varian": "",
+        "barcode": "DK-90530",
+        "Harga": "95000"
+    },
+    {
+        "id": "348",
+        "name": "SELIMUT BAMBOO",
+        "varian": "",
+        "barcode": "DK-38008",
+        "Harga": "110000"
+    },
+    {
+        "id": "349",
+        "name": "Selimut topi",
+        "varian": "",
+        "barcode": "DK-26655",
+        "Harga": "60000"
+    },
+    {
+        "id": "350",
+        "name": "Sendal Astronot",
+        "varian": "",
+        "barcode": "DK-92370",
+        "Harga": "45000"
+    },
+    {
+        "id": "351",
+        "name": "sendal dulux 326-1",
+        "varian": "",
+        "barcode": "DK-39621",
+        "Harga": "45000"
+    },
+    {
+        "id": "352",
+        "name": "SENDAL MICKEY",
+        "varian": "Sendal kode EH17C",
+        "barcode": "DK-84577",
+        "Harga": "55000"
+    },
+    {
+        "id": "353",
+        "name": "SENDAL MICKEY",
+        "varian": "Sendal kode EH17D",
+        "barcode": "DK-99685",
+        "Harga": "55000"
+    },
+    {
+        "id": "354",
+        "name": "SENDAL MICKEY",
+        "varian": "Sendal kode EH17E",
+        "barcode": "DK-26196",
+        "Harga": "55000"
+    },
+    {
+        "id": "355",
+        "name": "SENDAL OHAYO",
+        "varian": "",
+        "barcode": "DK-52348",
+        "Harga": "50000"
+    },
+    {
+        "id": "356",
+        "name": "SENDAL PITA BALANCE",
+        "varian": "",
+        "barcode": "DK-21398",
+        "Harga": "45000"
+    },
+    {
+        "id": "357",
+        "name": "sendal porto 1011 T",
+        "varian": "",
+        "barcode": "DK-52879",
+        "Harga": "45000"
+    },
+    {
+        "id": "358",
+        "name": "SENDAL SQUISHY",
+        "varian": "",
+        "barcode": "DK-41855",
+        "Harga": "80000"
+    },
+    {
+        "id": "359",
+        "name": "sendal subinco 609",
+        "varian": "",
+        "barcode": "DK-25047",
+        "Harga": "45000"
+    },
+    {
+        "id": "360",
+        "name": "sendal YD 20121",
+        "varian": "",
+        "barcode": "DK-60939",
+        "Harga": "45000"
+    },
+    {
+        "id": "361",
+        "name": "sepatu 2317 21-25",
+        "varian": "",
+        "barcode": "DK-67102",
+        "Harga": "135000"
+    },
+    {
+        "id": "362",
+        "name": "SEPATU BALANCE KIDS",
+        "varian": "",
+        "barcode": "DK-38904",
+        "Harga": "145000"
+    },
+    {
+        "id": "363",
+        "name": "SEPATU BALANCE 2631",
+        "varian": "",
+        "barcode": "DK-21338",
+        "Harga": "145000"
+    },
+    {
+        "id": "364",
+        "name": "SEPATU BALANCE JUNIOR",
+        "varian": "",
+        "barcode": "DK-28843",
+        "Harga": "145000"
+    },
+    {
+        "id": "365",
+        "name": "Sepatu DULUX kecil",
+        "varian": "",
+        "barcode": "DK-10683",
+        "Harga": "55000"
+    },
+    {
+        "id": "366",
+        "name": "SEPATU LV JUNIOR",
+        "varian": "",
+        "barcode": "DK-10271",
+        "Harga": "145000"
+    },
+    {
+        "id": "367",
+        "name": "sepatu MRR 9667",
+        "varian": "",
+        "barcode": "DK-80961",
+        "Harga": "135000"
+    },
+    {
+        "id": "368",
+        "name": "SET ADIDAS BOY & GIRL",
+        "varian": "",
+        "barcode": "DK-40141",
+        "Harga": "95000"
+    },
+    {
+        "id": "369",
+        "name": "SET Adidas panjang",
+        "varian": "",
+        "barcode": "DK-20129",
+        "Harga": "110000"
+    },
+    {
+        "id": "370",
+        "name": "Set Ammigos Avanger",
+        "varian": "",
+        "barcode": "DK-26158",
+        "Harga": "80000"
+    },
+    {
+        "id": "371",
+        "name": "SET AMMIGOS kids original",
+        "varian": "",
+        "barcode": "DK-92497",
+        "Harga": "115000"
+    },
+    {
+        "id": "372",
+        "name": "SET AMMIGOS NEW",
+        "varian": "",
+        "barcode": "DK-94636",
+        "Harga": "95000"
+    },
+    {
+        "id": "373",
+        "name": "Set azelea cherockee",
+        "varian": "",
+        "barcode": "DK-47052",
+        "Harga": "65000"
+    },
+    {
+        "id": "374",
+        "name": "SET BABY TERY DIOR",
+        "varian": "",
+        "barcode": "DK-59462",
+        "Harga": "105000"
+    },
+    {
+        "id": "375",
+        "name": "Set Babygap girl sablon",
+        "varian": "",
+        "barcode": "DK-66162",
+        "Harga": "65000"
+    },
+    {
+        "id": "376",
+        "name": "SET BASIC BULAN LAHIR",
+        "varian": "KIDS",
+        "barcode": "DK-68170",
+        "Harga": "60000"
+    },
+    {
+        "id": "377",
+        "name": "SET BASIC BULAN LAHIR",
+        "varian": "JUNIOR",
+        "barcode": "DK-33157",
+        "Harga": "70000"
+    },
+    {
+        "id": "378",
+        "name": "SET BOSS import",
+        "varian": "",
+        "barcode": "DK-73937",
+        "Harga": "120000"
+    },
+    {
+        "id": "379",
+        "name": "Set boy import",
+        "varian": "",
+        "barcode": "DK-26145",
+        "Harga": "55000"
+    },
+    {
+        "id": "380",
+        "name": "SET BRAND HNM",
+        "varian": "KIDS 1-7/8y",
+        "barcode": "DK-81268",
+        "Harga": "95000"
+    },
+    {
+        "id": "381",
+        "name": "SET BRAND HNM",
+        "varian": "JUNIOR 9-14y",
+        "barcode": "DK-49884",
+        "Harga": "110000"
+    },
+    {
+        "id": "382",
+        "name": "SET CATALINA",
+        "varian": "",
+        "barcode": "DK-65405",
+        "Harga": "110000"
+    },
+    {
+        "id": "383",
+        "name": "SET DIOR HOODIE LP",
+        "varian": "",
+        "barcode": "DK-46792",
+        "Harga": "125000"
+    },
+    {
+        "id": "384",
+        "name": "SET DISNEY KARAKTER",
+        "varian": "",
+        "barcode": "DK-42398",
+        "Harga": "65000"
+    },
+    {
+        "id": "385",
+        "name": "Set fruit import",
+        "varian": "",
+        "barcode": "DK-17453",
+        "Harga": "70000"
+    },
+    {
+        "id": "386",
+        "name": "SET GAP.GIRL",
+        "varian": "",
+        "barcode": "DK-85611",
+        "Harga": "65000"
+    },
+    {
+        "id": "387",
+        "name": "SET HNM MARVEL",
+        "varian": "KIDS",
+        "barcode": "DK-98879",
+        "Harga": "95000"
+    },
+    {
+        "id": "388",
+        "name": "SET HNM MARVEL",
+        "varian": "JUNIOR",
+        "barcode": "DK-21598",
+        "Harga": "100000"
+    },
+    {
+        "id": "389",
+        "name": "SET HNM rok",
+        "varian": "",
+        "barcode": "DK-60063",
+        "Harga": "90000"
+    },
+    {
+        "id": "390",
+        "name": "SET KENZO HOODIE LP",
+        "varian": "",
+        "barcode": "DK-83819",
+        "Harga": "125000"
+    },
+    {
+        "id": "391",
+        "name": "SET KENZO POLO import",
+        "varian": "",
+        "barcode": "DK-83578",
+        "Harga": "110000"
+    },
+    {
+        "id": "392",
+        "name": "SET KERAH IMPORT MIX",
+        "varian": "",
+        "barcode": "DK-72731",
+        "Harga": "80000"
+    },
+    {
+        "id": "393",
+        "name": "Set Koko Liberty",
+        "varian": "",
+        "barcode": "DK-23304",
+        "Harga": "145000"
+    },
+    {
+        "id": "394",
+        "name": "SET KOKO SARUNG HAMZAH",
+        "varian": "",
+        "barcode": "DK-53122",
+        "Harga": "170000"
+    },
+    {
+        "id": "395",
+        "name": "SET MELODY PENDEK 684-7",
+        "varian": "",
+        "barcode": "DK-99858",
+        "Harga": "70000"
+    },
+    {
+        "id": "396",
+        "name": "SET MINE KIDS BARBIE",
+        "varian": "",
+        "barcode": "DK-62382",
+        "Harga": "115000"
+    },
+    {
+        "id": "397",
+        "name": "SET MIX DEWASA",
+        "varian": "",
+        "barcode": "DK-52888",
+        "Harga": "85000"
+    },
+    {
+        "id": "398",
+        "name": "SET NEXT ALL BRAND",
+        "varian": "",
+        "barcode": "DK-60066",
+        "Harga": "135000"
+    },
+    {
+        "id": "399",
+        "name": "SET NEXT DENIM NEW",
+        "varian": "",
+        "barcode": "DK-60067",
+        "Harga": "150000"
+    },
+    {
+        "id": "400",
+        "name": "SET panjang melody 814-1",
+        "varian": "",
+        "barcode": "DK-11652",
+        "Harga": "155000"
+    },
+    {
+        "id": "401",
+        "name": "SET ROK MELIA",
+        "varian": "",
+        "barcode": "DK-95288",
+        "Harga": "65000"
+    },
+    {
+        "id": "402",
+        "name": "Set stripe",
+        "varian": "",
+        "barcode": "DK-50777",
+        "Harga": "75000"
+    },
+    {
+        "id": "403",
+        "name": "SET SUPERHERO JEANS",
+        "varian": "",
+        "barcode": "DK-10585",
+        "Harga": "120000"
+    },
+    {
+        "id": "404",
+        "name": "SET TUNIK KIARA",
+        "varian": "S",
+        "barcode": "DK-60412",
+        "Harga": "155000"
+    },
+    {
+        "id": "405",
+        "name": "SET TUNIK KIARA",
+        "varian": "M",
+        "barcode": "DK-38959",
+        "Harga": "165000"
+    },
+    {
+        "id": "406",
+        "name": "SET TUNIK KIARA",
+        "varian": "L",
+        "barcode": "DK-92660",
+        "Harga": "175000"
+    },
+    {
+        "id": "407",
+        "name": "SET TUNIK KIARA",
+        "varian": "XXL",
+        "barcode": "DK-80236",
+        "Harga": "195000"
+    },
+    {
+        "id": "408",
+        "name": "SET UNIQLO SNOPY",
+        "varian": "",
+        "barcode": "DK-52944",
+        "Harga": "85000"
+    },
+    {
+        "id": "409",
+        "name": "SET ZARA POLOS UNISEX",
+        "varian": "",
+        "barcode": "DK-19673",
+        "Harga": "95000"
+    },
+    {
+        "id": "410",
+        "name": "SHAMPOO MOEL",
+        "varian": "",
+        "barcode": "DK-26253",
+        "Harga": "75000"
+    },
+    {
+        "id": "411",
+        "name": "Short denim barbie",
+        "varian": "Kids",
+        "barcode": "DK-67688",
+        "Harga": "50000"
+    },
+    {
+        "id": "412",
+        "name": "Short denim barbie",
+        "varian": "Junior",
+        "barcode": "DK-23663",
+        "Harga": "55000"
+    },
+    {
+        "id": "413",
+        "name": "Singlet putih Premium",
+        "varian": "Sz S",
+        "barcode": "DK-66334",
+        "Harga": "10000"
+    },
+    {
+        "id": "414",
+        "name": "Singlet putih Premium",
+        "varian": "Sz M",
+        "barcode": "DK-66335",
+        "Harga": "10000"
+    },
+    {
+        "id": "415",
+        "name": "Singlet putih Premium",
+        "varian": "Sz L",
+        "barcode": "DK-66336",
+        "Harga": "10000"
+    },
+    {
+        "id": "416",
+        "name": "Singlet putih Premium",
+        "varian": "Sz XL",
+        "barcode": "DK-66337",
+        "Harga": "10000"
+    },
+    {
+        "id": "417",
+        "name": "SUNSCREEN MOEL",
+        "varian": "",
+        "barcode": "DK-37243",
+        "Harga": "75000"
+    },
+    {
+        "id": "418",
+        "name": "SWEATER DINO HnM",
+        "varian": "",
+        "barcode": "DK-68179",
+        "Harga": "80000"
+    },
+    {
+        "id": "419",
+        "name": "Sweatshirt UNIQLO",
+        "varian": "",
+        "barcode": "DK-59771",
+        "Harga": "60000"
+    },
+    {
+        "id": "420",
+        "name": "Switer OLDNAVY Dewasa",
+        "varian": "",
+        "barcode": "DK-60068",
+        "Harga": "70000"
+    },
+    {
+        "id": "421",
+        "name": "Tas Among US",
+        "varian": "Biru Tua",
+        "barcode": "DK-57694",
+        "Harga": "125000"
+    },
+    {
+        "id": "422",
+        "name": "Tas Among US",
+        "varian": "Biru Muda",
+        "barcode": "DK-60069",
+        "Harga": "125000"
+    },
+    {
+        "id": "423",
+        "name": "Tas Among US",
+        "varian": "Kuning",
+        "barcode": "DK-60070",
+        "Harga": "125000"
+    },
+    {
+        "id": "424",
+        "name": "Tas Among US",
+        "varian": "Orange",
+        "barcode": "DK-60071",
+        "Harga": "125000"
+    },
+    {
+        "id": "425",
+        "name": "Tas Among US",
+        "varian": "Ungu",
+        "barcode": "DK-60072",
+        "Harga": "125000"
+    },
+    {
+        "id": "426",
+        "name": "Tas Among US",
+        "varian": "Pink muda",
+        "barcode": "DK-57189",
+        "Harga": "125000"
+    },
+    {
+        "id": "427",
+        "name": "Tas Among US",
+        "varian": "Pink Panta",
+        "barcode": "DK-60073",
+        "Harga": "125000"
+    },
+    {
+        "id": "428",
+        "name": "TAS IMPORT DONAT",
+        "varian": "",
+        "barcode": "DK-66324",
+        "Harga": "75000"
+    },
+    {
+        "id": "429",
+        "name": "TAS mini jelly",
+        "varian": "",
+        "barcode": "DK-82377",
+        "Harga": "45000"
+    },
+    {
+        "id": "430",
+        "name": "TAS RAJUT",
+        "varian": "",
+        "barcode": "DK-47712",
+        "Harga": "45000"
+    },
+    {
+        "id": "431",
+        "name": "Tas Ransel boneka",
+        "varian": "",
+        "barcode": "DK-10687",
+        "Harga": "45000"
+    },
+    {
+        "id": "432",
+        "name": "TEE ZARA Ori",
+        "varian": "",
+        "barcode": "DK-80866",
+        "Harga": "75000"
+    },
+    {
+        "id": "433",
+        "name": "THALIA DRESS",
+        "varian": "",
+        "barcode": "DK-37722",
+        "Harga": "55000"
+    },
+    {
+        "id": "434",
+        "name": "TOPI BOSTON",
+        "varian": "",
+        "barcode": "DK-66702",
+        "Harga": "60000"
+    },
+    {
+        "id": "435",
+        "name": "TOPI BUCKET KATUN",
+        "varian": "",
+        "barcode": "DK-10482",
+        "Harga": "35000"
+    },
+    {
+        "id": "436",
+        "name": "TOPI MARVEL BRAND",
+        "varian": "",
+        "barcode": "DK-60075",
+        "Harga": "50000"
+    },
+    {
+        "id": "437",
+        "name": "TOPI NYC",
+        "varian": "",
+        "barcode": "DK-23079",
+        "Harga": "60000"
+    },
+    {
+        "id": "438",
+        "name": "True set",
+        "varian": "",
+        "barcode": "DK-86393",
+        "Harga": "65000"
+    },
+    {
+        "id": "439",
+        "name": "TSHIRT LONGBOY & GIRLS HUT",
+        "varian": "",
+        "barcode": "DK-22218",
+        "Harga": "80000"
+    },
+    {
+        "id": "440",
+        "name": "Tunik Alisha Kiny",
+        "varian": "KIDS",
+        "barcode": "DK-81332",
+        "Harga": "55000"
+    },
+    {
+        "id": "441",
+        "name": "Tunik Alisha Kiny",
+        "varian": "JUNIOR",
+        "barcode": "DK-44228",
+        "Harga": "65000"
+    },
+    {
+        "id": "442",
+        "name": "Tunik cotton tunik",
+        "varian": "",
+        "barcode": "DK-60011",
+        "Harga": "120000"
+    },
+    {
+        "id": "443",
+        "name": "UNIQLO CELPEN",
+        "varian": "",
+        "barcode": "DK-61679",
+        "Harga": "75000"
+    },
+    {
+        "id": "444",
+        "name": "UNIQLO LONG DEWASA",
+        "varian": "",
+        "barcode": "DK-90190",
+        "Harga": "60000"
+    },
+    {
+        "id": "445",
+        "name": "Valerle dress",
+        "varian": "",
+        "barcode": "DK-10574",
+        "Harga": "50000"
+    },
+    {
+        "id": "446",
+        "name": "WHALE CHINOS set",
+        "varian": "",
+        "barcode": "DK-62719",
+        "Harga": "75000"
+    },
+    {
+        "id": "447",
+        "name": "YARA LONGPANTS",
+        "varian": "",
+        "barcode": "DK-86535",
+        "Harga": "70000"
+    },
+    {
+        "id": "448",
+        "name": "YOURA SET",
+        "varian": "",
+        "barcode": "DK-50561",
+        "Harga": "120000"
+    },
+    {
+        "id": "449",
+        "name": "ZARA DISNEY DRESS",
+        "varian": "",
+        "barcode": "DK-95513",
+        "Harga": "80000"
+    },
+    {
+        "id": "450",
+        "name": "ZARA JOGER",
+        "varian": "",
+        "barcode": "DK-40740",
+        "Harga": "105000"
+    },
+    {
+        "id": "451",
+        "name": "ZARA LP GIRL",
+        "varian": "",
+        "barcode": "DK-66591",
+        "Harga": "80000"
+    },
+    {
+        "id": "452",
+        "name": "Zara tee Junior",
+        "varian": "",
+        "barcode": "DK-26153",
+        "Harga": "65000"
+    },
+    {
+        "id": "453",
+        "name": "ZAVIRA TEE",
+        "varian": "",
+        "barcode": "DK-26154",
+        "Harga": "50000"
+    },
+    {
+        "id": "454",
+        "name": "ZOO OVERAL BABY",
+        "varian": "",
+        "barcode": "DK-26455",
+        "Harga": "75000"
+    }
 ]
-  
