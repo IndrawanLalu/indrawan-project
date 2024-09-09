@@ -1,8 +1,6 @@
-
-
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
-import Diandra from './pages/diandra'
+import Diandra from './pages/Diandra'
 import Amg from './pages/Amg'
 import Home from './pages/Home'
 
