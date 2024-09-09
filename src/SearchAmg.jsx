@@ -148,7 +148,16 @@ const SearchAmg = () => {
                           <p>R-T : {item.s_t} Volt</p>
                           <p>S-T : {item.s_t} Volt</p>
                         </div>
+                    </div>
+                    <div className="grid-cols-5 border-t border-b py-2 flex justify-between">
+                        <div className=" flex flex-col items-start">
+                          <p className="font-bold">Kesimpulan</p>
+                          <p>Unbalance : {item.UBL} %</p>
+                          <p>Beban Total : {item.bebanKva} kVA</p>
+                          <p>Persentase : {item.Persen} %</p>
                         </div>
+                        
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>  
