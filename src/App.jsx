@@ -1,10 +1,9 @@
 
 
 import './App.css'
-import { Button } from './components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-import Search from './Search'
+import { Route, Routes } from 'react-router-dom'
+import Diandra from './pages/diandra'
+import Amg from './pages/Amg'
 
 
 function App() {
@@ -12,15 +11,14 @@ function App() {
 
   return (
     <>
-      <div className='py-4'>
+      
+      <Routes>
+        <Route path="/diandra" Component={Diandra} />
+        <Route path="/amg" Component={Amg} />
         
-        <Button className="py-6 gap-4"><Avatar>
-          <AvatarImage src="/diandra.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>Diandra Barcode</Button>
-      </div>
+      </Routes>
 
-      <Search />
+
     </>
   )
 }
