@@ -13,6 +13,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import Body from "./components/body";
+import { Button } from "./components/ui/button";
+
 
 
 
@@ -37,7 +40,12 @@ const SearchAmg = () => {
   };
 
   return (
-    <div>
+    <Body>
+      <div className='py-4'>
+            <Button className="py-6 gap-4">
+                Beban Gardu Selong
+            </Button>
+      </div>
       <Input className="mb-4 mt-4"
         type="text"
         value={query}
@@ -168,7 +176,7 @@ const SearchAmg = () => {
           </li>
         ))}
       </ul>
-    </div>
+    </Body>
   );
 };
 
