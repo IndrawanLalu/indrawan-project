@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
-  { name: 'Features', href: '' },
+  { name: 'Info Padam', href: '/padam' },
   { name: 'Marketplace', href: '' },
   { name: 'Company', href: '' },
 ]

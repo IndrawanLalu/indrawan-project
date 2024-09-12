@@ -16,7 +16,7 @@ const Search = () => {
 
   useEffect(() => {
     // Fetch data dari public folder
-    fetch("/data.json")
+    fetch("/db/data.json")
       .then((response) => response.json())
       .then((data) => setData(data));
   }, []);

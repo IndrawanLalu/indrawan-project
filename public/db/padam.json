@@ -1,0 +1,102 @@
+[
+    {
+        "id": "1",
+        "tanggal": "11 Sep 2004",
+        "penyulang": "Gelang",
+        "beban": "2,6",
+        "jamPadam": "-",
+        "jamNyala": "-",
+        "status": "MLS",
+        "Keterangan": "On Progress"
+    },
+    {
+        "id": "2",
+        "tanggal": "11 Sep 2004",
+        "penyulang": "Masbgik",
+        "beban": "1,48",
+        "jamPadam": "-",
+        "jamNyala": "-",
+        "status": "MLS",
+        "Keterangan": "On Progress"
+    },
+    {
+        "id": "3",
+        "tanggal": "11 Sep 2004",
+        "penyulang": "Paok Motong",
+        "beban": "1,62",
+        "jamPadam": "-",
+        "jamNyala": "-",
+        "status": "MLS",
+        "Keterangan": "On Progress"
+    },
+    {
+        "id": "4",
+        "tanggal": "10 Sep 2004",
+        "penyulang": "Sakra",
+        "beban": "6,2",
+        "jamPadam": "18:30",
+        "jamNyala": "21:26",
+        "status": "MLS",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "5",
+        "tanggal": "10 Sep 2004",
+        "penyulang": "Labuhan Haji ( Rec.Terminal)",
+        "beban": "1,5",
+        "jamPadam": "10:07",
+        "jamNyala": "10:52",
+        "status": "HAR",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "6",
+        "tanggal": "9 Sep 2024",
+        "penyulang": "Rempung",
+        "beban": "5,53",
+        "jamPadam": "18:13",
+        "jamNyala": "21:56",
+        "status": "MLS",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "7",
+        "tanggal": "9 Sep 2024",
+        "penyulang": "Kota Raja",
+        "beban": "6,8",
+        "jamPadam": "18:25",
+        "jamNyala": "21:30",
+        "status": "MLS",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "8",
+        "tanggal": "7 Sep 2024",
+        "penyulang": "Pandan Duri",
+        "beban": "4,2",
+        "jamPadam": "18:27",
+        "jamNyala": "19:05",
+        "status": "MLS",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "9",
+        "tanggal": "6 Sep 2024",
+        "penyulang": "Keruak",
+        "beban": "4,3",
+        "jamPadam": "18:19",
+        "jamNyala": "19:07",
+        "status": "MLS",
+        "Keterangan": "Done"
+    },
+    {
+        "id": "10",
+        "tanggal": "5 Sep 2024",
+        "penyulang": "Sikur",
+        "beban": "2,3",
+        "jamPadam": "18:20",
+        "jamNyala": "19:09",
+        "status": "MLS",
+        "Keterangan": "Done"
+    }
+]
