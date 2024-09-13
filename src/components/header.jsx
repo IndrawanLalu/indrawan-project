@@ -128,8 +128,7 @@ const Header = () => {
                     {user ?
                     (<>
                       <IoIosSettings />
-                      <DropdownMenuMobile />
-                     </>) : (
+                      <DropdownMenuMobile /></>) : (
                     <>
                       <CiLogin />
                       <Link to={"/login"}><Button variant="ghost ">Login</Button> </Link>
