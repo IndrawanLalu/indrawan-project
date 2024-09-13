@@ -1,23 +1,84 @@
 'use client'
 
 import { useState } from 'react'
+import { Button } from './ui/button'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
+import { IoHome } from "react-icons/io5";
+import { CiLogin } from "react-icons/ci";
+import { LuMenuSquare } from "react-icons/lu";
+import { Link, useNavigate } from 'react-router-dom'
+import { IoIosSettings } from "react-icons/io";
+import { getAuth } from 'firebase/auth';
+import { signOut } from 'firebase/auth';
+
+import {
+  LogOut,
+  User,
+} from "lucide-react"
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
   { name: 'Info Padam', href: '/padam' },
-  { name: 'Marketplace', href: '' },
-  { name: 'Company', href: '' },
+  { name: 'Marketplace', href: '/#' },
+  { name: 'Company', href: '/#' },
 ]
-
-export default function Header() {
+const Header = () => {
+  const DropdownMenuMobile = () => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost ">Seting</Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56">
+          <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+              <DropdownMenuShortcut></DropdownMenuShortcut>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <LogOut className="mr-2 h-4 w-4" />
+            <span onClick={handleLogout} >Log out</span>
+            <DropdownMenuShortcut></DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    )
+  }
+  
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
+  const navigate = useNavigate();
+  const auth = getAuth();
+  const user = auth.currentUser;  
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
   return (
     <div className="bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
+        {/* nav dekstop */}
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
             <Link to="/" className="-m-1.5 p-1.5">
@@ -47,11 +108,40 @@ export default function Header() {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
+              <Button onClick={handleLogout}>Logoutt</Button>
           </div>
+            <div className="md:hidden flex justify-between items-center border-t border-[#4F46E5] p-2 fixed bottom-0 left-0 right-0 rounded-3xl">
+              <ul className="flex justify-around w-full">
+                <li className='hover:text-indigo-600 hover:animate-in '>
+                  <div className='flex flex-col items-center'>
+                    <IoHome />
+                    <Button variant="ghost ">Home</Button>
+                  </div>
+                </li>
+                <li className='hover:text-indigo-600 hover:animate-in '>
+                  <div className='flex flex-col items-center'>
+                    <LuMenuSquare />
+                    <Button variant="ghost ">Menu</Button>
+                  </div>
+                </li>
+                <li className='hover:text-indigo-600 hover:animate-in '>
+                  <div className='flex flex-col items-center'>
+                    {user ?
+                    (<>
+                      <IoIosSettings />
+                      <DropdownMenuMobile />
+                     </>) : (
+                    <>
+                      <CiLogin />
+                      <Link to={"/login"}><Button variant="ghost ">Login</Button> </Link>
+                    </>
+                  )}
+                    </div>
+                </li>
+              </ul>
+            </div>
         </nav>
+        {/* dialog samping */}
         <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
           <div className="fixed inset-0 z-50" />
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
@@ -87,19 +177,22 @@ export default function Header() {
                   ))}
                 </div>
                 <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
+                    <a
+                      href="/login"
+                      onClick={''}
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >
+                      <span className='mr-2'>{user ? user.email : ''}</span>
+                      {user ? <Button onClick={handleLogout}>Logoutt</Button> : 'Login Here'}
+                    </a>
                 </div>
               </div>
             </div>
           </DialogPanel>
         </Dialog>
       </header>
-
     </div>
   )
 }
+
+export default Header

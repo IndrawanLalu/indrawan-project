@@ -1,9 +1,14 @@
 'use client'
 
 import Body from "@/components/body"
+import { Link } from "react-router-dom"
 
+import { getAuth } from "firebase/auth";
 
-export default function Home() {
+const Home = () => {
+
+const auth = getAuth();
+const user = auth.currentUser;  
   return (
     <Body>
        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
@@ -25,12 +30,12 @@ export default function Home() {
               dan membuat pekerjaan menjadi lebih mudah 😊
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
+              <Link
+                to={"/login"}
                 className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Get started
-              </a>
+                {user ? "Welcome, "+user.email : "Login Here"}
+              </Link>
               <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
                 Learn more <span aria-hidden="true">→</span>
               </a>
@@ -40,4 +45,5 @@ export default function Home() {
     </Body>
        
   )
-}
+};
+export default Home
