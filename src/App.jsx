@@ -6,8 +6,8 @@ import Diandra from './pages/Diandra'
 import Home from './pages/Home'
 import Header from './components/header'
 import Padam from './pages/Padam'
-import Login from './pages/Login'
-import "./firebase"
+import Login from './pages/Login/Login'
+import "./firebase/firebaseConfig"
 
 import ProtectedRoute from './components/ProtectedRoutes'
 
