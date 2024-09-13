@@ -1,4 +1,3 @@
-'use client'
 
 import Body from "@/components/body"
 import { Link } from "react-router-dom"
