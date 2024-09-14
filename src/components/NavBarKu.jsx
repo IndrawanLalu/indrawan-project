@@ -1,5 +1,5 @@
+'use client'
 
-import { useState } from 'react'
 import { Button } from './ui/button'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
@@ -26,6 +26,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useState } from 'react';
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
@@ -33,7 +34,7 @@ const navigation = [
   { name: 'Marketplace', href: '/#' },
   { name: 'Company', href: '/#' },
 ]
-const Header = () => {
+const NavBarKu = () => {
   const DropdownMenuMobile = () => {
     return (
       <DropdownMenu>
@@ -61,7 +62,7 @@ const Header = () => {
     )
   }
   
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState (false)
 
   const navigate = useNavigate();
   const auth = getAuth();
@@ -193,4 +194,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default NavBarKu

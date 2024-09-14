@@ -10,7 +10,8 @@ import Login from './pages/Login/Login'
 import "./firebase/firebaseConfig"
 
 import ProtectedRoute from './components/ProtectedRoutes'
-import Header from './components/header'
+
+import NavBarKu from './components/NavBarKu'
 
   
 function App() {
@@ -22,7 +23,7 @@ function App() {
   ]
   return (
     <>
-    <Header/>
+    <NavBarKu/>
       <Routes>
         <Route path="/" Component={Home} />
         <Route path="/login" Component={Login} />
