@@ -1,4 +1,3 @@
-'use client'
 
 import { Button } from './ui/button'
 import { Dialog, DialogPanel } from '@headlessui/react'
@@ -11,22 +10,9 @@ import { IoIosSettings } from "react-icons/io";
 import { getAuth } from 'firebase/auth';
 import { signOut } from 'firebase/auth';
 
-import {
-  LogOut,
-  User,
-} from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import { useState } from 'react';
+import DropdownMenuMobile from './DropdownMenuMobile';
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
@@ -35,32 +21,7 @@ const navigation = [
   { name: 'Company', href: '/#' },
 ]
 const NavBarKu = () => {
-  const DropdownMenuMobile = () => {
-    return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost ">Seting</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56">
-          <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <User className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-              <DropdownMenuShortcut></DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span onClick={handleLogout} >Log out</span>
-            <DropdownMenuShortcut></DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )
-  }
+  
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState (false)
 
