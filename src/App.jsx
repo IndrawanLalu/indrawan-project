@@ -4,12 +4,14 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Amg from './pages/Amg'
 import Diandra from './pages/Diandra'
 import Home from './pages/Home'
-import Header from './components/Header'
+
 import Padam from './pages/Padam'
 import Login from './pages/Login/Login'
 import "./firebase/firebaseConfig"
 
 import ProtectedRoute from './components/ProtectedRoutes'
+import Header from './components/header'
+
   
 function App() {
   const protectedRoute = [
