@@ -102,7 +102,7 @@ const NavBarKu = () => {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               <Button onClick={handleLogout}>Logoutt</Button>
           </div>
-            <div className="md:hidden flex justify-between items-center border-t border-[#4F46E5] p-2 fixed bottom-0 left-0 right-0 rounded-3xl">
+            <div className="md:hidden flex justify-between items-center border-t border-[#4F46E5] bg-[#4F46E5]/30 p-2 fixed bottom-0 left-0 right-0">
               <ul className="flex justify-around w-full">
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>

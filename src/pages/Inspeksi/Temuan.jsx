@@ -35,10 +35,8 @@ const Temuan = () => {
         }, []);
     return ( 
         <Body>
-            <div className="grid grid-cols-3 gap-4 content-right border-b-2  border-gray-500">
-                <h2 className="font-semibold text-start">Hasil Temuan </h2>
-                <TambahTemuan />
-            </div>
+                <h2 className="font-semibold text-start md:text-2xl border-b border-slate-600 ">Hasil Temuan <TambahTemuan />
+                </h2>
             <Table className="">
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader>
@@ -54,7 +52,7 @@ const Temuan = () => {
                             <img
                             src={item.imageUrl}
                             alt="Foto"
-                            className="w-16 h-16 rounded-full object-cover md:w-36 md:h-36"
+                            className="w-14 h-14 rounded-full object-cover md:w-36 md:h-36"
                             />
                         </TableCell> 
                         <TableCell className="text-start">
