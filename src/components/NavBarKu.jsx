@@ -22,7 +22,7 @@ import TambahTemuan from '@/pages/Inspeksi/Tambah Temuan';
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
   { name: 'Info Padam', href: '/padam' },
-  { name: 'Marketplace', href: '/#' },
+  { name: 'Inspeksi', href: '/inspeksi' },
   { name: 'Company', href: '/#' },
 ]
 async function getUserRole(uid) {
@@ -115,7 +115,10 @@ const NavBarKu = () => {
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
                     {role === "inspektor" ? (
+                      <>
                       <TambahTemuan />
+                      <span className="font-semibold pt-2">Tambah</span>
+                      </>
                     ) : (
                       <><LuMenuSquare />
                     <Button variant="ghost ">Menu</Button></>

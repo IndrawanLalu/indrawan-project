@@ -15,13 +15,12 @@ import {
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import TambahTemuan from "./Tambah Temuan";
   
 
 
 const Temuan = () => {
-
     const [data, setData] = useState([]);
-
         useEffect(() => {
             const fetchData = async () => {
             try {
@@ -32,29 +31,41 @@ const Temuan = () => {
                 console.error("Error fetching data: ", error);
             }
             };
-
             fetchData();
         }, []);
-
-        
     return ( 
         <Body>
-            <h2 className="font-semibold text-start border-b-2 border-gray-500">Hasil Temuan</h2>
+            <div className="grid grid-cols-3 gap-4 content-right border-b-2  border-gray-500">
+                <h2 className="font-semibold text-start">Hasil Temuan </h2>
+                <TambahTemuan />
+            </div>
             <Table className="">
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                    
                     </TableRow>
                 </TableHeader>
-                <TableBody className="text-md md:text-sm">
                 {data.map((item) => (
-                    <TableRow key={item.id} className="">
-                    <TableCell className="flex items-center space-x-3">
-                        <Dialog>
-                            <DialogTrigger asChild className="">
-                            <img src={item.imageUrl} alt="image" className="w-14 h-14 rounded-full md:rounded-md "/>
-                            </DialogTrigger>
+                <TableBody key={item.id} className="text-base md:text-xl">
+                <Dialog>
+                    <DialogTrigger asChild >
+                    <TableRow>
+                        <TableCell className="flex items-center space-x-3">
+                            <img
+                            src={item.imageUrl}
+                            alt="Foto"
+                            className="w-16 h-16 rounded-full object-cover md:w-36 md:h-36"
+                            />
+                        </TableCell> 
+                        <TableCell className="text-start">
+                            <div className="flex flex-col text-start ">
+                            <span>{item.temuan}</span>
+                            <span>{item.lokasi}</span>
+                            </div>
+                        </TableCell>
+                    <TableCell className="text-right">{item.status}</TableCell> 
+                    </TableRow>
+                    </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
                                 <DialogTitle>Detail Temuan</DialogTitle>
@@ -135,22 +146,10 @@ const Temuan = () => {
                                 <Button type="submit">Save changes</Button>
                                 </DialogFooter>
                             </DialogContent>
-                        </Dialog>
-                    </TableCell>
-                    <TableCell className="text-start">
-                        <div className="flex flex-col text-start ">
-                        <span>{item.temuan}</span>
-                        <span>{item.lokasi}</span>
-                        </div>
-                        
-                    </TableCell>
-                  
-                    <TableCell className="text-right">{item.status}</TableCell>
-                    </TableRow>
-                    ))}
+                        </Dialog>    
                 </TableBody>
+                ))}
                 </Table>
-
         </Body>
      );
 }

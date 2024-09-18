@@ -98,7 +98,7 @@ const TambahTemuan = () => {
       <DialogTrigger>
         <div className='flex flex-col items-center gap-2'>
           <FaPlusCircle />
-          <span className="font-semibold">Tambah</span>
+          
         </div>
       </DialogTrigger>
       
