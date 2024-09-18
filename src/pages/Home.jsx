@@ -2,12 +2,13 @@
 import Body from "@/components/body"
 import { Link } from "react-router-dom"
 
-import { getAuth } from "firebase/auth";
+
+import { useSelector } from "react-redux";
 
 const Home = () => {
 
-const auth = getAuth();
-const user = auth.currentUser;  
+
+const user = useSelector ((state) => state.auth.user);
   return (
     <Body>
       <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">

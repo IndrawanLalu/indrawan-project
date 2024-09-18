@@ -15,10 +15,15 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate} from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/authSlice";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "@/firebase/firebaseConfig";
 
 
 
 const Login = () => {
+    const dispatch = useDispatch();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -35,9 +40,23 @@ const Login = () => {
             setError(null);
             setLoading(true);
             const userCredentials = await signInWithEmailAndPassword(auth, email, password);
-            console.log("Login berhasil",userCredentials);
+            const user = userCredentials.user;
+            dispatch (login(user));
+           // Periksa apakah role sudah ada di Firestore
+            const roleRef = doc(db, "userRoles", user.uid);
+            const roleDoc = await getDoc(roleRef);
+            // Jika role belum ada, tambahkan role
+            if (!roleDoc.exists()) {
+                await setDoc(doc(db, "userRoles", user.uid), {
+                role: "user", // Ganti dengan role yang sesuai
+                email: user.email
+                });
+            }
+            console.log("User logged in and role checked/added");
+            // console.log("Login berhasil",userCredentials);
             nav("/");
         } catch (error) {
+            console.error("Error during login: ", error);
             setError(error.message);
         }
 

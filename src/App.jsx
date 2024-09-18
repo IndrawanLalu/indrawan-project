@@ -13,12 +13,17 @@ import ProtectedRoute from './components/ProtectedRoutes'
 
 import NavBarKu from './components/NavBarKu'
 
+import Temuan from './pages/Inspeksi/Temuan'
+
   
 function App() {
   const protectedRoute = [
     {path: "/diandra", component : <Diandra/>},
     {path: "/amg", component : <Amg/>},
     {path: "/padam", component : <Padam/>},
+
+    {path: "/inspeksi", component : <Temuan/>},
+
     {path: "*", component : <Navigate to = "/"></Navigate>}
   ]
   return (

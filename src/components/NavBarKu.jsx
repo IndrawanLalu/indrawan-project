@@ -11,8 +11,13 @@ import { getAuth } from 'firebase/auth';
 import { signOut } from 'firebase/auth';
 
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropdownMenuMobile from './DropdownMenuMobile';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '@/redux/authSlice';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebase/firebaseConfig';
+import TambahTemuan from '@/pages/Inspeksi/Tambah Temuan';
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
@@ -20,22 +25,44 @@ const navigation = [
   { name: 'Marketplace', href: '/#' },
   { name: 'Company', href: '/#' },
 ]
+async function getUserRole(uid) {
+  try {
+    const docRef = doc(db, "userRoles", uid);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data().role;
+    } else {
+      console.log("No such document!");
+      return null;
+    }
+  } catch (error) {
+    console.error("Error getting user role: ", error);
+  }
+}
 const NavBarKu = () => {
-  
-  
+  const user = useSelector ((state) => state.auth.user);
+  const [role, setRole] = useState(null);
+  useEffect(() => {
+    if (user) {
+      getUserRole(user.uid).then(setRole);
+    }
+  }, [user]);
+  const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState (false)
 
   const navigate = useNavigate();
   const auth = getAuth();
-  const user = auth.currentUser;  
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      dispatch(logout());
       navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     }
   };
+  
   return (
     <div className="bg-white">
       <header className="absolute inset-x-0 top-0 z-50">
@@ -76,17 +103,24 @@ const NavBarKu = () => {
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
                     <IoHome />
+                    <Link to={"/"}>
                     <Button variant="ghost ">Home</Button>
+                    </Link>
                   </div>
                 </li>
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
-                    <LuMenuSquare />
-                    <Button variant="ghost ">Menu</Button>
+                    {role === "inspektor" ? (
+                      <TambahTemuan />
+                    ) : (
+                      <><LuMenuSquare />
+                    <Button variant="ghost ">Menu</Button></>
+                    )}
+                    
                   </div>
                 </li>
                 <li className='hover:text-indigo-600 hover:animate-in '>
-                  <div className='flex flex-col items-center'>
+                  <div className='flex flex-col items-center gap-2'>
                     {user ?
                     (<>
                       <IoIosSettings />
