@@ -9,7 +9,6 @@ import {
     TableBody,
     TableCaption,
     TableCell,
-    TableHead,
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
@@ -40,25 +39,21 @@ const Temuan = () => {
         
     return ( 
         <Body>
-            <h2 className="font-semibold">Hasil Temuan</h2>
-            <Table>
+            <h2 className="font-semibold text-start border-b-2 border-gray-500">Hasil Temuan</h2>
+            <Table className="">
                 <TableCaption>A list of your recent invoices.</TableCaption>
                 <TableHeader>
                     <TableRow>
-                    <TableHead className="">Foto</TableHead>
-                    <TableHead>Temuan</TableHead>
-                    <TableHead>Lokasi</TableHead>
                     
-                    <TableHead className="text-right">Status</TableHead>
                     </TableRow>
                 </TableHeader>
-                <TableBody className="text-xs md:text-sm">
+                <TableBody className="text-md md:text-sm">
                 {data.map((item) => (
-                    <TableRow key={item.id}>
+                    <TableRow key={item.id} className="">
                     <TableCell className="flex items-center space-x-3">
                         <Dialog>
-                            <DialogTrigger asChild>
-                            <img src={item.imageUrl} alt="image" className="w-10 h-10 rounded-full md:rounded-md "/>
+                            <DialogTrigger asChild className="">
+                            <img src={item.imageUrl} alt="image" className="w-14 h-14 rounded-full md:rounded-md "/>
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
@@ -142,8 +137,14 @@ const Temuan = () => {
                             </DialogContent>
                         </Dialog>
                     </TableCell>
-                    <TableCell>{item.temuan}</TableCell>
-                    <TableCell>{item.lokasi}</TableCell>
+                    <TableCell className="text-start">
+                        <div className="flex flex-col text-start ">
+                        <span>{item.temuan}</span>
+                        <span>{item.lokasi}</span>
+                        </div>
+                        
+                    </TableCell>
+                  
                     <TableCell className="text-right">{item.status}</TableCell>
                     </TableRow>
                     ))}

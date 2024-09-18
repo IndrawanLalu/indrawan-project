@@ -33,8 +33,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    login: (state, action) => {
-      state.user = action.payload;
+    login(state, action) {
+      state.user = {
+        uid: action.payload.uid,
+        email: action.payload.email,
+        // tambahkan data lain yang diperlukan
+      };
       saveStateToLocalStorage(state.user); // Simpan user ke localStorage
     },
     logout: (state) => {

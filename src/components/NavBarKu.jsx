@@ -27,6 +27,10 @@ const navigation = [
 ]
 async function getUserRole(uid) {
   try {
+    if (!uid) {
+      console.error("UID is not provided");
+      return null; // Mengembalikan null jika UID tidak ada
+    }
     const docRef = doc(db, "userRoles", uid);
     const docSnap = await getDoc(docRef);
 
