@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 const Body = ({children}) => {
   return (
-    <>
+    <div className="max-w-none">
     <div className="bg-white">
-      <div className="relative isolate pt-14 lg:px-8">
+      <div className="relative isolate pt-8 lg:px-8">
         <div
           aria-hidden="true"
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -32,7 +32,7 @@ const Body = ({children}) => {
       </div>
     </div>
 
-    </>
+    </div>
   )
 }
 

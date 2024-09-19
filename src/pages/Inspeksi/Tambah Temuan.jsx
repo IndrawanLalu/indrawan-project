@@ -107,7 +107,7 @@ const TambahTemuan = () => {
             <DialogDescription>Pastikan Detail Temuan anda Benar</DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmitTemuan}>
-          <div className="grid gap-4 py-4 bo">
+          <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="image" className="text-right">Foto</Label>
               <Input

@@ -14,6 +14,8 @@ import ProtectedRoute from './components/ProtectedRoutes'
 import NavBarKu from './components/NavBarKu'
 
 import Temuan from './pages/Inspeksi/Temuan'
+import Pemeliharaan from './pages/Pemeliharaan/Pemeliharaan'
+import EksekusiTemuan from './pages/Pemeliharaan/EksekusiTemuan'
 
   
 function App() {
@@ -23,6 +25,8 @@ function App() {
     {path: "/padam", component : <Padam/>},
 
     {path: "/inspeksi", component : <Temuan/>},
+    {path: "/pemeliharaan", component : <Pemeliharaan/>},
+    {path: "/eksekusi/:id", component : <EksekusiTemuan/>},
 
     {path: "*", component : <Navigate to = "/"></Navigate>}
   ]

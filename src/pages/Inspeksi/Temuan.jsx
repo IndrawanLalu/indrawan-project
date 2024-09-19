@@ -1,17 +1,7 @@
-import Body from "@/components/body";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -19,8 +9,6 @@ import TambahTemuan from "./Tambah Temuan";
 import { Badge } from "@/components/ui/badge";
 import { FaCheck } from "react-icons/fa";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-  
-
 
 const Temuan = () => {
     const [data, setData] = useState([]);
@@ -37,40 +25,32 @@ const Temuan = () => {
             fetchData();
         }, []);
     return ( 
-        <Body>
-                <h2 className="font-semibold text-start md:text-2xl border-b border-main ">Hasil Temuan <TambahTemuan />
+        <div className="Container">
+                <h2 className="font-semibold text-start md:text-2xl md:pt-12 border-b pb-2 pt-6 border-main ">Hasil Temuan <TambahTemuan />
                 </h2>
-            <Table className="">
-                <TableCaption>A list of your recent invoices.</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                    </TableRow>
-                </TableHeader>
                 {data.map((item) => (
-                <TableBody key={item.id} className="text-sm md:text-xl">
-                <Dialog>
+                <Dialog key={item.id}>
                     <DialogTrigger asChild >
-                    <TableRow>
-                        <TableCell className="flex items-center space-x-3">
+                    <div className="grid grid-cols-5 justify-start py-2">
+                        <div className="content-center">
                             <Avatar>
                                 <AvatarImage src={item.imageUrl} />
                                 <AvatarFallback>SB</AvatarFallback>
                             </Avatar>
-                        </TableCell> 
-                        <TableCell className="text-start">
-                            <div className="flex flex-col text-start ">
-                            <span className="font-semibold">{item.temuan}</span>
-                            <span>{item.lokasi}</span>
-                            </div>
-                        </TableCell>
-                    <TableCell className="text-right">
+                        </div>
+                        <div className="col-start-2 col-span-3 text-start">
+                            <h2 className="font-semibold">{item.temuan}</h2>
+                            <p className="text-sm">{item.lokasi}</p>
+                        </div>
+                        <div className="content-center">
+                            <div className="text-[10px]">{item.tglInspeksi}</div>
                         {item.status === "Temuan" ? (
-                            <Badge variant="temuan">{item.status}</Badge>
-                        ) : (
-                            <Badge><FaCheck />{item.status} </Badge>
-                        )}
-                    </TableCell> 
-                    </TableRow>
+                                <Badge variant="temuan">{item.status}</Badge>
+                            ) : (
+                                <Badge><FaCheck />{item.status} </Badge>
+                            )}
+                        </div>
+                    </div>
                     </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
@@ -152,11 +132,9 @@ const Temuan = () => {
                                 <Button type="submit">Save changes</Button>
                                 </DialogFooter>
                             </DialogContent>
-                        </Dialog>    
-                </TableBody>
+                        </Dialog> 
                 ))}
-                </Table>
-        </Body>
+        </div>
      );
 }
  
