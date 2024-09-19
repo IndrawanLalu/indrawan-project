@@ -6,18 +6,17 @@ import { IoHome } from "react-icons/io5";
 import { CiLogin } from "react-icons/ci";
 import { LuMenuSquare } from "react-icons/lu";
 import { Link, useNavigate } from 'react-router-dom'
-import { IoIosSettings } from "react-icons/io";
 import { getAuth } from 'firebase/auth';
 import { signOut } from 'firebase/auth';
 
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DropdownMenuMobile from './DropdownMenuMobile';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '@/redux/authSlice';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/firebase/firebaseConfig';
-import TambahTemuan from '@/pages/Inspeksi/Tambah Temuan';
+// import { doc, getDoc } from 'firebase/firestore';
+// import { db } from '@/firebase/firebaseConfig';
+// import TambahTemuan from '@/pages/Inspeksi/Tambah Temuan';
 
 const navigation = [
   { name: 'Beban Gardu', href: '/amg' },
@@ -25,33 +24,34 @@ const navigation = [
   { name: 'Inspeksi', href: '/inspeksi' },
   { name: 'Company', href: '/#' },
 ]
-async function getUserRole(uid) {
-  try {
-    if (!uid) {
-      console.error("UID is not provided");
-      return null; // Mengembalikan null jika UID tidak ada
-    }
-    const docRef = doc(db, "userRoles", uid);
-    const docSnap = await getDoc(docRef);
+// async function getUserRole(uid) {
+//   try {
+//     if (!uid) {
+//       console.error("UID is not provided");
+//       return null; // Mengembalikan null jika UID tidak ada
+//     }
+//     const docRef = doc(db, "userRoles", uid);
+//     const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      return docSnap.data().role;
-    } else {
-      console.log("No such document!");
-      return null;
-    }
-  } catch (error) {
-    console.error("Error getting user role: ", error);
-  }
-}
+//     if (docSnap.exists()) {
+//       return docSnap.data().role;
+//     } else {
+//       console.log("No such document!");
+//       return null;
+//     }
+//   } catch (error) {
+//     console.error("Error getting user role: ", error);
+//   }
+// }
 const NavBarKu = () => {
   const user = useSelector ((state) => state.auth.user);
-  const [role, setRole] = useState(null);
-  useEffect(() => {
-    if (user) {
-      getUserRole(user.uid).then(setRole);
-    }
-  }, [user]);
+  // Kalo butuh role pakai disini
+  // const [role, setRole] = useState(null);
+  // useEffect(() => {
+  //   if (user) {
+  //     getUserRole(user.uid).then(setRole);
+  //   }
+  // }, [user]);
   const dispatch = useDispatch();
   const [mobileMenuOpen, setMobileMenuOpen] = useState (false)
 
@@ -94,47 +94,43 @@ const NavBarKu = () => {
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
             {navigation.map((item) => (
-              <Link key={item.name} to={item.href} className="px-2 rounded-md hover:bg-[#4F46E5] hover:text-white text-sm font-semibold leading-6 text-gray-900">
+              <Link key={item.name} to={item.href} >
+                <Button className="flex flex-col">
                 {item.name}
+                </Button>
               </Link>
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               <Button onClick={handleLogout}>Logoutt</Button>
           </div>
-            <div className="md:hidden flex justify-between items-center border-t border-[#4F46E5] bg-[#4F46E5]/30 p-2 fixed bottom-0 left-0 right-0">
+            <div className="md:hidden flex justify-between items-center border-t-4 border-main bg-slate-100 p-2 fixed bottom-0 left-0 right-0 rounded-2xl">
               <ul className="flex justify-around w-full">
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
-                    <IoHome />
+                    
                     <Link to={"/"}>
-                    <Button variant="ghost ">Home</Button>
+                    <Button size="iconNav" className="flex flex-col">
+                      <IoHome />Home
+                      </Button>
                     </Link>
                   </div>
                 </li>
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
-                    {role === "inspektor" ? (
-                      <>
-                      <TambahTemuan />
-                      <span className="font-semibold pt-2">Tambah</span>
-                      </>
-                    ) : (
-                      <><LuMenuSquare />
-                    <Button variant="ghost ">Menu</Button></>
-                    )}
-                    
+                    <Link to={"#"}>
+                    <Button size="iconNav" className="flex flex-col"> <LuMenuSquare />Menu</Button>
+                    </Link>
                   </div>
                 </li>
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center gap-2'>
                     {user ?
-                    (<>
-                      <IoIosSettings />
-                      <DropdownMenuMobile /></>) : (
+                    (
+                      <DropdownMenuMobile />) : (
                     <>
-                      <CiLogin />
-                      <Link to={"/login"}><Button variant="ghost ">Login</Button> </Link>
+                      
+                      <Link to={"/login"}><Button size="iconNav">Login<CiLogin /></Button> </Link>
                     </>
                   )}
                     </div>

@@ -16,6 +16,9 @@ import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import TambahTemuan from "./Tambah Temuan";
+import { Badge } from "@/components/ui/badge";
+import { FaCheck } from "react-icons/fa";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
   
 
 
@@ -35,7 +38,7 @@ const Temuan = () => {
         }, []);
     return ( 
         <Body>
-                <h2 className="font-semibold text-start md:text-2xl border-b border-slate-600 ">Hasil Temuan <TambahTemuan />
+                <h2 className="font-semibold text-start md:text-2xl border-b border-main ">Hasil Temuan <TambahTemuan />
                 </h2>
             <Table className="">
                 <TableCaption>A list of your recent invoices.</TableCaption>
@@ -44,24 +47,29 @@ const Temuan = () => {
                     </TableRow>
                 </TableHeader>
                 {data.map((item) => (
-                <TableBody key={item.id} className="text-base md:text-xl">
+                <TableBody key={item.id} className="text-sm md:text-xl">
                 <Dialog>
                     <DialogTrigger asChild >
                     <TableRow>
                         <TableCell className="flex items-center space-x-3">
-                            <img
-                            src={item.imageUrl}
-                            alt="Foto"
-                            className="w-14 h-14 rounded-full object-cover md:w-36 md:h-36"
-                            />
+                            <Avatar>
+                                <AvatarImage src={item.imageUrl} />
+                                <AvatarFallback>SB</AvatarFallback>
+                            </Avatar>
                         </TableCell> 
                         <TableCell className="text-start">
                             <div className="flex flex-col text-start ">
-                            <span>{item.temuan}</span>
+                            <span className="font-semibold">{item.temuan}</span>
                             <span>{item.lokasi}</span>
                             </div>
                         </TableCell>
-                    <TableCell className="text-right">{item.status}</TableCell> 
+                    <TableCell className="text-right">
+                        {item.status === "Temuan" ? (
+                            <Badge variant="temuan">{item.status}</Badge>
+                        ) : (
+                            <Badge><FaCheck />{item.status} </Badge>
+                        )}
+                    </TableCell> 
                     </TableRow>
                     </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">

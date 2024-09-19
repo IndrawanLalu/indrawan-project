@@ -77,8 +77,8 @@ const Login = () => {
     };
     return (
         <Body>
-            <div className="h-screen grid grid-cols-1 gap-4 content-center justify-items-center">
-            <Card className=" w-[300px] bg-slate-400/50">
+            <div className=" flex flex-col gap-2 content-center justify-center md:items-center md:h-screen">
+            <Card>
                 <CardHeader>
                     <CardTitle>Login Form</CardTitle>
                     <CardDescription></CardDescription>
@@ -109,7 +109,7 @@ const Login = () => {
                     />
                     </div>
                 </div>
-                <Button variant="secondary" size="lg" type="submit" className="mt-6 w-full">{loading ? "Loading..." : "Login"}</Button>   
+                <Button size="lg" type="submit" className="mt-6 w-full">{loading ? "Loading..." : "Login"}</Button>   
                 {error && <span className="text-red-600">{error}</span>}
                 </form>
                 </CardContent>

@@ -15,7 +15,9 @@ import {
 } from "@/components/ui/accordion"
 import Body from "./components/body";
 import { Button } from "./components/ui/button";
-import { Textarea } from "./components/ui/textarea";
+import { Copy } from "lucide-react";
+import { Label } from "./components/ui/label";
+import { Link } from "react-router-dom";
 
 
 
@@ -24,6 +26,7 @@ const SearchAmg = () => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [data, setData] = useState([]);
+  const [typingTimeout, setTypingTimeout] = useState(null); // Untuk menyimpan timeout
 
   useEffect(() => {
     // Fetch data dari public folder
@@ -33,17 +36,28 @@ const SearchAmg = () => {
   }, []);
 
   const handleSearch = (e) => {
-    setQuery(e.target.value);
-    const filteredResults = data.filter((item) =>
-      item.nama.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    setResults(filteredResults);
+    const value = e.target.value;
+    setQuery(value);
+
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Set timeout untuk menunggu 1 detik sebelum pencarian dieksekusi
+    const timeout = setTimeout(() => {
+      const filteredResults = data.filter((item) =>
+        item.nama.toLowerCase().includes(value.toLowerCase())
+      );
+      setResults(filteredResults);
+    }, 2000); // 1 detik
+
+    setTypingTimeout(timeout);
   };
 
   return (
     <Body>
-      <div className='py-4'>
-            <Button className="py-6 gap-4">
+      <div className='py-2'>
+            <Button variant="neutral" className="py-4 gap-4">
                 Beban Gardu Selong
             </Button>
       </div>
@@ -85,15 +99,28 @@ const SearchAmg = () => {
                       <p>Lokasi</p>
                       {item.Titik == 'BELUMDIUPDATE' ? 
                       <p className="text-red-600">BELUM DI UPDATE</p> : 
-                      <div className="flex gap-2 items-center justify-center bg-slate-200 rounded-lg hover:bg-green-200">
-                        <TbMapSearch />
-                        <a href={item.Titik} target={item.Titik}>Maps</a>
+                      <div className="flex gap-2 items-center justify-center">
+                        <Link to={item.Titik} target={item.Titik}><Button size="iconNav" ><TbMapSearch />Maps</Button></Link>
                       </div>}
                     </div>
-                    <div className=" w-full gap-4 py-2">
-                      
-                      <Textarea>{item.Titik}</Textarea>
+                    
+                    <div className="flex items-center space-x-2">
+                      <div className="grid flex-1 gap-2">
+                          <Label htmlFor="link" className="sr-only">
+                            Link
+                          </Label>
+                          <Input
+                            id="link"
+                            defaultValue={item.Titik}
+                            readOnly
+                          />
+                      </div>
+                      <Button type="submit" size="sm" className="px-3">
+                        <span className="sr-only">Copy</span>
+                        <Copy className="h-2 w-2" />
+                      </Button>
                     </div>
+                    
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">

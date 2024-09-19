@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils"
 const Avatar = React.forwardRef(({ className, ...props }, ref) => (
   <AvatarPrimitive.Root
     ref={ref}
-    className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}
+    className={cn('relative flex h-10 w-10 md:h-16 md:w-16 shrink-0 overflow-hidden rounded-full outline outline-2 outline-main', className)}
     {...props} />
 ))
 Avatar.displayName = AvatarPrimitive.Root.displayName
@@ -23,7 +23,7 @@ const AvatarFallback = React.forwardRef(({ className, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
     className={cn(
-      "flex h-full w-full items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800",
+      'flex h-full w-full items-center justify-center rounded-full bg-white text-text dark:bg-darkBg dark:text-darkText font-base',
       className
     )}
     {...props} />

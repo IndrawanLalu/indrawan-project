@@ -13,21 +13,28 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@headlessui/react"
+
 
 import { getAuth } from 'firebase/auth';
 import { signOut } from 'firebase/auth';
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { IoIosSettings } from "react-icons/io";
+import { Button } from "./ui/button";
+import { useDispatch } from "react-redux";
+import { logout } from "@/redux/authSlice";
 
 const DropdownMenuMobile = () => {
 
   const auth = getAuth();
   const user = auth.currentUser;  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      Navigate('/login');
+      dispatch(logout());
+      navigate('/login');
     } catch (error) {
       console.error('Logout failed:', error);
     }
@@ -35,7 +42,9 @@ const DropdownMenuMobile = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost ">Seting</Button>
+         
+          <Button size="iconNav" className="flex flex-col"><IoIosSettings />Seting</Button>
+          
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
           <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
