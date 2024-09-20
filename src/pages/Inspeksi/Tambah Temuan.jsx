@@ -69,6 +69,10 @@ const TambahTemuan = () => {
             category,
             tglInspeksi,
             status: "Temuan",
+            imageEksekusiURL:"",
+            eksekutor: "",
+            tglEksekusi: "",
+            keterangan: "",
           });
           
         
@@ -96,7 +100,7 @@ const TambahTemuan = () => {
     
     <Dialog>
       <DialogTrigger>
-        <div className='flex flex-col items-center gap-2'>
+        <div >
           <span className="flex items-center justify-center rounded-full h-6 w-6 bg-main border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none dark:hover:shadow-none'"><FaPlusCircle /></span>
         </div>
       </DialogTrigger>

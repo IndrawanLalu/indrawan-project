@@ -1,4 +1,4 @@
-import Body from "@/components/body"
+
 import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import {
@@ -76,7 +76,7 @@ const Login = () => {
         setLoading(false);
     };
     return (
-        <Body>
+        <>
             <div className=" flex flex-col gap-2 content-center justify-center md:items-center md:h-screen">
             <Card>
                 <CardHeader>
@@ -122,7 +122,7 @@ const Login = () => {
             </Card>
             </div>
            
-        </Body>
+        </>
     )
 }
 

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import TambahTemuan from "./Tambah Temuan";
 import { Badge } from "@/components/ui/badge";
 import { FaCheck } from "react-icons/fa";
+import { CgDanger } from "react-icons/cg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Temuan = () => {
@@ -25,9 +26,12 @@ const Temuan = () => {
             fetchData();
         }, []);
     return ( 
-        <div className="Container">
-                <h2 className="font-semibold text-start md:text-2xl md:pt-12 border-b pb-2 pt-6 border-main ">Hasil Temuan <TambahTemuan />
-                </h2>
+        <div className="Container mb-16">
+                <div className=" border-main border-b grid grid-cols-2 mt-4 py-2 md:grid-cols-5">
+                <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">Hasil Temuan</h2>
+                <div className="flex flex-col justify-center py-2 md:pt-12"><TambahTemuan /></div>
+                
+                </div>
                 {data.map((item) => (
                 <Dialog key={item.id}>
                     <DialogTrigger asChild >
@@ -44,11 +48,9 @@ const Temuan = () => {
                         </div>
                         <div className="content-center">
                             <div className="text-[10px]">{item.tglInspeksi}</div>
-                        {item.status === "Temuan" ? (
-                                <Badge variant="temuan">{item.status}</Badge>
-                            ) : (
-                                <Badge><FaCheck />{item.status} </Badge>
-                            )}
+                                {item.status === "Temuan" ? <Badge variant="temuan">{item.status} </Badge>
+                                : item.status === "Pending" ?<Badge variant="pending"><CgDanger />{item.status} </Badge>
+                                : <Badge><FaCheck />{item.status} </Badge>}
                         </div>
                     </div>
                     </DialogTrigger>

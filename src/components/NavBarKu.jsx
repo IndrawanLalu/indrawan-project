@@ -69,7 +69,7 @@ const NavBarKu = () => {
   
   return (
     <div className="bg-white">
-      <header className="absolute inset-x-0 top-0 z-50">
+      <header className="fixed inset-x-0 top-0 z-50 ">
         {/* nav dekstop */}
         <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
@@ -118,7 +118,7 @@ const NavBarKu = () => {
                 </li>
                 <li className='hover:text-indigo-600 hover:animate-in '>
                   <div className='flex flex-col items-center'>
-                    <Link to={"#"}>
+                    <Link to={"menu"}>
                     <Button size="iconNav" className="flex flex-col"> <LuMenuSquare />Menu</Button>
                     </Link>
                   </div>

@@ -13,7 +13,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import Body from "./components/body";
 import { Button } from "./components/ui/button";
 import { Copy } from "lucide-react";
 import { Label } from "./components/ui/label";
@@ -55,7 +54,7 @@ const SearchAmg = () => {
   };
 
   return (
-    <Body>
+    <div>
       <div className='py-2'>
             <Button variant="neutral" className="py-4 gap-4">
                 Beban Gardu Selong
@@ -209,7 +208,7 @@ const SearchAmg = () => {
           </li>
         ))}
       </ul>
-    </Body>
+    </div>
   );
 };
 

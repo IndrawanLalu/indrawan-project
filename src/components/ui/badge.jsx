@@ -10,6 +10,7 @@ const badgeVariants = cva(
       variant: {
         default: 'bg-main',
         temuan: 'bg-red-500/50 dark:bg-red-500/20',
+        pending: 'bg-amber-300 dark:bg-amber-300',
         neutral: 'bg-white dark:bg-darkBg dark:text-darkText',
       },
     },

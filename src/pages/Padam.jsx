@@ -1,4 +1,4 @@
-import Body from "@/components/body";
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useEffect, useState } from "react";
 
@@ -26,7 +26,7 @@ const Padam = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <Body>
+    <>
       <h1 className="text-2xl font-semibold py-2">Event Padam ULP Selong</h1>
       <Table>
         <TableHeader>
@@ -79,7 +79,7 @@ const Padam = () => {
           </button>
         ))}
       </div>
-    </Body>
+    </>
   );
 };
 
