@@ -41,11 +41,7 @@ const Login = () => {
             setLoading(true);
             const userCredentials = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredentials.user;
-            dispatch(login({
-                uid: user.uid,
-                email: user.email,
-                // tambahkan data lain jika diperlukan
-            }));
+            
            // Periksa apakah role sudah ada di Firestore
             const roleRef = doc(db, "userRoles", user.uid);
             const roleDoc = await getDoc(roleRef);
@@ -57,6 +53,12 @@ const Login = () => {
                 });
             }
             const role = roleDoc.data().role;
+            dispatch(login({
+                uid: user.uid,
+                email: user.email,
+                role: role,
+                // tambahkan data lain jika diperlukan
+            }));
             console.log("User logged in and role checked/added role: ", role);
             console.log("Login berhasil",userCredentials);
             if (role === "inspektor") {
@@ -66,6 +68,8 @@ const Login = () => {
                 
             } else if (role === "diandra") {
                 nav("/diandra");
+            } else if (role === "har") {
+                nav("/pemeliharaan");
             }
             
         } catch (error) {

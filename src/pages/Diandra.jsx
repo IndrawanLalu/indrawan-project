@@ -6,11 +6,13 @@ const Diandra = () => {
     return (
         <>
         <div className='py-4'>
-          <Button className="py-6 gap-4">
-            <Avatar>
+          <Button variant="neutral" className="py-6  gap-4">
+            <div>
+              <Avatar className="">
             <AvatarImage src="/diandra.png" />
             <AvatarFallback>CN</AvatarFallback>
-          </Avatar>Diandra Barcode</Button>
+          </Avatar>
+          </div>Diandra Barcode</Button>
         </div>
         <Search/>
       </>

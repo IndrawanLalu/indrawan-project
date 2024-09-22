@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { FaCheck } from "react-icons/fa";
 import { CgDanger } from "react-icons/cg";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Temuan = () => {
     const [data, setData] = useState([]);
@@ -18,7 +19,10 @@ const Temuan = () => {
             try {
                 const querySnapshot = await getDocs(collection(db, "inspeksi"));
                 const fetchedData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                setData(fetchedData);
+                // Mengurutkan data berdasarkan tglInspeksi dari yang terbaru ke terlama
+                const sortedData = fetchedData.sort((a, b) => new Date(b.tglInspeksi) - new Date(a.tglInspeksi));
+
+            setData(sortedData);
             } catch (error) {
                 console.error("Error fetching data: ", error);
             }
@@ -27,32 +31,47 @@ const Temuan = () => {
         }, []);
     return ( 
         <div className="Container mb-16">
-                <div className=" border-main border-b grid grid-cols-2 mt-4 py-2 md:grid-cols-5">
-                <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">Hasil Temuan</h2>
-                <div className="flex flex-col justify-center py-2 md:pt-12"><TambahTemuan /></div>
-                
+                <div className=" border-main border-b pb-2 flex fixed left-2 right-0 top-0 md:left-40 md:top-12">
+                    <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">Hasil Temuan</h2>
+                    <div className="flex flex-col justify-center pl-2 py-2 md:pt-12"><TambahTemuan /></div>
                 </div>
+                <div className="fixed left-0 right-0 top-16 md:left-48 md:right-48 md:top-40">
+                <ScrollArea className="w-full h-screen px-2 md:h-screen">
                 {data.map((item) => (
                 <Dialog key={item.id}>
                     <DialogTrigger asChild >
-                    <div className="grid grid-cols-5 justify-start py-2">
-                        <div className="content-center">
-                            <Avatar>
-                                <AvatarImage src={item.imageUrl} />
-                                <AvatarFallback>SB</AvatarFallback>
-                            </Avatar>
+                    <div key={item.id} className="grid grid-cols-6 justify-start py-2 hover:bg-main/10">
+                            <div className="content-center pl-2">
+                                <Avatar>
+                                    <AvatarImage src={item.imageUrl} />
+                                    <AvatarFallback>SB</AvatarFallback>
+                                </Avatar>
+                            </div>
+                            <div className="col-start-2 col-span-3 md:col-span-2 md:content-center text-start">
+                                <h2 className="font-semibold">{item.temuan}</h2>
+                                <p className="text-sm">{item.lokasi}</p>
+                            </div>
+                            <div className="hidden md:flex md:text-start md:items-center">
+                                <h2 className="font-semibold">{item.penyulang}</h2>
+                            </div>
+                            <div className="hidden md:flex md:text-start md:items-center">
+                                <h2 className="font-semibold">{item.tglInspeksi}</h2>
+                            </div>
+                            <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
+                                <div className="text-[10px]">{new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric"
+                                    })}
+                                </div>
+                                <div className="">
+                                    {item.status === "Temuan" ? <Badge variant="temuan">{item.status} </Badge>
+                                    : item.status === "Pending" ?<Badge variant="pending"><CgDanger />{item.status} </Badge>
+                                    : <Badge><FaCheck />{item.status} </Badge>}
+                                </div>
+                            </div>
+                            
                         </div>
-                        <div className="col-start-2 col-span-3 text-start">
-                            <h2 className="font-semibold">{item.temuan}</h2>
-                            <p className="text-sm">{item.lokasi}</p>
-                        </div>
-                        <div className="content-center">
-                            <div className="text-[10px]">{item.tglInspeksi}</div>
-                                {item.status === "Temuan" ? <Badge variant="temuan">{item.status} </Badge>
-                                : item.status === "Pending" ?<Badge variant="pending"><CgDanger />{item.status} </Badge>
-                                : <Badge><FaCheck />{item.status} </Badge>}
-                        </div>
-                    </div>
                     </DialogTrigger>
                             <DialogContent className="sm:max-w-[425px]">
                                 <DialogHeader>
@@ -136,6 +155,11 @@ const Temuan = () => {
                             </DialogContent>
                         </Dialog> 
                 ))}
+                <div className=" pb-20 mb-20  pt-2 text-sm">
+                        <p>Hasil temuan Inspeksi</p>
+                </div>
+                </ScrollArea>
+                </div>
         </div>
      );
 }

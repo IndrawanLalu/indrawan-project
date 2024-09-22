@@ -103,9 +103,9 @@ const EksekusiTemuan = () => {
   };
 
   return (
-    <div className="container mx-auto mb-16">
-      <div className=" border-main border-b grid grid-cols-2 mt-4 py-2 md:grid-cols-5">
-        <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">Hasil Temuan</h2>
+    <div className="mx-auto mb-16">
+      <div className=" border-main border-b grid grid-cols-2 md:grid-cols-5 md:pt-10">
+        <h2 className="font-semibold text-start md:text-2xl md:pt-12">Hasil Temuan</h2>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="grid gap-4 py-4">
@@ -264,7 +264,7 @@ const EksekusiTemuan = () => {
               </Select>
           </div>
         </div>
-        <Button type="submit">Update</Button>
+        <Button type="submit" className="mt-14">Update</Button>
       </form>
     </div>
   );

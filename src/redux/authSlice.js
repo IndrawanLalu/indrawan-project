@@ -37,6 +37,7 @@ const authSlice = createSlice({
       state.user = {
         uid: action.payload.uid,
         email: action.payload.email,
+        role: action.payload.role,
         // tambahkan data lain yang diperlukan
       };
       saveStateToLocalStorage(state.user); // Simpan user ke localStorage

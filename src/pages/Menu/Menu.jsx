@@ -6,10 +6,14 @@ import {
     CardTitle,
   } from "@/components/ui/card"
 import { ArrowBigRight } from "lucide-react"
+import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
+
+
   
 const Menu = () => {
-
+    const user = useSelector((state) => state.auth.user); // Mengambil user dari Redux
+    
     return (
         <div>
             <div className="Container border-main border-b grid grid-cols-2 mt-4 py-2">
@@ -26,7 +30,8 @@ const Menu = () => {
                         </Link>
                     </CardFooter>
                 </Card>
-                <Card>
+                {user?.role==="admin" | user?.role==="har" ? (
+                    <Card>
                     <CardHeader>
                         <CardTitle className="text-md border-b norder-main">Pemeliharaan</CardTitle>
                     </CardHeader>
@@ -36,6 +41,8 @@ const Menu = () => {
                         </Link>
                     </CardFooter>
                 </Card>
+                ): null}
+                
                 <Card>
                     <CardHeader>
                         <CardTitle className="text-md border-b norder-main">Lokasi Gardu</CardTitle>
