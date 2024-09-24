@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { db } from "@/firebase/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { collection, getDocs, query, orderBy, limit, startAfter } from "firebase/firestore";
+
+import { useCallback, useEffect, useRef, useState } from "react";
 import TambahTemuan from "./Tambah Temuan";
 import { Badge } from "@/components/ui/badge";
 import { FaCheck } from "react-icons/fa";
@@ -14,21 +15,65 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Temuan = () => {
     const [data, setData] = useState([]);
-        useEffect(() => {
-            const fetchData = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "inspeksi"));
-                const fetchedData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Mengurutkan data berdasarkan tglInspeksi dari yang terbaru ke terlama
-                const sortedData = fetchedData.sort((a, b) => new Date(b.tglInspeksi) - new Date(a.tglInspeksi));
+        // useEffect(() => {
+        //     const fetchData = async () => {
+        //     try {
+        //         const querySnapshot = await getDocs(collection(db, "inspeksi"));
+        //         const fetchedData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        //         // Mengurutkan data berdasarkan tglInspeksi dari yang terbaru ke terlama
+        //         const sortedData = fetchedData.sort((a, b) => new Date(b.tglInspeksi) - new Date(a.tglInspeksi));
 
-            setData(sortedData);
+        //     setData(sortedData);
+        //     } catch (error) {
+        //         console.error("Error fetching data: ", error);
+        //     }
+        //     };
+        //     fetchData();
+        // }, []);
+        const lastDocRef = useRef(null);
+        const [loading, setLoading] = useState(false);
+        const [hasMore, setHasMore] = useState(true); // Untuk memeriksa apakah ada data lebih lanjut
+        const limitPerPage = 10; // Batas data per halaman
+    
+        const fetchData = useCallback(async (loadMore = false) => {
+            setLoading(true);
+            try {
+                const ref = collection(db, "inspeksi");
+                let q;
+    
+                if (loadMore && lastDocRef.current) {
+                    q = query(ref, orderBy("tglInspeksi", "desc"), startAfter(lastDocRef.current), limit(limitPerPage));
+                } else {
+                    q = query(ref, orderBy("tglInspeksi", "desc"), limit(limitPerPage));
+                }
+    
+                const querySnapshot = await getDocs(q);
+                const fetchedData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+                // Simpan dokumen terakhir tanpa memicu re-render
+                lastDocRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
+    
+                // Cek apakah ada data lebih lanjut
+                setHasMore(querySnapshot.docs.length >= limitPerPage);
+    
+                // Update data
+                setData(prevData => loadMore ? [...prevData, ...fetchedData] : fetchedData);
             } catch (error) {
                 console.error("Error fetching data: ", error);
+            } finally {
+                setLoading(false);
             }
-            };
-            fetchData();
-        }, []);
+        }, [limitPerPage]);
+    
+        useEffect(() => {
+            fetchData(); // Ambil data pertama kali
+        }, [fetchData]);
+    
+        const loadMoreData = () => {
+            if (!loading && hasMore) {
+                fetchData(true); // Ambil data halaman berikutnya
+            }
+        };
     return ( 
         <div className="Container mb-16">
                 <div className=" border-main border-b pb-2 flex fixed left-2 right-0 top-0 md:left-40 md:top-12">
@@ -155,6 +200,14 @@ const Temuan = () => {
                             </DialogContent>
                         </Dialog> 
                 ))}
+                <div>
+                {hasMore && !loading && (
+                    <Button onClick={loadMoreData} className="mt-4">
+                        Load More
+                    </Button>
+                )}
+                {loading && <p>Loading...</p>}
+                </div>
                 <div className=" pb-20 mb-20  pt-2 text-sm">
                         <p>Hasil temuan Inspeksi</p>
                 </div>
