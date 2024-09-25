@@ -40,7 +40,7 @@ const Pemeliharaan = () => {
     return ( 
         <div className="Container">
             <Tabs defaultValue="Temuan" className="w-[400px] flex fixed left-2 right-0 top-0 md:left-40 md:top-12">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center">
                 <div className="font-semibold text-start md:text-2xl md:pt-12 pb-2 pt-6 ">
                     <TabsList>
                         <TabsTrigger value="Temuan">Temuan</TabsTrigger>
@@ -49,7 +49,7 @@ const Pemeliharaan = () => {
                     </TabsList>
                 </div>
                 {/* Dropdown Filter Category */}
-                <div className="pt-4 ml-8">
+                <div className="pt-4 ml-2 mr-2">
                     <Select onValueChange={setFilterCategory}>
                         <SelectTrigger className="w-48">
                             <SelectValue placeholder="Filter" />

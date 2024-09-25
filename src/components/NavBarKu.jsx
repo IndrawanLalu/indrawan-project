@@ -64,13 +64,13 @@ const NavBarKu = () => {
   
   return (
     <div className="bg-white">
-      <header className="md:fixed inset-x-0 top-0 z-50 bg-white ">
+      <header className="hidden md:grid md:fixed md:w-full md:top-0 md:z-50 bg-main/10 md:justify-items-between">
         {/* nav dekstop */}
-        <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
+        <nav aria-label="Global" className="flex items-center justify-between p-4 lg:px-8">
           <div className="hidden lg:flex lg:flex-1 lg:justify-start">
-              <Button variant="neutral">Teknik Selong, {user?.role}</Button>
+             <Link to={"/"}> <Button variant="neutral">{user?.email}, {user?.role}</Button> </Link>
           </div>
-          <div className="hidden lg:flex lg:gap-x-12">
+          <div className="hidden lg:flex lg:gap-x-12 md:justify-center">
             {navigation.map((item) => (
               <Link key={item.name} to={item.href} >
                 <Button className="flex flex-col">

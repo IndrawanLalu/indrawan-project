@@ -1,40 +1,26 @@
-
-
-import { useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
+import DiagramGangguan from "@/components/diagram/DiagramGangguan";
+import DiagramPenyulangTrip from "@/components/diagram/DiagramPenyulangTrip";
+// import { useSelector } from "react-redux";
 
 const Home = () => {
 
 
-const user = useSelector ((state) => state.auth.user);
+// const user = useSelector ((state) => state.auth.user);
   return (
-    <>
-      <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-              Project latihan sambil mengisi waktu.{' '}
-              <a href="#" className="font-semibold text-indigo-600">
-                <span aria-hidden="true" className="absolute inset-0" />
-                Read more <span aria-hidden="true">&rarr;</span>
-              </a>
-            </div>
+    <div className="p-2 md:py-20 md:w-full flex flex-col">
+      <div className="text-2xl font-semibold border-b border-main">
+        Dashboard Kinerja
+      </div>
+      <div className="md:grid md:grid-cols-2 md:px-40 md:py-8 md:gap-8 border-main border-b flex flex-col">
+          <div className="">
+            <DiagramGangguan />
           </div>
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-              Mudah mudahan bisa Bermanfaat
-            </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Kedepan semoga bisa menjadi tools yang bisa membantu memudahkan pekerjaan
-              dan membuat pekerjaan menjadi lebih mudah 😊
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button>
-                {user ? "Welcome, "+user.email : "Login Here"}
-              </Button>
-            </div>
+          <div className="h-[300px] md:h-full">
+            <DiagramPenyulangTrip />
           </div>
-        </div>
-    </>
+      </div>
+      <div className="pb-20 pt-2 md:pb-2 text-main text-sm font-semibold flex justify-center">Teknik Selong</div>
+    </div>
   )
 };
 export default Home

@@ -200,7 +200,7 @@ const Temuan = () => {
                             </DialogContent>
                         </Dialog> 
                 ))}
-                <div>
+                <div className="flex justify-center">
                 {hasMore && !loading && (
                     <Button onClick={loadMoreData} className="mt-4">
                         Load More
@@ -208,7 +208,7 @@ const Temuan = () => {
                 )}
                 {loading && <p>Loading...</p>}
                 </div>
-                <div className=" pb-20 mb-20  pt-2 text-sm">
+                <div className=" pb-20 mb-20  pt-2 text-sm flex justify-center">
                         <p>Hasil temuan Inspeksi</p>
                 </div>
                 </ScrollArea>

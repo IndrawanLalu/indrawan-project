@@ -1,0 +1,42 @@
+{
+    "top10gangguan": [
+      { "penyulang": "Masbagik", "jumlah": 7 },
+      { "penyulang": "Keruak", "jumlah": 7 },
+      { "penyulang": "Kopel-1", "jumlah": 5 },
+      { "penyulang": "Labuhan Haji", "jumlah": 4 },
+      { "penyulang": "Rec.Rau Galuh", "jumlah": 3 },
+      { "penyulang": "Sikur", "jumlah": 3 },
+      { "penyulang": "Sakra", "jumlah": 3 },
+      { "penyulang": "Rec.Sukamulia", "jumlah": 3 },
+      { "penyulang": "Pancor", "jumlah": 2 },
+      { "penyulang": "Rec.Mt.Tangi", "jumlah": 2 }
+    ],
+    "gangguan2024": [
+      { "bulan": "Jan", "jumlah": 14 },
+      { "bulan": "Feb", "jumlah": 10 },
+      { "bulan": "Mar", "jumlah": 3 },
+      { "bulan": "Apr", "jumlah": 5 },
+      { "bulan": "Mei", "jumlah": 2 },
+      { "bulan": "Jun", "jumlah": 4 },
+      { "bulan": "Jul", "jumlah": 4 },
+      { "bulan": "Agu", "jumlah": 8 },
+      { "bulan": "Sep", "jumlah": 5 },
+      { "bulan": "Okt", "jumlah":  ""},
+      { "bulan": "Nov", "jumlah":  ""},
+      { "bulan": "Des", "jumlah":  ""}
+    ],
+    "targetGangguan2024": [
+      { "bulan": "Jan", "jumlah": 8 },
+      { "bulan": "Feb", "jumlah": 7 },
+      { "bulan": "Mar", "jumlah": 8 },
+      { "bulan": "Apr", "jumlah": 4 },
+      { "bulan": "Mei", "jumlah": 3 },
+      { "bulan": "Jun", "jumlah": 4 },
+      { "bulan": "Jul", "jumlah": 5 },
+      { "bulan": "Agu", "jumlah": 5 },
+      { "bulan": "Sep", "jumlah": 4 },
+      { "bulan": "Okt", "jumlah": 7 },
+      { "bulan": "Nov", "jumlah": 14},
+      { "bulan": "Des", "jumlah": 12}
+    ]
+  }
