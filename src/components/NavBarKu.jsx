@@ -64,7 +64,7 @@ const NavBarKu = () => {
   
   return (
     <div className="bg-white">
-      <header className="hidden md:grid md:fixed md:w-full md:top-0 md:z-50 bg-main/10 md:justify-items-between">
+      <header className=" md:grid md:fixed md:w-full md:top-0 md:z-50 bg-main/10 md:justify-items-between">
         {/* nav dekstop */}
         <nav aria-label="Global" className="flex items-center justify-between p-4 lg:px-8">
           <div className="hidden lg:flex lg:flex-1 lg:justify-start">
