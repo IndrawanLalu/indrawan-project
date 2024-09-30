@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db, storage } from "@/firebase/firebaseConfig";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const TambahTemuan = () => {
   const [image, setImage] = useState(null);
@@ -24,6 +31,25 @@ const TambahTemuan = () => {
 
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
   const [error, setError] = useState(null);
+
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "penyulang"));
+        const fetchedData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setData(fetchedData);
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   // Mengambil koordinat lokasi pengguna secara otomatis
   useEffect(() => {
@@ -185,24 +211,24 @@ const TambahTemuan = () => {
               onChange={(e) => setLokasi(e.target.value)}
             />
           </div>
-          
+
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="lokasi" className="text-right">
               location
             </Label>
             <input
-                id="location"
-                value={
-                  location.lat && location.lng
-                    ? `${location.lat}, ${location.lng}`
-                    : "Fetching location..."
-                }
-                readOnly
-                className="col-span-3 border border-gray-300 p-2"
-              />
-              {error && (
-                <div className="text-red-500 col-span-4">Error: {error}</div>
-              )}
+              id="location"
+              value={
+                location.lat && location.lng
+                  ? `${location.lat}, ${location.lng}`
+                  : "Fetching location..."
+              }
+              readOnly
+              className="col-span-3 border border-gray-300 p-2"
+            />
+            {error && (
+              <div className="text-red-500 col-span-4">Error: {error}</div>
+            )}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="inspektor" className="text-right">
@@ -241,12 +267,23 @@ const TambahTemuan = () => {
             <Label htmlFor="penyulang" className="text-right">
               Penyulang
             </Label>
-            <Input
-              id="penyulang"
-              value={penyulang}
+            <Select
+              name="penyulang"
+              onValueChange={(value) => setPenyulang(value)}
               className="col-span-3"
-              onChange={(e) => setPenyulang(e.target.value)}
-            />
+              required
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Penyulang ..." />
+              </SelectTrigger>
+              <SelectContent key={penyulang.id}>
+                {data.map((penyulang) => (
+                  <SelectItem key={penyulang.id} value={penyulang.penyulang}>
+                    {penyulang.penyulang}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="category" className="text-right">

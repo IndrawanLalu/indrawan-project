@@ -103,7 +103,7 @@ const EksekusiTemuan = () => {
   };
 
   return (
-    <div className="mx-auto mb-16">
+    <div className="mx-4 mb-16">
       <div className=" border-main border-b grid grid-cols-2 md:grid-cols-5 md:pt-10">
         <h2 className="font-semibold text-start md:text-2xl md:pt-12">Hasil Temuan</h2>
       </div>
@@ -264,8 +264,9 @@ const EksekusiTemuan = () => {
               </Select>
           </div>
         </div>
-        <Button type="submit" className="mt-14">Update</Button>
+        <Button type="submit" className="mt-14 mb-10 flex w-full ">Update</Button>
       </form>
+      <div className="h-4"></div>
     </div>
   );
 };
