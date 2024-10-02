@@ -170,7 +170,8 @@ const TambahTemuan = () => {
             <Input
               type="file"
               id="image"
-              accept="capture=camera,image/*"
+              accept="image/*"
+              capture="environment"
               onChange={handleImageChange}
               className="col-span-3"
             />
