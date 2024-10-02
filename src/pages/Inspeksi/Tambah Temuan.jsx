@@ -155,9 +155,9 @@ const TambahTemuan = () => {
   };
 
   return (
-    <div className="p-2 md:pt-20 md:px-80">
+    <div className="px-2 md:pt-20 md:px-80">
       <div className=" border-main border-b pb-2 flex left-2 right-0 top-0 md:left-40 md:top-12">
-        <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">
+        <h2 className="font-semibold text-start md:text-2xl md:pt-12">
           Input Temuan
         </h2>
       </div>
@@ -170,10 +170,9 @@ const TambahTemuan = () => {
             <Input
               type="file"
               id="image"
-              accept="image/*"
+              accept="capture=camera,image/*"
               onChange={handleImageChange}
               className="col-span-3"
-              capture
             />
           </div>
           {preview && (
@@ -234,7 +233,7 @@ const TambahTemuan = () => {
             <Label htmlFor="inspektor" className="text-right">
               Map
             </Label>
-            <div className="col-span-3">
+            <div className="col-span-3 -z-50">
               <MapContainer
                 key={location.lat + location.lng}
                 center={[location.lat, location.lng]}
@@ -264,11 +263,10 @@ const TambahTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="penyulang" className="text-right">
-              Penyulang
-            </Label>
+            <Label className="text-right">Penyulang</Label>
             <Select
               name="penyulang"
+              id="penyulang"
               onValueChange={(value) => setPenyulang(value)}
               className="col-span-3"
               required
@@ -286,20 +284,23 @@ const TambahTemuan = () => {
             </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="category" className="text-right">
-              Kategory
-            </Label>
-            <select
+            <Label className="text-right">Kategory</Label>
+            <Select
+              name="category"
               id="category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              onValueChange={(value) => setCategory(value)}
               className="col-span-3"
+              required
             >
-              <option value="">-</option>
-              <option value="JTM">JTM</option>
-              <option value="JTR">JTR</option>
-              <option value="Gardu">Gardu</option>
-            </select>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="...." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="JTM">JTM</SelectItem>
+                <SelectItem value="JTR">JTR</SelectItem>
+                <SelectItem value="Gardu">Gardu</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="tanggalInspeksi" className="text-right">
@@ -307,6 +308,7 @@ const TambahTemuan = () => {
             </Label>
             <Input
               type="date"
+              name="tanggalInspeksi"
               id="tanggalInspeksi"
               value={tglInspeksi}
               className="col-span-3"

@@ -13,6 +13,8 @@ import Pemeliharaan from "./pages/Pemeliharaan/Pemeliharaan";
 import EksekusiTemuan from "./pages/Pemeliharaan/EksekusiTemuan";
 import Menu from "./pages/Menu/Menu";
 import TambahTemuan from "./pages/Inspeksi/Tambah Temuan";
+import Penyulang from "./pages/Aset/Penyulang";
+import TambahPenyulang from "./pages/Aset/TambahPenyulang";
 
 function App() {
   const protectedRoute = [
@@ -24,8 +26,10 @@ function App() {
     { path: "/padam", component: <Padam /> },
     { path: "/menu", component: <Menu /> },
     { path: "/tambahTemuan", component: <TambahTemuan /> },
+    { path: "/aset/penyulang", component: <Penyulang /> },
+    { path: "/aset/tambahPenyulang", component: <TambahPenyulang /> },
+
     { path: "*", component: <Navigate to="/"></Navigate> },
-    
   ];
   return (
     <>

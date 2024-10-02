@@ -24,7 +24,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { FaCheck, FaPlusCircle } from "react-icons/fa";
 import { CgDanger } from "react-icons/cg";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 
@@ -116,9 +116,8 @@ const Temuan = () => {
             <FaPlusCircle />
           </Link>
         </div>
-        <div className="flex flex-col justify-center pl-2 py-2 md:pt-12"></div>
       </div>
-      <div className="fixed left-0 right-0 top-16 md:left-48 md:right-48 md:top-40">
+      <div className="fixed left-0 right-0 top-10 md:left-48 md:right-48 md:top-40">
         <ScrollArea className="w-full h-screen px-2 md:h-screen">
           {data.map((item) => (
             <Dialog key={item.id}>
@@ -127,17 +126,22 @@ const Temuan = () => {
                   key={item.id}
                   className="grid grid-cols-6 justify-start py-2 hover:bg-main/10"
                 >
-                  <div className="content-center pl-2">
+                  {/* <div className="content-center pl-2">
                     <Avatar>
                       <AvatarImage src={item.imageUrl} />
                       <AvatarFallback>SB</AvatarFallback>
                     </Avatar>
-                  </div>
-                  <div className="col-start-2 col-span-3 md:col-span-2 md:content-center text-start">
+                  </div> */}
+                  <div className="col-start-1 col-span-3 md:col-span-2 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
+                  <div className=" flex flex-col col-start-4 colsspan-3 text-start items-center justify-center content-center">
+                    <span>Penyulang</span>
+                    <h2 className="font-semibold">{item.penyulang}</h2>
+
+                  </div>
+                  <div className="hidden  md:flex md:text-start md:items-center">
                     <h2 className="font-semibold">{item.penyulang}</h2>
                   </div>
                   <div className="hidden md:flex md:text-start md:items-center">
