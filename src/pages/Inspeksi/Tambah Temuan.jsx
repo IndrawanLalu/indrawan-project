@@ -171,7 +171,6 @@ const TambahTemuan = () => {
               type="file"
               id="image"
               accept="image/*"
-              capture="environment"
               onChange={handleImageChange}
               className="col-span-3"
             />
