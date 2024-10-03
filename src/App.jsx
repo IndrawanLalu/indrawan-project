@@ -15,37 +15,79 @@ import Menu from "./pages/Menu/Menu";
 import TambahTemuan from "./pages/Inspeksi/Tambah Temuan";
 import Penyulang from "./pages/Aset/Penyulang";
 import TambahPenyulang from "./pages/Aset/TambahPenyulang";
+import { Toaster } from "./components/ui/toaster";
+import Unauthorrized from "./pages/Unauthorrized";
 
 function App() {
-  const protectedRoute = [
-    { path: "/diandra", component: <Diandra /> },
-    { path: "/amg", component: <Amg /> },
-    { path: "/inspeksi", component: <Temuan /> },
-    { path: "/pemeliharaan", component: <Pemeliharaan /> },
-    { path: "/eksekusi/:id", component: <EksekusiTemuan /> },
-    { path: "/padam", component: <Padam /> },
-    { path: "/menu", component: <Menu /> },
-    { path: "/tambahTemuan", component: <TambahTemuan /> },
-    { path: "/aset/penyulang", component: <Penyulang /> },
-    { path: "/aset/tambahPenyulang", component: <TambahPenyulang /> },
-
-    { path: "*", component: <Navigate to="/"></Navigate> },
+  // Routes yang dapat diakses oleh admin saja
+  const protectedRouteAdmin = [
+    { path: "/aset/penyulang", element: <Penyulang /> },
+    { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
   ];
+  const protectedRouteDiandra = [{ path: "/diandra", element: <Diandra /> }];
+  // Routes yang dapat diakses oleh admin dan inspektor
+  const sharedRoutes = [
+    { path: "/amg", element: <Amg /> },
+    { path: "/padam", element: <Padam /> },
+    { path: "/menu", element: <Menu /> },
+    { path: "/inspeksi", element: <Temuan /> },
+    { path: "/tambahTemuan", element: <TambahTemuan /> },
+    { path: "/pemeliharaan", element: <Pemeliharaan /> },
+    { path: "/eksekusi/:id", element: <EksekusiTemuan /> },
+  ];
+
   return (
     <>
       <NavBarKu />
       <Routes>
-        <Route path="/" Component={Home} />
-        <Route path="/login" Component={Login} />
-        {/* <Route path="/signup" Component={SignUp} /> */}
-        {protectedRoute.map(({ path, component }) => (
+        {/* Route Public */}
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/unauthorized" element={<Unauthorrized />} />
+
+        {/* Route Admin */}
+        {protectedRouteAdmin.map(({ path, element }) => (
           <Route
             key={path}
             path={path}
-            element={<ProtectedRoute>{component}</ProtectedRoute>}
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                {element}
+              </ProtectedRoute>
+            }
           />
         ))}
+        {/* Route Admin */}
+        {protectedRouteDiandra.map(({ path, element }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute allowedRoles={["diandra", "admin"]}>
+                {element}
+              </ProtectedRoute>
+            }
+          />
+        ))}
+
+        {/* Route untuk Admin dan Inspektor */}
+        {sharedRoutes.map(({ path, element }) => (
+          <Route
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute allowedRoles={["admin", "inspektor", "har"]}>
+                {element}
+              </ProtectedRoute>
+            }
+          />
+        ))}
+
+        {/* Catch-All Route */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+      <Toaster />
     </>
   );
 }

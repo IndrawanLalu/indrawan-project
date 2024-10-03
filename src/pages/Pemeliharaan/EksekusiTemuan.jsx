@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db, storage } from "@/firebase/firebaseConfig";
@@ -6,23 +6,31 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { TbMapSearch } from "react-icons/tb";
+import ImagePreview from "../ImagePreview";
 
 const EksekusiTemuan = () => {
   const { id } = useParams(); // Ambil ID dari URL
   const [data, setData] = useState({
-    imageUrl:"",
-    temuan:"",
-    lokasi:"",
-    inspektor:"",
-    penyulang:"",
-    category:"",
-    tglInspeksi:"",
+    imageUrl: "",
+    temuan: "",
+    lokasi: "",
+    inspektor: "",
+    penyulang: "",
+    category: "",
+    tglInspeksi: "",
     imageEksekusiURL: "",
     eksekutor: "",
     tglEksekusi: "",
     keterangan: "",
-    status: ""
+    status: "",
   });
   const navigate = useNavigate();
   const [preview, setPreview] = useState(null);
@@ -71,20 +79,18 @@ const EksekusiTemuan = () => {
 
       if (imageEksekusi) {
         // Upload gambar ke Firebase Storage
-        const storageRef = ref(storage, `images/eksekusi/${imageEksekusi.name}`);
+        const storageRef = ref(
+          storage,
+          `images/eksekusi/${imageEksekusi.name}`
+        );
         const uploadTask = uploadBytesResumable(storageRef, imageEksekusi);
 
         // Menunggu upload selesai dan mengambil URL gambar
         imageEksekusiURL = await new Promise((resolve, reject) => {
-          uploadTask.on(
-            "state_changed",
-            null,
-            reject,
-            async () => {
-              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-              resolve(downloadURL);
-            }
-          );
+          uploadTask.on("state_changed", null, reject, async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadURL);
+          });
         });
       }
 
@@ -103,31 +109,37 @@ const EksekusiTemuan = () => {
   };
 
   return (
-    <div className="mx-4 mb-16">
+    <div className="mx-4 md:mx-40 mb-16">
       <div className=" border-main border-b grid grid-cols-2 md:grid-cols-5 md:pt-10">
-        <h2 className="font-semibold text-start md:text-2xl md:pt-12">Hasil Temuan</h2>
+        <h2 className="font-semibold text-start md:text-2xl md:pt-12">
+          Hasil Temuan
+        </h2>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label className="text-right">
-              Foto
-            </Label>
-            <img
+            <Label className="text-right">Foto</Label>
+            <ImagePreview
               type="file"
               src={data.imageUrl}
               alt="foto"
-              className="w-20 h-20 rounded-md md:w-36 md:h-36 object-cover"
+              className="w-full h-full rounded-md md:w-36 md:h-36 object-cover"
             />
-            {data.imageEksekusiURL ? <img
-              type="file"
-              src={data.imageEksekusiURL}
-              alt="foto"
-              className="w-20 h-20 rounded-md md:w-36 md:h-36 object-cover"
-            /> : ""}
+            {data.imageEksekusiURL ? (
+              <img
+                type="file"
+                src={data.imageEksekusiURL}
+                alt="foto"
+                className="w-40 h-40 rounded-md md:w-36 md:h-36 object-cover"
+              />
+            ) : (
+              ""
+            )}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="temuan" className="text-right">Temuan</Label>
+            <Label htmlFor="temuan" className="text-right">
+              Temuan
+            </Label>
             <Input
               type="text"
               id="temuan"
@@ -139,7 +151,9 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="lokasi" className="text-right">lokasi</Label>
+            <Label htmlFor="lokasi" className="text-right">
+              lokasi
+            </Label>
             <Input
               type="text"
               id="lokasi"
@@ -151,7 +165,21 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="penyulang" className="text-right">Penyulang</Label>
+            <Label htmlFor="location" className="text-right"></Label>
+            <Link
+              to={"https://www.google.com/maps/place/" + data.location}
+              target="_blank"
+            >
+              <span className="gap-2 flex bg-main text-white p-1 rounded items-center hover:bg-gray-600 md:w-20">
+                <TbMapSearch />
+                Maps
+              </span>
+            </Link>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="penyulang" className="text-right">
+              Penyulang
+            </Label>
             <Input
               type="text"
               id="penyulang"
@@ -163,7 +191,9 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tglInspeksi" className="text-right">Tgl Inspeksi</Label>
+            <Label htmlFor="tglInspeksi" className="text-right">
+              Tgl Inspeksi
+            </Label>
             <Input
               type="date"
               id="tglInspeksi"
@@ -175,12 +205,16 @@ const EksekusiTemuan = () => {
             />
           </div>
           {/* More form fields... */}
-          
+
           <div className=" border-main border-b grid grid-cols-2 mt-4 py-2 md:grid-cols-5">
-            <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">Eksekusi Temuan</h2>
+            <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">
+              Eksekusi Temuan
+            </h2>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="tglEksekusi" className="text-right">Tgl Eksekusi</Label>
+            <Label htmlFor="tglEksekusi" className="text-right">
+              Tgl Eksekusi
+            </Label>
             <Input
               type="date"
               id="tglEksekusi"
@@ -192,7 +226,9 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="eksekutor" className="text-right">Eksekutor</Label>
+            <Label htmlFor="eksekutor" className="text-right">
+              Eksekutor
+            </Label>
             <Input
               type="text"
               id="eksekutor"
@@ -204,7 +240,9 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="keterangan" className="text-right">Keterangan</Label>
+            <Label htmlFor="keterangan" className="text-right">
+              Keterangan
+            </Label>
             <Input
               type="text"
               id="keterangan"
@@ -216,55 +254,65 @@ const EksekusiTemuan = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="imageEksekusiURL" className="text-right">Foto Eksekusi</Label>
-            {data.imageEksekusiURL ?
+            <Label htmlFor="imageEksekusiURL" className="text-right">
+              Foto Eksekusi
+            </Label>
+            {data.imageEksekusiURL ? (
               <Input
-              type="file"
-              name="imageEksekusiURL"
-              id="imageEksekusiURL"
-              accept="image/*"
-              onChange={handleImageChange} // Handle perubahan gambar
-              className="col-span-3"
-              
-            />: 
+                type="file"
+                name="imageEksekusiURL"
+                id="imageEksekusiURL"
+                accept="image/*"
+                onChange={handleImageChange} // Handle perubahan gambar
+                className="col-span-3"
+              />
+            ) : (
               <Input
-              type="file"
-              name="imageEksekusiURL"
-              id="imageEksekusiURL"
-              accept="image/*"
-              onChange={handleImageChange} // Handle perubahan gambar
-              className="col-span-3"
-              required
-            />}
-            
+                type="file"
+                name="imageEksekusiURL"
+                id="imageEksekusiURL"
+                accept="image/*"
+                onChange={handleImageChange} // Handle perubahan gambar
+                className="col-span-3"
+                required
+              />
+            )}
           </div>
           {preview && (
             <div className="grid grid-cols-4 items-center">
               <Label htmlFor="imagePreview" className="text-right"></Label>
               <div className="col-span-3">
-                <img src={preview} id="imagePreview" alt="Selected Preview" className="h-32 w-32 object-cover" />
+                <img
+                  src={preview}
+                  id="imagePreview"
+                  alt="Selected Preview"
+                  className="h-32 w-32 object-cover"
+                />
               </div>
             </div>
           )}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label className="text-right">Status</Label>
-            
-              <Select 
+
+            <Select
               name="status"
               onValueChange={(value) => setData({ ...data, status: value })}
               className="col-span-3"
-              required>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder={data.status} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Selesai">Selesai</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                </SelectContent>
-              </Select>
+              required
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder={data.status} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Selesai">Selesai</SelectItem>
+                <SelectItem value="Pending">Pending</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
-        <Button type="submit" className="mt-14 mb-10 flex w-full ">Update</Button>
+        <Button type="submit" className="mt-14 mb-10 flex w-full ">
+          Update
+        </Button>
       </form>
       <div className="h-4"></div>
     </div>

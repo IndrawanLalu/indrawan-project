@@ -50,10 +50,10 @@ const TambahPenyulang = () => {
   };
 
   return (
-    <div className="px-2 md:pt-20 md:px-80">
+    <div className="px-2 md:pt-20 md:px-96">
       <div className="border-main border-b pb-2 flex left-2 right-0 top-0 md:left-40 md:top-12">
         <h2 className="font-semibold text-start md:text-2xl md:pt-12">
-          Input Temuan
+          Input Penyulang
         </h2>
       </div>
       <form onSubmit={handleSubmitPenyulang}>
@@ -115,7 +115,12 @@ const TambahPenyulang = () => {
             />
           </div>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full">
+        <Button
+          type="submit"
+          disabled={isLoading}
+          size="lg"
+          className="mt-4 w-full"
+        >
           {isLoading ? "Uploading..." : "Simpan"}
         </Button>
       </form>

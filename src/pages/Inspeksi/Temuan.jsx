@@ -27,6 +27,7 @@ import { CgDanger } from "react-icons/cg";
 // import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
+import ImagePreview from "../ImagePreview";
 
 const Temuan = () => {
   const [data, setData] = useState([]);
@@ -103,9 +104,9 @@ const Temuan = () => {
     }
   };
   return (
-    <div className="Container mb-16">
-      <div className=" border-main border-b pb-2 flex fixed left-2 right-0 top-0 md:left-40 md:top-12">
-        <h2 className="font-semibold text-start md:text-2xl md:pt-12 pt-2">
+    <div className="mb-16">
+      <div className=" border-main border-b pb-2 flex fixed left-2 right-40 top-0 md:left-40 md:top-20 items-center">
+        <h2 className="font-semibold text-start md:text-2xl pt-2">
           Hasil Temuan
         </h2>
         <div className="pl-4 pt-2">
@@ -124,7 +125,7 @@ const Temuan = () => {
               <DialogTrigger asChild>
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10"
+                  className="grid grid-cols-6 py-2 hover:bg-main/10 content-center justify-center items-center border-b border-main/50 dark:border-main/50"
                 >
                   {/* <div className="content-center pl-2">
                     <Avatar>
@@ -132,20 +133,17 @@ const Temuan = () => {
                       <AvatarFallback>SB</AvatarFallback>
                     </Avatar>
                   </div> */}
-                  <div className="col-start-1 col-span-3 md:col-span-2 md:content-center text-start">
+                  <div className="col-start-1 col-span-3 md:col-span-3 text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className=" flex flex-col col-start-4 colsspan-3 text-start items-center justify-center content-center">
+                  <div className=" flex flex-col col-start-4 md:col-start-4 colsspan-3 text-start items-center">
                     <span>Penyulang</span>
                     <h2 className="font-semibold">{item.penyulang}</h2>
-
                   </div>
-                  <div className="hidden  md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.penyulang}</h2>
-                  </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.tglInspeksi}</h2>
+                  <div className="hidden md:flex flex-col  md:col-start-5 colsspan-1 text-start items-center">
+                    <span>Inspektor</span>
+                    <h2 className="font-semibold">{item.inspektor}</h2>
                   </div>
                   <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
                     <div className="text-[10px]">
@@ -185,7 +183,7 @@ const Temuan = () => {
                     <Label htmlFor="foto" className="text-right">
                       Foto
                     </Label>
-                    <img
+                    <ImagePreview
                       src={item.imageUrl}
                       alt="foto"
                       className="w-20 h-20 rounded-md md:w-36 md:h-36"

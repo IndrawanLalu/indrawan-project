@@ -9,46 +9,15 @@ import { logout } from "@/redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import DropdownMenuMobile from "./DropdownMenuMobile";
 import AdminHover from "./adminHover";
-// import { doc, getDoc } from 'firebase/firestore';
-// import { db } from '@/firebase/firebaseConfig';
-// import TambahTemuan from '@/pages/Inspeksi/Tambah Temuan';
-
 const navigation = [
   { name: "Beban Gardu", href: "/amg" },
   { name: "Info Padam", href: "/padam" },
   { name: "Inspeksi", href: "/inspeksi" },
-  { name: "Company", href: "/#" },
+  { name: "Pemeliharaan", href: "/pemeliharaan" },
 ];
-// async function getUserRole(uid) {
-//   try {
-//     if (!uid) {
-//       console.error("UID is not provided");
-//       return null; // Mengembalikan null jika UID tidak ada
-//     }
-//     const docRef = doc(db, "userRoles", uid);
-//     const docSnap = await getDoc(docRef);
-
-//     if (docSnap.exists()) {
-//       return docSnap.data().role;
-//     } else {
-//       console.log("No such document!");
-//       return null;
-//     }
-//   } catch (error) {
-//     console.error("Error getting user role: ", error);
-//   }
-// }
 const NavBarKu = () => {
   const user = useSelector((state) => state.auth.user); // Mengambil user dari Redux
-  // Kalo butuh role pakai disini
-  // const [role, setRole] = useState(null);
-  // useEffect(() => {
-  //   if (user) {
-  //     getUserRole(user.uid).then(setRole);
-  //   }
-  // }, [user]);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
   const auth = getAuth();
   const handleLogout = async () => {
@@ -63,15 +32,17 @@ const NavBarKu = () => {
 
   return (
     <div className="bg-white">
-      <header className=" md:grid md:fixed md:w-full md:top-0 md:z-50 md:bg-main/10 md:justify-items-between">
+      <header className=" md:fixed md:w-full md:top-0 md:z-50 md:bg-main md:justify-items-between">
         {/* nav dekstop */}
         <nav
           aria-label="Global"
           className="flex items-center justify-between p-4 lg:px-8"
         >
-          <div className="hidden lg:flex lg:flex-1 lg:justify-start">
+          <div className="hidden lg:flex lg:flex-1 lg:justify-start lg:z-50">
             {user?.role === "admin" ? (
-              <AdminHover user={user?.email} role={user?.role} />
+              <Link to={"/"}>
+                <AdminHover user={user?.email} role={user?.role} />
+              </Link>
             ) : (
               <Link to={"/"}>
                 {" "}
@@ -89,8 +60,8 @@ const NavBarKu = () => {
             ))}
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <Button variant="neutral" onClick={handleLogout}>
-              Logoutt
+            <Button variant="outline" onClick={handleLogout}>
+              Logout
             </Button>
           </div>
           <div className="md:hidden z-50 flex justify-between items-center border-t-4 border-main bg-slate-100 p-4 fixed bottom-0 left-0 right-0 rounded-2xl">
@@ -98,7 +69,7 @@ const NavBarKu = () => {
               <li className="hover:text-indigo-600 hover:animate-in ">
                 <div className="flex flex-col items-center">
                   <Link to={"/"}>
-                    <Button size="iconNav" className="flex flex-col">
+                    <Button size="icon" className="flex flex-col">
                       <IoHome />
                       Home
                     </Button>
@@ -109,7 +80,7 @@ const NavBarKu = () => {
                 {user?.role !== "diandra" ? (
                   <div className="flex flex-col items-center">
                     <Link to={"menu"}>
-                      <Button size="iconNav" className="flex flex-col">
+                      <Button size="icon" className="flex flex-col">
                         {" "}
                         <LuMenuSquare />
                         Menu
@@ -121,11 +92,14 @@ const NavBarKu = () => {
               <li className="hover:text-indigo-600 hover:animate-in ">
                 <div className="flex flex-col items-center gap-2">
                   {user ? (
-                    <DropdownMenuMobile />
+                    <DropdownMenuMobile
+                      data={handleLogout}
+                      email={user?.email}
+                    />
                   ) : (
                     <>
                       <Link to={"/login"}>
-                        <Button size="iconNav">
+                        <Button size="icon">
                           Login
                           <CiLogin />
                         </Button>{" "}
