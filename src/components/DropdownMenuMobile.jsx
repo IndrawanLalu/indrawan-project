@@ -19,7 +19,7 @@ import { Button } from "./ui/button";
 // import { useDispatch } from "react-redux";
 // import { logout } from "@/redux/authSlice";
 
-const DropdownMenuMobile = ({ data, email }) => {
+const DropdownMenuMobile = ({ onclick, email }) => {
   // const auth = getAuth();
   // const user = auth.currentUser;
   // const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const DropdownMenuMobile = ({ data, email }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" className="flex flex-col">
+        <Button size="sm" className="flex flex-col">
           <IoIosSettings />
           Seting
         </Button>
@@ -55,7 +55,7 @@ const DropdownMenuMobile = ({ data, email }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <LogOut className="mr-2 h-4 w-4" />
-          <span onClick={data}>Log out</span>
+          <span onClick={onclick}>Log out</span>
           <DropdownMenuShortcut></DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>
@@ -66,7 +66,7 @@ DropdownMenuMobile.props;
 // Validasi tipe props
 DropdownMenuMobile.propTypes = {
   email: PropTypes.string.isRequired, // Menentukan bahwa user harus bertipe string dan wajib
-  data: PropTypes.string.isRequired, // Menentukan bahwa role harus bertipe string dan wajib
+  onclick: PropTypes.func.isRequired, // Menentukan bahwa role harus bertipe string dan wajib
 };
 
 export default DropdownMenuMobile;

@@ -17,12 +17,22 @@ import Penyulang from "./pages/Aset/Penyulang";
 import TambahPenyulang from "./pages/Aset/TambahPenyulang";
 import { Toaster } from "./components/ui/toaster";
 import Unauthorrized from "./pages/Unauthorrized";
+import Dashboard from "./pages/admin/Dashboard";
+import GangguanPenyulang from "./pages/gangguan/GangguanPenyulang";
+import TambahGangguan from "./pages/gangguan/Tambah Gangguan";
+import SeedSegment from "./seeder/seedPage";
+import Segment from "./pages/segment/Segment";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
   const protectedRouteAdmin = [
-    { path: "/aset/penyulang", element: <Penyulang /> },
+    { path: "/admin/aset/penyulang", element: <Penyulang /> },
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
+    { path: "/admin/dashboard", element: <Dashboard /> },
+    { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
+    { path: "/admin/tambahGangguan", element: <TambahGangguan /> },
+    { path: "/admin/seeder", element: <SeedSegment /> },
+    { path: "/admin/data-segment", element: <Segment /> },
   ];
   const protectedRouteDiandra = [{ path: "/diandra", element: <Diandra /> }];
   // Routes yang dapat diakses oleh admin dan inspektor

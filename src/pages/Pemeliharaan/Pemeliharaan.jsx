@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Layouts from "../admin/layouts";
 
 const Pemeliharaan = () => {
   const [data, setData] = useState([]);
@@ -70,13 +71,16 @@ const Pemeliharaan = () => {
     );
   };
   return (
-    <div className="md:flex">
+    <Layouts>
+      <div className="font-semibold text-start md:text-2xl md:pt-2">
+        List Temuan Hasil Inspeksi
+      </div>
       <Tabs
         defaultValue="Temuan"
-        className="w-[500px] fixed left-2 right-2 top-0 md:left-40 md:top-14 items-center justify-center"
+        className="w-[500px] md:w-full m-auto md:h-screen"
       >
         <div className="flex items-center">
-          <div className="font-semibold text-start md:text-2xl pb-2 pt-6 ">
+          <div className="font-semibold text-start md:text-2xl pb-1 md:pt-6 ">
             <TabsList>
               <TabsTrigger value="Temuan">Temuan</TabsTrigger>
               <TabsTrigger value="Pending">Pending</TabsTrigger>
@@ -84,7 +88,7 @@ const Pemeliharaan = () => {
             </TabsList>
           </div>
           {/* Dropdown Filter Category */}
-          <div className="pt-4 ml-2 mr-2">
+          <div className="md:pt-4 ml-2 mr-2">
             <Select onValueChange={setFilterCategory}>
               <SelectTrigger className="w-30 md:w-40">
                 <SelectValue placeholder="Kategory" />
@@ -98,42 +102,48 @@ const Pemeliharaan = () => {
             </Select>
           </div>
           {/* Dropdown Filter Penyulang */}
-          <div className="hidden md:block md:pt-4 md:ml-2 md:mr-2">
-            <Select onValueChange={setFilterPenyulang}>
-              <SelectTrigger className="w-20 md:w-40">
-                <SelectValue placeholder="Penyulang" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Semua</SelectItem>
-                {dataPenyulang.map((penyulang) => (
-                  <SelectItem key={penyulang.id} value={penyulang.penyulang}>
-                    {penyulang.penyulang}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         </div>
-
+        <div className=" hidden md:grid grid-cols-6 justify-start text-center py-2 border font-semibold items-center bg-main/30">
+          <h1 className="col-span-2">Temuan</h1>
+          <Select onValueChange={setFilterPenyulang}>
+            <SelectTrigger className="">
+              <SelectValue placeholder="Penyulang" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Semua</SelectItem>
+              {dataPenyulang.map((penyulang) => (
+                <SelectItem key={penyulang.id} value={penyulang.penyulang}>
+                  {penyulang.penyulang}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <h1>Inspektor</h1>
+          <h1>Tgl Inspeksi</h1>
+          <h1 className="">Status</h1>
+        </div>
         <TabsContent value="Temuan">
-          <div className="fixed left-0 right-0 top-16 md:left-48 md:right-48 md:top-36">
-            <ScrollArea className="w-full h-screen px-2 md:h-screen">
+          <div className=" ">
+            <ScrollArea className="w-full h-[80vh] px-2">
               {filteredDataByCategoryAndPenyulang("Temuan").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10"
+                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
-                  <div className="col-start-1 col-span-4 md:col-span-2 md:content-center text-start">
+                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.penyulang}</h2>
+                  <div className="hidden md:flex md:flex-col md:text-start md:items-center">
+                    <h2 className="">{item.penyulang}</h2>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.tglInspeksi}</h2>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.inspektor}</h2>
                   </div>
-                  <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.tglInspeksi}</h2>
+                  </div>
+                  <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
                       {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
                         day: "2-digit",
@@ -161,33 +171,33 @@ const Pemeliharaan = () => {
                   </div>
                 </div>
               ))}
-              <div className=" pb-20 mb-20  pt-2 text-sm">
-                <p>Hasil temuan Inspeksi</p>
-              </div>
             </ScrollArea>
           </div>
         </TabsContent>
         <TabsContent value="Pending">
-          <div className="fixed left-0 right-0 top-16 md:left-48 md:right-48 md:top-40">
-            <ScrollArea className="w-full h-screen px-2 md:h-screen">
+          <div className=" ">
+            <ScrollArea className="w-full h-[80vh] px-2">
               {filteredDataByCategoryAndPenyulang("Pending").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10"
+                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
-                  <div className="col-start-1 col-span-4 md:col-span-2 md:content-center text-start">
+                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.penyulang}</h2>
+                  <div className="hidden md:flex md:flex-col md:text-start md:items-center">
+                    <h2 className="">{item.penyulang}</h2>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.tglInspeksi}</h2>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.inspektor}</h2>
                   </div>
-                  <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.tglInspeksi}</h2>
+                  </div>
+                  <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
-                      {new Date(item.tglEksekusi).toLocaleDateString("id-ID", {
+                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
@@ -213,33 +223,36 @@ const Pemeliharaan = () => {
                   </div>
                 </div>
               ))}
-              <div className=" pb-20 mb-20  pt-2 text-sm">
+              <div className=" pb-20 mb-20  pt-2 text-sm md:hidden">
                 <p>Hasil temuan Inspeksi</p>
               </div>
             </ScrollArea>
           </div>
         </TabsContent>
         <TabsContent value="Selesai">
-          <div className="fixed left-0 right-0 top-16 md:left-48 md:right-48 md:top-40">
-            <ScrollArea className="w-full h-screen px-2 md:h-screen">
+          <div className=" ">
+            <ScrollArea className="w-full h-[90vh] px-2">
               {filteredDataByCategoryAndPenyulang("Selesai").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10"
+                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
-                  <div className="col-start-1 col-span-4 md:col-span-2 md:content-center text-start">
+                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.penyulang}</h2>
+                  <div className="hidden md:flex md:flex-col md:text-start md:items-center">
+                    <h2 className="">{item.penyulang}</h2>
                   </div>
-                  <div className="hidden md:flex md:text-start md:items-center">
-                    <h2 className="font-semibold">{item.tglInspeksi}</h2>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.inspektor}</h2>
                   </div>
-                  <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.tglInspeksi}</h2>
+                  </div>
+                  <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
-                      {new Date(item.tglEksekusi).toLocaleDateString("id-ID", {
+                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
                         day: "2-digit",
                         month: "2-digit",
                         year: "numeric",
@@ -265,14 +278,14 @@ const Pemeliharaan = () => {
                   </div>
                 </div>
               ))}
-              <div className=" pb-20 mb-20  pt-2 text-sm">
+              <div className=" pb-20 mb-20  pt-2 text-sm md:hidden">
                 <p>Hasil temuan Inspeksi</p>
               </div>
             </ScrollArea>
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </Layouts>
   );
 };
 export default Pemeliharaan;

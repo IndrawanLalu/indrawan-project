@@ -14,11 +14,11 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   }
 
   if (!user) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace />;
   }
 
   // Cek apakah role pengguna ada di allowedRoles
-  if (!allowedRoles.includes(userRole)) {
+  if (user && !allowedRoles.includes(userRole)) {
     return <Navigate to="/unauthorized" replace />; // Redirect jika role tidak sesuai
   }
 

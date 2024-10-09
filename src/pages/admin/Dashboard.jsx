@@ -1,12 +1,14 @@
-import { TotalGangguan } from "./gangguan/dataGangguan";
+// import DiagramGangguan from "@/components/diagram/DiagramGangguan";
+import Layouts from "./Layouts";
+// import DiagramPenyulangTrip from "@/components/diagram/DiagramPenyulangTrip";
 import DiagramGangguanPenyulang from "@/components/diagram/DiagramGangguanPenyulang";
+import TabelSegment from "@/components/diagram/TabelSegment";
 import Top10gangguan from "@/components/diagram/Top10Gangguan";
-// import { useSelector } from "react-redux";
+import { TotalGangguan } from "@/pages/gangguan/dataGangguan";
 
-const Home = () => {
-  // const user = useSelector ((state) => state.auth.user);
+const Dashboard = () => {
   return (
-    <div className="p-2 md:py-20 md:w-full flex flex-col">
+    <Layouts>
       <div className="">
         <div className="text-2xl font-semibold border-b border-main">
           Dashboard Kinerja
@@ -28,9 +30,16 @@ const Home = () => {
               <Top10gangguan />
             </div>
           </div>
+          <div className="text-2xl font-semibold pt-4">
+            <span className="border-b border-main">Inspeksi Penyulang</span>
+          </div>
+          <div className="grid md:grid-cols-2 gap-4">
+            <TabelSegment />
+          </div>
         </div>
       </div>
-    </div>
+    </Layouts>
   );
 };
-export default Home;
+
+export default Dashboard;

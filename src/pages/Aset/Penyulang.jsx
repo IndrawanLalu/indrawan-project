@@ -27,6 +27,7 @@ import { EditIcon, PlusCircleIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import Layouts from "../admin/layouts";
 
 const Penyulang = () => {
   const [data, setData] = useState([]);
@@ -102,169 +103,180 @@ const Penyulang = () => {
     }
   };
   return (
-    <div className="w-full pt-24 text-center mx-auto px-28">
-      <div className="flex flex-col">
-        <div className="text-2xl font-semibold py-2">Penyulang ULP Selong</div>
-        <div className="flex gap-2 items-center">
-          <span className="text-2xl font-semibold">Tambah</span>
-          <Link to="/aset/tambahPenyulang">
-            <Button type="button" size="sm">
-              <PlusCircleIcon />
-            </Button>
-          </Link>
-        </div>
-      </div>
-      <div
-        className={`grid transition-all duration-5000 ease-in-out ${
-          editItem ? "grid-cols-3 gap-4 " : "grid-cols-1"
-        }`}
-      >
-        <div className="col-span-2">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[30px]">#</TableHead>
-                <TableHead>Penyulang</TableHead>
-                <TableHead>Sumber GI/PLTD</TableHead>
-                <TableHead>Panjang</TableHead>
-                <TableHead>Beban</TableHead>
-                <TableHead>Tgl Update</TableHead>
-                <TableHead></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {data.map((item, index) => (
-                <TableRow key={item.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{item.penyulang}</TableCell>
-                  <TableCell>{item.sumber}</TableCell>
-                  <TableCell>{item.Panjang} kMS</TableCell>
-                  <TableCell>{item.beban} MW</TableCell>
-                  <TableCell> {item.tglUpdate}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-center">
-                      <Button
-                        type="button"
-                        size="ssm"
-                        variant="delete"
-                        onClick={() => handleEditClick(item)}
-                      >
-                        <EditIcon className="h-4 w-4 text-main" />
-                      </Button>
-                      <Button type="button" variant="delete" size="icon">
-                        <TrashIcon className="h-4 w-4 text-red-500" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-
-        {editItem && (
-          <div className="mt-10 p-4 border rounded shadow-lg shadow-main col-span-1">
-            <h3 className="text-xl font-semibold">Edit Penyulang</h3>
-            <form>
-              <div className="mb-4 text-start">
-                <Label className="font-semibold">Penyulang</Label>
-                <Input
-                  name="penyulang"
-                  type="text"
-                  value={editItem.penyulang}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, penyulang: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </div>
-              <div className="mb-4 text-start">
-                <Label className="font-semibold">Sumber GI/PLTD</Label>
-                <Input
-                  type="text"
-                  value={editItem.sumber}
-                  onChange={(e) =>
-                    setEditItem({ ...editItem, sumber: e.target.value })
-                  }
-                  className="border p-2 rounded w-full"
-                />
-              </div>
-              <div className="mb-4 text-start">
-                <Label className="font-semibold">Panjang</Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    type="number"
-                    value={editItem.Panjang}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, Panjang: e.target.value })
-                    }
-                    className="border p-2 rounded w-30"
-                  />
-                  <span>KMS</span>
-                </div>
-              </div>
-              <div className="mb-4 text-start">
-                <Label className="font-semibold">Beban</Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    type="number"
-                    value={editItem.beban}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, beban: e.target.value })
-                    }
-                    className="border p-2 rounded w-30"
-                  />
-                  <span>MW</span>
-                </div>
-              </div>
-              <div className="mb-4 text-start">
-                <Label className="font-semibold">Tanggal Update</Label>
-                <div className="flex items-center gap-4">
-                  <Input
-                    type="date"
-                    value={editItem.tglUpdate}
-                    onChange={(e) =>
-                      setEditItem({ ...editItem, tglUpdate: e.target.value })
-                    }
-                    className="border p-2 rounded w-40"
-                  />
-                </div>
-              </div>
-              {/* Tambahkan input lain sesuai kebutuhan */}
-              <Button
-                type="submit"
-                variant="destructive"
-                className="mt-4 mr-8"
-                onClick={handleCancel}
-              >
-                Batal
-              </Button>
-              <AlertDialog>
-                <AlertDialogTrigger>
-                  <Button className="mt-4">Update</Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>Yakin ingin mengupdate?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={handleUpdate}>
-                      Update
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                  {error ? <p className="text-red-500 mb-4">{error}</p> : null}
-                </AlertDialogContent>
-              </AlertDialog>
-            </form>
+    <Layouts>
+      <div className="w-full text-center mx-auto px-4">
+        <div className="flex flex-col">
+          <div className="text-2xl font-semibold py-2">
+            Penyulang ULP Selong
           </div>
-        )}
+          <div className="flex gap-2 items-center">
+            <span className="text-2xl font-semibold">Tambah</span>
+            <Link to="/aset/tambahPenyulang">
+              <Button type="button" size="sm">
+                <PlusCircleIcon className="w-4 h-4" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+        <div
+          className={`grid transition-all duration-5000 ease-in-out ${
+            editItem ? "grid-cols-3 gap-4 " : "grid-cols-1"
+          }`}
+        >
+          <div className="col-span-2">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[30px]">#</TableHead>
+                  <TableHead>Penyulang</TableHead>
+                  <TableHead>Sumber GI/PLTD</TableHead>
+                  <TableHead>Panjang</TableHead>
+                  <TableHead>Beban</TableHead>
+                  <TableHead>Tgl Update</TableHead>
+                  <TableHead></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data.map((item, index) => (
+                  <TableRow key={item.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{item.penyulang}</TableCell>
+                    <TableCell>{item.sumber}</TableCell>
+                    <TableCell>{item.Panjang} kMS</TableCell>
+                    <TableCell>{item.beban} MW</TableCell>
+                    <TableCell> {item.tglUpdate}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center">
+                        <Button
+                          type="button"
+                          size="ssm"
+                          variant="delete"
+                          onClick={() => handleEditClick(item)}
+                        >
+                          <EditIcon className="h-4 w-4 text-main" />
+                        </Button>
+                        <Button type="button" variant="delete" size="icon">
+                          <TrashIcon className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          {editItem && (
+            <div className="mt-10 p-4 border rounded shadow-lg shadow-main col-span-1">
+              <h3 className="text-xl font-semibold">Edit Gangguan</h3>
+              <form>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Penyulang</Label>
+                  <Input
+                    name="penyulang"
+                    type="text"
+                    value={editItem.penyulang}
+                    onChange={(e) =>
+                      setEditItem({ ...editItem, penyulang: e.target.value })
+                    }
+                    className="border p-2 rounded w-full"
+                  />
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Sumber GI/PLTD</Label>
+                  <Input
+                    type="text"
+                    value={editItem.sumber}
+                    onChange={(e) =>
+                      setEditItem({ ...editItem, sumber: e.target.value })
+                    }
+                    className="border p-2 rounded w-full"
+                  />
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Panjang</Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="number"
+                      value={editItem.Panjang}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, Panjang: e.target.value })
+                      }
+                      className="border p-2 rounded w-30"
+                    />
+                    <span>KMS</span>
+                  </div>
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Beban</Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="number"
+                      value={editItem.beban}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, beban: e.target.value })
+                      }
+                      className="border p-2 rounded w-30"
+                    />
+                    <span>MW</span>
+                  </div>
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Tanggal Update</Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="date"
+                      value={editItem.tglUpdate}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, tglUpdate: e.target.value })
+                      }
+                      className="border p-2 rounded w-40"
+                    />
+                  </div>
+                </div>
+                {/* Tambahkan input lain sesuai kebutuhan */}
+                <Button
+                  type="submit"
+                  variant="warning"
+                  className="mt-4 mr-8"
+                  onClick={handleCancel}
+                >
+                  Batal
+                </Button>
+                <AlertDialog>
+                  <AlertDialogTrigger>
+                    <span className="h-10 px-4 py-2 rounded-md bg-main border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none dark:hover:shadow-none">
+                      Update
+                    </span>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Yakin ingin mengupdate?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleUpdate}>
+                        Update
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                    {error ? (
+                      <p className="text-red-500 mb-4">{error}</p>
+                    ) : null}
+                  </AlertDialogContent>
+                </AlertDialog>
+              </form>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </Layouts>
   );
 };
 

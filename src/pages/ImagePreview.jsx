@@ -17,7 +17,12 @@ const ImagePreview = ({ src, alt }) => {
         alt={alt}
         className="cursor-pointer"
         onClick={handleImageClick}
-        style={{ width: "150px", height: "auto" }}
+        style={{
+          width: "144px",
+          height: "144px",
+          objectFit: "cover",
+          borderRadius: "10px",
+        }}
       />
 
       {/* Dialog for preview */}
