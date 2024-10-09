@@ -14,7 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Layouts from "../admin/layouts";
+import Layouts from "@/pages/admin/layouts";
 
 const Pemeliharaan = () => {
   const [data, setData] = useState([]);

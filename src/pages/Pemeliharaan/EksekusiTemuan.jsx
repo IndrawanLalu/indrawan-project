@@ -14,8 +14,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TbMapSearch } from "react-icons/tb";
-import ImagePreview from "../ImagePreview";
-import Layouts from "../admin/layouts";
+import ImagePreview from "@/pages/ImagePreview";
+import Layouts from "@/pages/admin/layouts";
 
 const EksekusiTemuan = () => {
   const { id } = useParams(); // Ambil ID dari URL
