@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import Sidebar from "./Sidebar";
+import Sidebar from "@/pages/admin/Sidebar";
 import { FaBars } from "react-icons/fa"; // Menggunakan react-icons untuk tombol toggle
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";

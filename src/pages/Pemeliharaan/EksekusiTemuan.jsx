@@ -14,7 +14,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TbMapSearch } from "react-icons/tb";
+<<<<<<< HEAD
 import ImagePreview from "../ImagePreview";
+=======
+import ImagePreview from "@/pages/ImagePreview";
+>>>>>>> 91d1e1e222b24e42b36ce8ad0b7bbdd85361f3ab
 import Layouts from "@/pages/admin/layouts";
 
 const EksekusiTemuan = () => {
