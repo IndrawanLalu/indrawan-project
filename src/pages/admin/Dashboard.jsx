@@ -1,5 +1,5 @@
 // import DiagramGangguan from "@/components/diagram/DiagramGangguan";
-import Layouts from "./Layouts";
+import Layouts from "@/pages/admin/Layouts";
 // import DiagramPenyulangTrip from "@/components/diagram/DiagramPenyulangTrip";
 import DiagramGangguanPenyulang from "@/components/diagram/DiagramGangguanPenyulang";
 import TabelSegment from "@/components/diagram/TabelSegment";

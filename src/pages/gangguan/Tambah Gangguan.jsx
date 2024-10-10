@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button"; // Assuming you have Button component
-import Layouts from "../admin/Layouts";
+import Layouts from "@/pages/admin/Layouts";
 import {
   Select,
   SelectContent,

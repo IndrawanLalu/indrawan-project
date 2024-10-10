@@ -1,8 +1,30 @@
 import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState, useEffect } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig"; // Sesuaikan dengan konfigurasi Firebase Anda
-
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+  ChartDataLabels // Register DataLabels plugin
+);
 const DiagramGangguanPenyulang = () => {
   const [targetGangguan2024, setTargetGangguan2024] = useState([]);
   const [gangguan2024, setGangguan2024] = useState([]);
