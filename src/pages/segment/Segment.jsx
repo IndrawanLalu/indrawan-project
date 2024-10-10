@@ -41,7 +41,7 @@ import { EditIcon, PlusCircleIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import Layouts from "@/pages/admin/layouts";
+import Layouts from "@/pages/admin/Layouts";
 
 const Segment = () => {
   const [data, setData] = useState([]);
