@@ -28,6 +28,8 @@ import {
   updateDoc,
   doc,
   deleteDoc,
+  where,
+  query,
 } from "firebase/firestore";
 import { EditIcon, PlusCircleIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -35,6 +37,9 @@ import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import Layouts from "@/pages/admin/Layouts";
 import ModalDialog from "@/lib/dialog";
+import { TbMapSearch } from "react-icons/tb";
+import { format } from "date-fns";
+import DatePicker from "react-datepicker";
 
 const GangguanPenyulang = () => {
   const [data, setData] = useState([]);
@@ -44,19 +49,26 @@ const GangguanPenyulang = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State untuk kontrol modal
 
   const { toast } = useToast();
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  ); // Default tgl 1 bulan ini
+  const [endDate, setEndDate] = useState(new Date()); // Default hari ini
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(
-          collection(db, "gangguanPenyulang")
+        const q = query(
+          collection(db, "gangguanPenyulang"), // Sesuaikan nama koleksi
+          where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
+          where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
         );
-        const fetchedData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
+        const querySnapshot = await getDocs(q);
+        const dataGangguan = querySnapshot.docs.map((doc) => ({
           ...doc.data(),
+          id: doc.id,
         }));
         // Mengurutkan data berdasarkan tgl inspeksi dari yang terbaru ke terlama
-        const sortedData = fetchedData.sort(
+        const sortedData = dataGangguan.sort(
           (a, b) => new Date(b.tanggalGangguan) - new Date(a.tanggalGangguan)
         );
         setData(sortedData);
@@ -65,7 +77,7 @@ const GangguanPenyulang = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const handleEditClick = (item) => {
     setEditItem(item); // Set item yang sedang di-edit
@@ -118,6 +130,7 @@ const GangguanPenyulang = () => {
         arusT: editItem.arusT,
         arusN: editItem.arusN,
         penyebab: editItem.penyebab,
+        lokasiGangguan: editItem.lokasiGangguan,
       });
 
       // Update data di state
@@ -179,8 +192,24 @@ const GangguanPenyulang = () => {
     <Layouts>
       <div className="w-full text-center mx-auto px-4">
         <div className="flex flex-col">
-          <div className="text-2xl font-semibold py-2">
-            Gangguan Penyulang ULP Selong
+          <div className=" border-b border-main flex justify-between py-2">
+            <span className="text-2xl font-semibold">Gangguan Penyulang</span>
+            <div className="flex gap-2 justify-items-center justify-end px-6">
+              <label>Start Date: </label>
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                className="bg-transparent border border-main rounded-md px-2 text-black"
+                dateFormat={"dd/MM/yyyy"}
+              />
+              <label>End Date: </label>
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                className="bg-transparent border border-main rounded-md px-2 text-black"
+                dateFormat={"dd/MM/yyyy"}
+              />
+            </div>
           </div>
           <div className="flex gap-4 items-center">
             <span className="text-2xl font-semibold">Tambah</span>
@@ -216,6 +245,7 @@ const GangguanPenyulang = () => {
                   <TableHead>Arus T</TableHead>
                   <TableHead>Arus N</TableHead>
                   <TableHead>Penyebab</TableHead>
+                  <TableHead>Lokasi</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
               </TableHeader>
@@ -247,6 +277,22 @@ const GangguanPenyulang = () => {
                     <TableCell>{item.arusT}</TableCell>
                     <TableCell>{item.arusN}</TableCell>
                     <TableCell>{item.penyebab}</TableCell>
+                    <TableCell>
+                      {item.lokasiGangguan ? (
+                        <Link
+                          to={
+                            "https://www.google.com/maps/place/" +
+                            item.lokasiGangguan
+                          }
+                          target="_blank"
+                        >
+                          <span className="gap-2 flex bg-main text-white p-1 rounded items-center hover:bg-gray-600">
+                            <TbMapSearch />
+                            Maps
+                          </span>
+                        </Link>
+                      ) : null}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center justify-center gap-1">
                         <Button
@@ -462,6 +508,21 @@ const GangguanPenyulang = () => {
                     value={editItem.penyebab}
                     onChange={(e) =>
                       setEditItem({ ...editItem, penyebab: e.target.value })
+                    }
+                    className="border p-2 rounded w-full"
+                  />
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">lokasiGangguan</Label>
+                  <Input
+                    name="lokasiGangguan"
+                    type="text"
+                    value={editItem.lokasiGangguan}
+                    onChange={(e) =>
+                      setEditItem({
+                        ...editItem,
+                        lokasiGangguan: e.target.value,
+                      })
                     }
                     className="border p-2 rounded w-full"
                   />

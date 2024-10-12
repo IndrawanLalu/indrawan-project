@@ -47,7 +47,7 @@ const Segment = () => {
   const [data, setData] = useState([]);
   const [editItem, setEditItem] = useState(null); // State untuk mengontrol item yang sedang di-edit
   const [error, setError] = useState(""); // State untuk menangani error
-  const [filterPenyulang, setFilterPenyulang] = useState("all");
+  const [filterPenyulang, setFilterPenyulang] = useState("GELANG");
 
   const BulanSekarang = new Date().getMonth();
 

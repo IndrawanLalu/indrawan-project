@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+import { format } from "date-fns"; // For handling date formats
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -25,7 +27,8 @@ ChartJS.register(
   Filler,
   ChartDataLabels // Register DataLabels plugin
 );
-const DiagramGangguanPenyulang = () => {
+
+const DiagramGangguanPenyulang = ({ startDate, endDate }) => {
   const [targetGangguan2024, setTargetGangguan2024] = useState([]);
   const [gangguan2024, setGangguan2024] = useState([]);
 
@@ -35,8 +38,8 @@ const DiagramGangguanPenyulang = () => {
       try {
         const q = query(
           collection(db, "gangguanPenyulang"), // Sesuaikan nama koleksi
-          where("tanggalGangguan", ">=", "2024-01-01"),
-          where("tanggalGangguan", "<=", "2024-12-31")
+          where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
+          where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
         );
         const querySnapshot = await getDocs(q);
         const dataGangguan = querySnapshot.docs.map((doc) => ({
@@ -61,7 +64,7 @@ const DiagramGangguanPenyulang = () => {
     };
 
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
 
   const data = {
     labels: [
@@ -128,5 +131,8 @@ const DiagramGangguanPenyulang = () => {
     </div>
   );
 };
-
+DiagramGangguanPenyulang.propTypes = {
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+};
 export default DiagramGangguanPenyulang;

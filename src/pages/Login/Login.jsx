@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -13,12 +13,20 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "@/redux/authSlice";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig";
 
 const Login = () => {
+  const userLogin = useSelector((state) => state.auth.user); // Mengambil user dari Redux
+  const nav = useNavigate();
+  useEffect(() => {
+    if (userLogin) {
+      // Jika user sudah login, redirect ke halaman lain
+      nav("/");
+    }
+  }, [userLogin, nav]);
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -26,7 +34,6 @@ const Login = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const nav = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();

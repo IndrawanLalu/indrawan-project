@@ -37,7 +37,7 @@ const DropdownMenuMobile = ({ onclick, email }) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="sm" className="flex flex-col">
+        <Button size="menuMobile" className="flex flex-col">
           <IoIosSettings />
           Seting
         </Button>

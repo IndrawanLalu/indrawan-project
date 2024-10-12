@@ -40,7 +40,7 @@ const NavBarKu = () => {
               <li className="hover:text-indigo-600 hover:animate-in ">
                 <div className="flex flex-col items-center">
                   <Link to={"/"}>
-                    <Button size="sm" className="flex flex-col">
+                    <Button size="menuMobile" className="flex flex-col">
                       <IoHome />
                       Home
                     </Button>
@@ -51,14 +51,22 @@ const NavBarKu = () => {
                 {user?.role !== "diandra" ? (
                   <div className="flex flex-col items-center">
                     <Link to={"menu"}>
-                      <Button size="sm" className="flex flex-col">
+                      <Button size="menuMobile" className="flex flex-col">
                         {" "}
                         <LuMenuSquare />
                         Menu
                       </Button>
                     </Link>
                   </div>
-                ) : null}
+                ) : (
+                  <Link to={"/diandra"}>
+                    <Button size="menuMobile" className="flex flex-col">
+                      {" "}
+                      <LuMenuSquare />
+                      Diandra
+                    </Button>
+                  </Link>
+                )}
               </li>
               <li className="hover:text-indigo-600 hover:animate-in ">
                 <div className="flex flex-col items-center gap-2">
@@ -70,7 +78,7 @@ const NavBarKu = () => {
                   ) : (
                     <>
                       <Link to={"/login"}>
-                        <Button size="sm">
+                        <Button size="menuMobile">
                           Login
                           <CiLogin />
                         </Button>{" "}

@@ -1,3 +1,5 @@
+import PropTypes from "prop-types";
+import { format } from "date-fns"; // For handling date formats
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -24,7 +26,7 @@ ChartJS.register(
   ChartDataLabels
 );
 
-const Top10gangguan = () => {
+const Top10gangguan = ({ startDate, endDate }) => {
   const [gangguanTerbanyak, setGangguanTerbanyak] = useState([]);
 
   useEffect(() => {
@@ -32,8 +34,8 @@ const Top10gangguan = () => {
       try {
         const q = query(
           collection(db, "gangguanPenyulang"), // Sesuaikan nama koleksi
-          where("tanggalGangguan", ">=", "2024-01-01"),
-          where("tanggalGangguan", "<=", "2024-12-31")
+          where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
+          where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
         );
         const querySnapshot = await getDocs(q);
         const dataGangguan = querySnapshot.docs.map((doc) => ({
@@ -64,7 +66,7 @@ const Top10gangguan = () => {
     };
 
     fetchData();
-  }, []);
+  }, [startDate, endDate]);
   const data = {
     labels: gangguanTerbanyak.map(([penyulang]) => penyulang),
     datasets: [
@@ -116,5 +118,8 @@ const Top10gangguan = () => {
 
   return <Bar data={data} options={options} />;
 };
-
+Top10gangguan.propTypes = {
+  startDate: PropTypes.instanceOf(Date),
+  endDate: PropTypes.instanceOf(Date),
+};
 export default Top10gangguan;

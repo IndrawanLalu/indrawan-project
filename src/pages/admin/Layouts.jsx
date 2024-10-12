@@ -40,7 +40,7 @@ const Layouts = ({ children }) => {
         <div className="flex gap-2">
           {/* Toggle Button */}
           <button
-            className="text-white mb-6 md:block hidden focus:outline-none"
+            className="text-white p-2 md:block hidden focus:outline-none"
             onClick={toggleSidebar}
           >
             <FaBars size={24} />

@@ -22,6 +22,7 @@ import GangguanPenyulang from "./pages/gangguan/GangguanPenyulang";
 import TambahGangguan from "./pages/gangguan/Tambah Gangguan";
 import SeedSegment from "./seeder/seedPage";
 import Segment from "./pages/segment/Segment";
+import PetaGangguan from "./pages/gangguan/PetaGangguan";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -30,6 +31,10 @@ function App() {
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
     { path: "/admin/dashboard", element: <Dashboard /> },
     { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
+    {
+      path: "/admin/gangguanPenyulang/peta-gangguan",
+      element: <PetaGangguan />,
+    },
     { path: "/admin/tambahGangguan", element: <TambahGangguan /> },
     { path: "/admin/seeder", element: <SeedSegment /> },
     { path: "/admin/data-segment", element: <Segment /> },

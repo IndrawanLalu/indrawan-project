@@ -56,12 +56,12 @@ const TotalGangguan = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-center">
-              <span className="text-sm">Persentase</span>
+              <span className="text-sm">Persentase Gangguan</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="text-center">
             <span className="text-4xl animate-pulse text-red-500">
-              {(totalGangguan / 81).toFixed(2) * 100} %
+              {(totalGangguan / 81).toFixed(2) * 100}%
             </span>
           </CardContent>
         </Card>
