@@ -7,6 +7,9 @@ import Layouts from "@/pages/admin/Layouts";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format } from "date-fns";
+import L from "leaflet";
+import markerIconPng from "leaflet/dist/images/marker-icon.png";
+import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 
 const PetaGangguan = () => {
   const [data, setData] = useState([]);
@@ -14,6 +17,17 @@ const PetaGangguan = () => {
     new Date(new Date().getFullYear(), 0, 1)
   ); // Default awal tahun ini
   const [endDate, setEndDate] = useState(new Date()); // Default hari ini
+
+  // Definisikan custom icon
+  const customIcon = new L.Icon({
+    iconUrl: markerIconPng,
+    shadowUrl: markerShadowPng,
+    iconSize: [25, 41], // Ukuran ikon
+    iconAnchor: [12, 41], // Jangkar ikon
+    popupAnchor: [1, -34], // Posisi popup relatif terhadap ikon
+    shadowSize: [41, 41], // Ukuran bayangan ikon
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -90,7 +104,7 @@ const PetaGangguan = () => {
           {data.map((gangguan) => {
             const lokasi = processLocation(gangguan.lokasiGangguan);
             return lokasi ? (
-              <Marker key={gangguan.id} position={lokasi}>
+              <Marker key={gangguan.id} position={lokasi} icon={customIcon}>
                 <Popup>
                   Tanggal: {gangguan.tanggalGangguan} <br />
                   Penyulang: {gangguan.penyulang} <br />
