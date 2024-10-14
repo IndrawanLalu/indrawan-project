@@ -9,6 +9,7 @@ import DiagramSumberGangguan from "@/components/diagram/DiagramSumberGangguan";
 import DatePicker from "react-datepicker"; // Import DatePicker
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from "react";
+import DiagramTemuan from "@/components/diagram/DiagramTemuan";
 
 const Dashboard = () => {
   const [startDate, setStartDate] = useState(
@@ -21,7 +22,7 @@ const Dashboard = () => {
       <div className="">
         <div className=" border-b border-main flex justify-between py-2">
           <span className="text-2xl font-semibold">Dashboard Kinerja</span>
-          <div className="flex gap-2 justify-items-center justify-end px-6">
+          <div className="hidden md:flex gap-2 justify-items-center justify-end px-6">
             <label>Start Date: </label>
             <DatePicker
               selected={startDate}
@@ -65,8 +66,13 @@ const Dashboard = () => {
           <div className="text-2xl font-semibold pt-4">
             <span className="border-b border-main">Inspeksi Penyulang</span>
           </div>
-          <div className="grid md:grid-cols-2 gap-4">
-            <TabelSegment />
+          <div className="grid md:grid-cols-3 gap-4">
+            <div className="col-span-2">
+              <TabelSegment />
+            </div>
+            <div className="col-span-1">
+              <DiagramTemuan startDate={startDate} endDate={endDate} />
+            </div>
           </div>
         </div>
       </div>

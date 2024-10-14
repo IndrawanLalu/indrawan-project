@@ -18,6 +18,20 @@ const Menu = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-md border-b norder-main">
+              Dashboard
+            </CardTitle>
+          </CardHeader>
+          <CardFooter className="w-full justify-end ">
+            <Link to="/admin/dashboard">
+              <Button size="lg" variant="secondary">
+                GO <ArrowBigRight className="ml-2 h-4 w-4" />{" "}
+              </Button>
+            </Link>
+          </CardFooter>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-md border-b norder-main">
               Inspeksi
             </CardTitle>
           </CardHeader>
