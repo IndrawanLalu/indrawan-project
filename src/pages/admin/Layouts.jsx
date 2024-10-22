@@ -33,11 +33,11 @@ const Layouts = ({ children }) => {
     <div className="min-h-screen flex">
       {/* Sidebar */}
       <nav
-        className={`hidden md:flex bg-main md:py-4 min-h-screen overflow-auto md:flex-col flex-shrink-0 transition-all duration-300 ${
-          isCollapsed ? "w-[80px]" : "w-[250px]"
+        className={`hidden md:flex bg-main md:py-1 min-h-screen overflow-auto md:flex-col flex-shrink-0 transition-all duration-300 ${
+          isCollapsed ? "w-[60px]" : "w-[210px]"
         }`}
       >
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-1">
           {/* Toggle Button */}
           <button
             className="text-white p-2 md:block hidden focus:outline-none"
@@ -47,8 +47,8 @@ const Layouts = ({ children }) => {
           </button>
 
           {/* Header */}
-          <div className={`${isCollapsed ? "hidden" : ""}`}>
-            <h1 className="">{user?.email} |</h1>
+          <div className={`${isCollapsed ? "hidden" : "px-4"}`}>
+            <p className="text-sm">{user?.email}</p>
             <span className="text-sm">{user?.role}</span>
           </div>
         </div>
@@ -72,7 +72,7 @@ const Layouts = ({ children }) => {
 
         {/* Footer */}
         <footer className="bg-main/50 text-white p-4 text-center">
-          <p>&copy; 2024 My Website</p>
+          <p>&copy; 2024 Teknik ULP Selong</p>
         </footer>
       </div>
     </div>

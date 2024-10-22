@@ -19,7 +19,15 @@ const navigation = [
     accName: "Peta Gangguan",
     accHref: "/admin/gangguanPenyulang/peta-gangguan",
   },
-  { name: "Pemeliharaan", href: "/pemeliharaan", icon: FaChartLine },
+  {
+    name: "Pemeliharaan",
+    href: "/pemeliharaan",
+    icon: FaChartLine,
+    accName: "Daftar Pemeliharaan",
+    accHref: "/admin/pemeliharaan/daftar-pemeliharaan",
+    accName2: "Cetak Wo",
+    accHref2: "/admin/pemeliharaan/cetak-wo",
+  },
   { name: "Seed Data", href: "/admin/seeder", icon: FaChartLine },
   { name: "Data Segment", href: "/admin/data-segment", icon: FaChartLine },
 ];
@@ -54,8 +62,14 @@ const Sidebar = ({ isCollapsed }) => {
                     {!isCollapsed ? item.name : null}
                   </Link>
                 </AccordionTrigger>
-                <AccordionContent className="pl-8 hover:bg-[#DAF5F0] pt-2">
-                  <Link to={item.accHref}>{item.accName}</Link>
+                <AccordionContent className="pl-8 pt-2 flex flex-col gap-2">
+                  <div className=" hover:bg-[#DAF5F0]">
+                    <Link to={item.accHref}>{item.accName}</Link>
+                  </div>
+
+                  <div className=" hover:bg-[#DAF5F0]">
+                    <Link to={item.accHref2}>{item.accName2}</Link>
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

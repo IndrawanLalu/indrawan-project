@@ -23,6 +23,9 @@ import TambahGangguan from "./pages/gangguan/Tambah Gangguan";
 import SeedSegment from "./seeder/seedPage";
 import Segment from "./pages/segment/Segment";
 import PetaGangguan from "./pages/gangguan/PetaGangguan";
+import DaftarPemeliharaan from "./pages/Pemeliharaan/DaftarPemeliharaan";
+import UpdateDataTemuan from "./pages/Pemeliharaan/UpdateDataTemuan";
+import CetakWo from "./pages/Pemeliharaan/CetakWo";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -38,6 +41,18 @@ function App() {
     { path: "/admin/tambahGangguan", element: <TambahGangguan /> },
     { path: "/admin/seeder", element: <SeedSegment /> },
     { path: "/admin/data-segment", element: <Segment /> },
+    {
+      path: "/admin/pemeliharaan/daftar-pemeliharaan",
+      element: <DaftarPemeliharaan />,
+    },
+    {
+      path: "/admin/pemeliharaan/update-temuan/:id",
+      element: <UpdateDataTemuan />,
+    },
+    {
+      path: "/admin/pemeliharaan/cetak-wo",
+      element: <CetakWo />,
+    },
   ];
   const protectedRouteDiandra = [{ path: "/diandra", element: <Diandra /> }];
   // Routes yang dapat diakses oleh admin dan inspektor

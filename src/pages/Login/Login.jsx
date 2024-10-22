@@ -89,7 +89,7 @@ const Login = () => {
   return (
     <>
       <div className="relative w-full min-h-screen">
-        <div className="hidden  relative w-full min-h-screen md:flex items-center justify-center">
+        <div className="hidden  relative w-full min-h-screen items-center justify-center">
           {/* Gambar SVG sebagai background */}
           <img src="/login.svg" alt="login" className="h-[800px]" />
 

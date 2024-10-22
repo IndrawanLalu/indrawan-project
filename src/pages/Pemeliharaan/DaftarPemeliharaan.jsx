@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/select";
 import Layouts from "@/pages/admin/Layouts";
 
-const Pemeliharaan = () => {
+const DaftarPemeliharaan = () => {
   const [data, setData] = useState([]);
   const [dataPenyulang, setDataPenyulang] = useState([]);
   const [filterCategory, setFilterCategory] = useState("all");
-  const [filterPenyulang, setFilterPenyulang] = useState("all");
+  const [filterPenyulang, setFilterPenyulang] = useState("KELAYU");
   // Default "all" instead of empty string
 
   useEffect(() => {
@@ -31,12 +31,8 @@ const Pemeliharaan = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        // Filter data yang hanya memiliki statusValidasi "valid"
-        const filteredData = fetchedData.filter(
-          (data) => data.statusValidasi === "valid"
-        );
         // Mengurutkan data berdasarkan tgl inspeksi dari yang terbaru ke terlama
-        const sortedData = filteredData.sort(
+        const sortedData = fetchedData.sort(
           (a, b) => new Date(b.tglInspeksi) - new Date(a.tglInspeksi)
         );
 
@@ -108,7 +104,7 @@ const Pemeliharaan = () => {
           {/* Dropdown Filter Penyulang */}
         </div>
         <div className=" hidden md:grid grid-cols-6 justify-start text-center py-2 border font-semibold items-center bg-main/30">
-          <h1 className="col-span-2">Temuan</h1>
+          <h1 className="col-span-1">Temuan</h1>
           <Select onValueChange={setFilterPenyulang}>
             <SelectTrigger className="">
               <SelectValue placeholder="Penyulang" />
@@ -124,6 +120,7 @@ const Pemeliharaan = () => {
           </Select>
           <h1>Inspektor</h1>
           <h1>Tgl Inspeksi</h1>
+          <h1>Material</h1>
           <h1 className="">Status</h1>
         </div>
         <TabsContent value="Temuan">
@@ -134,7 +131,7 @@ const Pemeliharaan = () => {
                   key={item.id}
                   className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
-                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
+                  <div className="col-span-3 md:col-span-1 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
@@ -147,6 +144,17 @@ const Pemeliharaan = () => {
                   <div className="hidden md:block md:text-center md:items-center">
                     <h2 className="">{item.tglInspeksi}</h2>
                   </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    {item.materials && item.materials.length > 0 ? (
+                      item.materials.map((material, index) => (
+                        <h2 key={index} className="">
+                          {material.namaMaterial} : {material.jumlahMaterial}
+                        </h2>
+                      ))
+                    ) : (
+                      <p>Tidak ada material</p>
+                    )}
+                  </div>
                   <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
                       {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
@@ -156,18 +164,19 @@ const Pemeliharaan = () => {
                       })}
                     </div>
                     <div className="">
-                      <Link to={`/eksekusi/${item.id}`}>
-                        {item.status === "Temuan" ? (
-                          <Badge variant="temuan">{item.status} </Badge>
-                        ) : item.status === "Pending" ? (
+                      <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
+                        {item.statusValidasi === null ||
+                        item.statusValidasi === undefined ? (
+                          <Badge variant="temuan">? </Badge>
+                        ) : item.statusValidasi === "invalid" ? (
                           <Badge variant="pending">
                             <CgDanger />
-                            {item.status}{" "}
+                            {item.statusValidasi}
                           </Badge>
                         ) : (
                           <Badge>
                             <FaCheck />
-                            {item.status}{" "}
+                            {item.statusValidasi}
                           </Badge>
                         )}
                       </Link>
@@ -208,7 +217,7 @@ const Pemeliharaan = () => {
                       })}
                     </div>
                     <div className="">
-                      <Link to={`/eksekusi/${item.id}`}>
+                      <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
                         {item.status === "Temuan" ? (
                           <Badge variant="temuan">{item.status} </Badge>
                         ) : item.status === "Pending" ? (
@@ -263,18 +272,18 @@ const Pemeliharaan = () => {
                       })}
                     </div>
                     <div className="">
-                      <Link to={`/eksekusi/${item.id}`}>
-                        {item.status === "Temuan" ? (
-                          <Badge variant="temuan">{item.status} </Badge>
-                        ) : item.status === "Pending" ? (
+                      <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
+                        {item.statusValidasi === "" ? (
+                          <Badge variant="">? </Badge>
+                        ) : item.statusValidasi === "invalid" ? (
                           <Badge variant="pending">
                             <CgDanger />
-                            {item.status}{" "}
+                            {item.statusValidasi}
                           </Badge>
                         ) : (
                           <Badge>
                             <FaCheck />
-                            {item.status}{" "}
+                            {item.statusValidasi}
                           </Badge>
                         )}
                       </Link>
@@ -292,4 +301,4 @@ const Pemeliharaan = () => {
     </Layouts>
   );
 };
-export default Pemeliharaan;
+export default DaftarPemeliharaan;
