@@ -1,6 +1,13 @@
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { FaChartLine, FaChartPie } from "react-icons/fa";
+import {
+  FaBinoculars,
+  FaBookMedical,
+  FaChartLine,
+  FaChartPie,
+  FaEnvelope,
+  FaPeopleCarry,
+} from "react-icons/fa";
 // import { Button } from "@/components/ui/button";
 import {
   Accordion,
@@ -11,25 +18,32 @@ import {
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: FaChartLine },
-  { name: "Aset", href: "/admin/aset/penyulang", icon: FaChartPie },
+  {
+    name: "Aset",
+    href: "/admin/aset/penyulang",
+    icon: FaChartPie,
+    accName: "Maps",
+    accHref: "/admin/aset/maps",
+  },
   {
     name: "Gangguan Penyulang",
     href: "/admin/gangguanPenyulang",
-    icon: FaChartPie,
+    icon: FaBookMedical,
     accName: "Peta Gangguan",
     accHref: "/admin/gangguanPenyulang/peta-gangguan",
   },
   {
     name: "Pemeliharaan",
     href: "/pemeliharaan",
-    icon: FaChartLine,
+    icon: FaPeopleCarry,
     accName: "Daftar Pemeliharaan",
     accHref: "/admin/pemeliharaan/daftar-pemeliharaan",
     accName2: "Cetak Wo",
     accHref2: "/admin/pemeliharaan/cetak-wo",
   },
   { name: "Seed Data", href: "/admin/seeder", icon: FaChartLine },
-  { name: "Data Segment", href: "/admin/data-segment", icon: FaChartLine },
+  { name: "Data Segment", href: "/admin/data-segment", icon: FaBinoculars },
+  { name: "Surat Masuk", href: "/admin/surat-masuk", icon: FaEnvelope },
 ];
 
 const Sidebar = ({ isCollapsed }) => {

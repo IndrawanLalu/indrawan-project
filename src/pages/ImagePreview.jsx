@@ -2,7 +2,7 @@ import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 import PropTypes from "prop-types";
 import { useState } from "react";
 
-const ImagePreview = ({ src, alt }) => {
+const ImagePreview = ({ src, alt, description }) => {
   const [open, setOpen] = useState(false);
 
   const handleImageClick = () => {
@@ -31,9 +31,10 @@ const ImagePreview = ({ src, alt }) => {
           {/* Optional: Add any button or action to open the dialog manually */}
         </DialogTrigger>
         <DialogContent>
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center">
             {/* Zoomed Image */}
             <img src={src} alt={alt} className="max-w-full max-h-screen" />
+            <p className="text-center text-lg">{description}</p>
           </div>
         </DialogContent>
       </Dialog>
@@ -43,6 +44,7 @@ const ImagePreview = ({ src, alt }) => {
 ImagePreview.propTypes = {
   src: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
 };
 
 export default ImagePreview;

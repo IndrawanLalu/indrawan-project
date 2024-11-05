@@ -69,6 +69,7 @@ const Penyulang = () => {
       !editItem.sumber ||
       !editItem.Panjang ||
       !editItem.beban ||
+      !editItem.bebanSiang ||
       !editItem.tglUpdate
     ) {
       setError("Semua field harus diisi."); // Set pesan error jika input kosong
@@ -82,6 +83,7 @@ const Penyulang = () => {
         sumber: editItem.sumber,
         Panjang: editItem.Panjang,
         beban: editItem.beban,
+        bebanSiang: editItem.bebanSiang,
         tglUpdate: editItem.tglUpdate,
       });
 
@@ -102,6 +104,16 @@ const Penyulang = () => {
       console.error("Error updating document: ", error);
     }
   };
+  // Fungsi untuk menghitung total beban
+  const totalBeban = data.reduce(
+    (sum, item) => sum + parseFloat(item.beban || 0),
+    0
+  );
+  const bebanSiang = data.reduce(
+    (sum, item) => sum + parseFloat(item.bebanSiang || 0),
+    0
+  );
+
   return (
     <Layouts>
       <div className="w-full text-center mx-auto px-4">
@@ -131,7 +143,12 @@ const Penyulang = () => {
                   <TableHead>Penyulang</TableHead>
                   <TableHead>Sumber GI/PLTD</TableHead>
                   <TableHead>Panjang</TableHead>
-                  <TableHead>Beban</TableHead>
+                  <TableHead>
+                    Beban Malam <br /> {totalBeban.toFixed(2)} MW
+                  </TableHead>
+                  <TableHead>
+                    Beban Siang <br /> {bebanSiang.toFixed(2)} MW
+                  </TableHead>
                   <TableHead>Tgl Update</TableHead>
                   <TableHead></TableHead>
                 </TableRow>
@@ -144,6 +161,7 @@ const Penyulang = () => {
                     <TableCell>{item.sumber}</TableCell>
                     <TableCell>{item.Panjang} kMS</TableCell>
                     <TableCell>{item.beban} MW</TableCell>
+                    <TableCell>{item.bebanSiang} MW</TableCell>
                     <TableCell> {item.tglUpdate}</TableCell>
                     <TableCell>
                       <div className="flex items-center justify-center">
@@ -215,6 +233,20 @@ const Penyulang = () => {
                       value={editItem.beban}
                       onChange={(e) =>
                         setEditItem({ ...editItem, beban: e.target.value })
+                      }
+                      className="border p-2 rounded w-30"
+                    />
+                    <span>MW</span>
+                  </div>
+                </div>
+                <div className="mb-4 text-start">
+                  <Label className="font-semibold">Beban Siang</Label>
+                  <div className="flex items-center gap-4">
+                    <Input
+                      type="number"
+                      value={editItem.bebanSiang}
+                      onChange={(e) =>
+                        setEditItem({ ...editItem, bebanSiang: e.target.value })
                       }
                       className="border p-2 rounded w-30"
                     />

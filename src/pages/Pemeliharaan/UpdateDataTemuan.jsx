@@ -118,6 +118,7 @@ const UpdateDataTemuan = () => {
                 type="file"
                 src={data.imageUrl}
                 alt="foto"
+                // description="test gambar"
                 className="w-36 h-36 rounded-md md:w-36 md:h-36 object-cover"
               />
               {data.imageEksekusiURL ? (
