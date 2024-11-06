@@ -29,14 +29,12 @@ import CetakWo from "./pages/Pemeliharaan/CetakWo";
 import SuratMasuk from "./pages/SuratMasuk/SuratMasuk";
 import TambahSuratMasuk from "./pages/SuratMasuk/TambahSuratMasuk";
 import Maps from "./pages/Aset/Maps";
-import Sld from "./pages/Aset/SLD";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
   const protectedRouteAdmin = [
     { path: "/admin/aset/penyulang", element: <Penyulang /> },
     { path: "/admin/aset/maps", element: <Maps /> },
-    { path: "/admin/aset/sld", element: <Sld /> },
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
     { path: "/admin/dashboard", element: <Dashboard /> },
     { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
