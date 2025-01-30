@@ -185,7 +185,7 @@ const SearchAmg = () => {
                           <p>S-T : {item.s_t} Volt</p>
                         </div>
                       </div>
-                      <div className="grid-cols-5 border-t border-b py-2 flex justify-between">
+                      <div className="grid-cols-5 border-t border-b py-2 flex justify-between mb-14">
                         <div className=" flex flex-col items-start">
                           <p className="font-bold">Kesimpulan</p>
                           <p>Unbalance : {item.UBL} %</p>

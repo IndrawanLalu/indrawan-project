@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CgDanger } from "react-icons/cg";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import downloadExcel from "@/pages/Pemeliharaan/DownloadExcel";
 import {
   Select,
   SelectContent,
@@ -15,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Layouts from "@/pages/admin/Layouts";
+import { Button } from "@/components/ui/button";
 
 const DaftarPemeliharaan = () => {
   const [data, setData] = useState([]);
@@ -87,6 +89,7 @@ const DaftarPemeliharaan = () => {
               <TabsTrigger value="Selesai">Selesai</TabsTrigger>
             </TabsList>
           </div>
+
           {/* Dropdown Filter Category */}
           <div className="md:pt-4 ml-2 mr-2">
             <Select onValueChange={setFilterCategory}>
@@ -101,9 +104,12 @@ const DaftarPemeliharaan = () => {
               </SelectContent>
             </Select>
           </div>
+          <div className="ml-10">
+            <Button onClick={downloadExcel}>Download Excel</Button>
+          </div>
           {/* Dropdown Filter Penyulang */}
         </div>
-        <div className=" hidden md:grid grid-cols-6 justify-start text-center py-2 border font-semibold items-center bg-main/30">
+        <div className=" hidden md:grid grid-cols-8 justify-start text-center py-2 border font-semibold items-center bg-main/30">
           <h1 className="col-span-1">Temuan</h1>
           <Select onValueChange={setFilterPenyulang}>
             <SelectTrigger className="">
@@ -121,6 +127,8 @@ const DaftarPemeliharaan = () => {
           <h1>Inspektor</h1>
           <h1>Tgl Inspeksi</h1>
           <h1>Material</h1>
+          <h1>Alamat</h1>
+          <h1>Titik Lokasi</h1>
           <h1 className="">Status</h1>
         </div>
         <TabsContent value="Temuan">
@@ -129,11 +137,10 @@ const DaftarPemeliharaan = () => {
               {filteredDataByCategoryAndPenyulang("Temuan").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
+                  className="grid grid-cols-8 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
                   <div className="col-span-3 md:col-span-1 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
-                    <p className="text-sm">{item.lokasi}</p>
                   </div>
                   <div className="hidden md:flex md:flex-col md:text-start md:items-center">
                     <h2 className="">{item.penyulang}</h2>
@@ -154,6 +161,12 @@ const DaftarPemeliharaan = () => {
                     ) : (
                       <p>Tidak ada material</p>
                     )}
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.lokasi}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.location}</h2>
                   </div>
                   <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
@@ -193,11 +206,10 @@ const DaftarPemeliharaan = () => {
               {filteredDataByCategoryAndPenyulang("Pending").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
+                  className="grid grid-cols-8 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
-                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
+                  <div className="col-span-3 md:col-span-1 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
-                    <p className="text-sm">{item.lokasi}</p>
                   </div>
                   <div className="hidden md:flex md:flex-col md:text-start md:items-center">
                     <h2 className="">{item.penyulang}</h2>
@@ -207,6 +219,23 @@ const DaftarPemeliharaan = () => {
                   </div>
                   <div className="hidden md:block md:text-center md:items-center">
                     <h2 className="">{item.tglInspeksi}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    {item.materials && item.materials.length > 0 ? (
+                      item.materials.map((material, index) => (
+                        <h2 key={index} className="">
+                          {material.namaMaterial} : {material.jumlahMaterial}
+                        </h2>
+                      ))
+                    ) : (
+                      <p>Tidak ada material</p>
+                    )}
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.lokasi}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.location}</h2>
                   </div>
                   <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
                     <div className="text-[10px]">
@@ -218,63 +247,9 @@ const DaftarPemeliharaan = () => {
                     </div>
                     <div className="">
                       <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
-                        {item.status === "Temuan" ? (
-                          <Badge variant="temuan">{item.status} </Badge>
-                        ) : item.status === "Pending" ? (
-                          <Badge variant="pending">
-                            <CgDanger />
-                            {item.status}{" "}
-                          </Badge>
-                        ) : (
-                          <Badge>
-                            <FaCheck />
-                            {item.status}{" "}
-                          </Badge>
-                        )}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className=" pb-20 mb-20  pt-2 text-sm md:hidden">
-                <p>Hasil temuan Inspeksi</p>
-              </div>
-            </ScrollArea>
-          </div>
-        </TabsContent>
-        <TabsContent value="Selesai">
-          <div className=" ">
-            <ScrollArea className="w-full h-[90vh] px-2">
-              {filteredDataByCategoryAndPenyulang("Selesai").map((item) => (
-                <div
-                  key={item.id}
-                  className="grid grid-cols-6 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
-                >
-                  <div className="col-span-3 md:col-span-2 md:content-center text-start">
-                    <h2 className="font-semibold">{item.temuan}</h2>
-                    <p className="text-sm">{item.lokasi}</p>
-                  </div>
-                  <div className="hidden md:flex md:flex-col md:text-start md:items-center">
-                    <h2 className="">{item.penyulang}</h2>
-                  </div>
-                  <div className="hidden md:block md:text-center md:items-center">
-                    <h2 className="">{item.inspektor}</h2>
-                  </div>
-                  <div className="hidden md:block md:text-center md:items-center">
-                    <h2 className="">{item.tglInspeksi}</h2>
-                  </div>
-                  <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
-                    <div className="text-[10px]">
-                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </div>
-                    <div className="">
-                      <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
-                        {item.statusValidasi === "" ? (
-                          <Badge variant="">? </Badge>
+                        {item.statusValidasi === null ||
+                        item.statusValidasi === undefined ? (
+                          <Badge variant="temuan">? </Badge>
                         ) : item.statusValidasi === "invalid" ? (
                           <Badge variant="pending">
                             <CgDanger />
@@ -291,9 +266,75 @@ const DaftarPemeliharaan = () => {
                   </div>
                 </div>
               ))}
-              <div className=" pb-20 mb-20  pt-2 text-sm md:hidden">
-                <p>Hasil temuan Inspeksi</p>
-              </div>
+            </ScrollArea>
+          </div>
+        </TabsContent>
+        <TabsContent value="Selesai">
+          <div className=" ">
+            <ScrollArea className="w-full h-[80vh] px-2">
+              {filteredDataByCategoryAndPenyulang("Selesai").map((item) => (
+                <div
+                  key={item.id}
+                  className="grid grid-cols-8 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
+                >
+                  <div className="col-span-3 md:col-span-1 md:content-center text-start">
+                    <h2 className="font-semibold">{item.temuan}</h2>
+                  </div>
+                  <div className="hidden md:flex md:flex-col md:text-start md:items-center">
+                    <h2 className="">{item.penyulang}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.inspektor}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.tglInspeksi}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    {item.materials && item.materials.length > 0 ? (
+                      item.materials.map((material, index) => (
+                        <h2 key={index} className="">
+                          {material.namaMaterial} : {material.jumlahMaterial}
+                        </h2>
+                      ))
+                    ) : (
+                      <p>Tidak ada material</p>
+                    )}
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.lokasi}</h2>
+                  </div>
+                  <div className="hidden md:block md:text-center md:items-center">
+                    <h2 className="">{item.location}</h2>
+                  </div>
+                  <div className="flex flex-col justify-center text-end md:text-center col-span-1 md:col-span-1 ">
+                    <div className="text-[10px]">
+                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
+                    </div>
+                    <div className="">
+                      <Link to={`/admin/pemeliharaan/update-temuan/${item.id}`}>
+                        {item.statusValidasi === null ||
+                        item.statusValidasi === undefined ? (
+                          <Badge variant="temuan">? </Badge>
+                        ) : item.statusValidasi === "invalid" ? (
+                          <Badge variant="pending">
+                            <CgDanger />
+                            {item.statusValidasi}
+                          </Badge>
+                        ) : (
+                          <Badge>
+                            <FaCheck />
+                            {item.statusValidasi}
+                          </Badge>
+                        )}
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </ScrollArea>
           </div>
         </TabsContent>

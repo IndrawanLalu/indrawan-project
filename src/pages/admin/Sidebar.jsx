@@ -36,13 +36,20 @@ const navigation = [
     name: "Pemeliharaan",
     href: "/pemeliharaan",
     icon: FaPeopleCarry,
-    accName: "Daftar Pemeliharaan",
+    accName: "Validasi Pemeliharaan",
     accHref: "/admin/pemeliharaan/daftar-pemeliharaan",
-    accName2: "Cetak Wo",
+    accName2: "Daftar Semua Pemeliharaan",
     accHref2: "/admin/pemeliharaan/cetak-wo",
   },
   { name: "Seed Data", href: "/admin/seeder", icon: FaChartLine },
   { name: "Data Segment", href: "/admin/data-segment", icon: FaBinoculars },
+  {
+    name: "Data Gardu",
+    href: "/admin/data-gardu",
+    icon: FaBinoculars,
+    accName: "Rencana Pekerjaan",
+    accHref: "/admin/gardu/rencana-pemeliharaan",
+  },
   { name: "Surat Masuk", href: "/admin/surat-masuk", icon: FaEnvelope },
 ];
 

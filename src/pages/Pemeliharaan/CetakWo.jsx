@@ -138,6 +138,7 @@ const CetakWo = () => {
                     </SelectContent>
                   </Select>
                 </TableHead>
+                <TableHead>Section Padam</TableHead>
                 <TableHead>Material</TableHead>
               </TableRow>
             </TableHeader>
@@ -176,12 +177,13 @@ const CetakWo = () => {
                           <div>Tidak ada temuan</div>
                         )
                       }
-                      className="w-36 h-36 rounded-md md:w-36 md:h-36 object-cover"
+                      className="w-12 h-12 rounded-full md:w-12 md:h-12 object-cover"
                     />
                   </TableCell>
                   <TableCell>{item.temuan}</TableCell>
                   <TableCell>{item.lokasi}</TableCell>
                   <TableCell>{item.penyulang}</TableCell>
+                  <TableCell>{item.sectionPadam}</TableCell>
                   <TableCell>
                     {item.materials && item.materials.length > 0 ? (
                       item.materials.map((material, index) => (

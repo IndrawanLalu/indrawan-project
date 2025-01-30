@@ -18,8 +18,8 @@ const ImagePreview = ({ src, alt, description }) => {
         className="cursor-pointer"
         onClick={handleImageClick}
         style={{
-          width: "144px",
-          height: "144px",
+          width: "80px",
+          height: "80px",
           objectFit: "cover",
           borderRadius: "10px",
         }}

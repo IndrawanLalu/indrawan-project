@@ -29,6 +29,9 @@ import CetakWo from "./pages/Pemeliharaan/CetakWo";
 import SuratMasuk from "./pages/SuratMasuk/SuratMasuk";
 import TambahSuratMasuk from "./pages/SuratMasuk/TambahSuratMasuk";
 import Maps from "./pages/Aset/Maps";
+import BebanGardu from "./pages/Gardu/BebanGardu";
+import DetailGardu from "./pages/Gardu/DetailGardu";
+import RencanaPekerjaan from "./pages/Gardu/RencanaPekerjaan";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -43,6 +46,13 @@ function App() {
       element: <PetaGangguan />,
     },
     { path: "/admin/tambahGangguan", element: <TambahGangguan /> },
+    { path: "/admin/data-gardu", element: <BebanGardu /> },
+    { path: "/admin/detail-gardu/:nama", element: <DetailGardu /> },
+    {
+      path: "/admin/gardu/rencana-pemeliharaan",
+      element: <RencanaPekerjaan />,
+    },
+
     { path: "/admin/seeder", element: <SeedSegment /> },
     { path: "/admin/data-segment", element: <Segment /> },
     {

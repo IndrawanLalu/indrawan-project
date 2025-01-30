@@ -31,6 +31,7 @@ const UpdateDataTemuan = () => {
     tglInspeksi: "",
     namaMaterial: [],
     jumlahMaterial: [],
+    sectionPadam: "",
     statusValidasi: "",
   });
   const navigate = useNavigate();
@@ -236,7 +237,19 @@ const UpdateDataTemuan = () => {
                 ))}
               </div>
             </div>
-
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="sectionPadam" className="text-right">
+                Section Padam
+              </Label>
+              <Input
+                type="text"
+                id="sectionPadam"
+                name="sectionPadam"
+                value={data.sectionPadam}
+                onChange={handleChange}
+                className="col-span-3"
+              />
+            </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="text-right">Status Validasi</Label>
 

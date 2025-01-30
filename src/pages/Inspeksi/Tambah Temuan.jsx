@@ -15,11 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Layouts from "../admin/Layouts";
 
 const TambahTemuan = () => {
   const [image, setImage] = useState(null);
   const [temuan, setTemuan] = useState("");
   const [lokasi, setLokasi] = useState("");
+  const [noGardu, setNoGardu] = useState("");
   const [inspektor, setInspektor] = useState("");
   const [penyulang, setPenyulang] = useState("");
   const [category, setCategory] = useState("");
@@ -33,6 +35,8 @@ const TambahTemuan = () => {
   const [error, setError] = useState(null);
 
   const [data, setData] = useState([]);
+  const [dataGardu, setDataGardu] = useState([]);
+  const [filteredGardu, setFilteredGardu] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +54,27 @@ const TambahTemuan = () => {
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    // Fetch data dari public folder
+    fetch("/db/amg.json")
+      .then((response) => response.json())
+      .then((data) => setDataGardu(data));
+  }, []);
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      if (noGardu) {
+        setFilteredGardu(
+          dataGardu.filter((item) =>
+            item.nama.toLowerCase().includes(noGardu.toLowerCase())
+          )
+        );
+      } else {
+        setFilteredGardu([]);
+      }
+    }, 2000); // Delay selama 300ms
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [noGardu, dataGardu]);
 
   // Mengambil koordinat lokasi pengguna secara otomatis
   useEffect(() => {
@@ -123,6 +148,7 @@ const TambahTemuan = () => {
             imageUrl,
             temuan,
             lokasi,
+            noGardu,
             inspektor,
             penyulang,
             category,
@@ -137,6 +163,7 @@ const TambahTemuan = () => {
 
           setTemuan("");
           setLokasi("");
+          setNoGardu("");
           setInspektor("");
           setPenyulang("");
           setCategory("");
@@ -155,7 +182,7 @@ const TambahTemuan = () => {
   };
 
   return (
-    <div className="px-2 md:pt-20 md:px-80">
+    <Layouts className="px-2">
       <div className=" border-main border-b pb-2 flex left-2 right-0 top-0 md:left-40 md:top-12">
         <h2 className="font-semibold text-start md:text-2xl md:pt-12">
           Input Temuan
@@ -210,6 +237,25 @@ const TambahTemuan = () => {
               onChange={(e) => setLokasi(e.target.value)}
             />
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label className="text-right">Gardu</Label>
+            <input
+              type="text"
+              name="noGardu"
+              id="noGardu"
+              placeholder="Cari Gardu..."
+              onChange={(e) => setNoGardu(e.target.value)}
+              className="col-span-3 border rounded p-2 w-[180px]"
+              required
+            />
+            <div className="col-start-2">
+              {filteredGardu.map((item) => (
+                <div key={item.nama} onClick={() => setNoGardu(item.nama)}>
+                  {item.nama}-{item.alamat}
+                </div>
+              ))}
+            </div>
+          </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="lokasi" className="text-right">
@@ -233,7 +279,7 @@ const TambahTemuan = () => {
             <Label htmlFor="inspektor" className="text-right">
               Map
             </Label>
-            <div className="col-span-3 -z-50">
+            <div className="col-span-2 z-50">
               <MapContainer
                 key={location.lat + location.lng}
                 center={[location.lat, location.lng]}
@@ -324,7 +370,7 @@ const TambahTemuan = () => {
         )}
       </form>
       <div className="h-[100px]"></div>
-    </div>
+    </Layouts>
   );
 };
 
