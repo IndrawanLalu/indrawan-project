@@ -29,6 +29,8 @@ const navigation = [
     name: "Gangguan Penyulang",
     href: "/admin/gangguanPenyulang",
     icon: FaBookMedical,
+    accName2: "Target Gangguan",
+    accHref2: "/admin/gangguanPenyulang/target-gangguan",
     accName: "Peta Gangguan",
     accHref: "/admin/gangguanPenyulang/peta-gangguan",
   },

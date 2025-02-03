@@ -32,6 +32,8 @@ import Maps from "./pages/Aset/Maps";
 import BebanGardu from "./pages/Gardu/BebanGardu";
 import DetailGardu from "./pages/Gardu/DetailGardu";
 import RencanaPekerjaan from "./pages/Gardu/RencanaPekerjaan";
+import TargetGangguan from "./pages/gangguan/TargetGangguan";
+import TambahTargetGangguan from "./pages/gangguan/TanbahTargetGangguann";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -41,6 +43,14 @@ function App() {
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
     { path: "/admin/dashboard", element: <Dashboard /> },
     { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
+    {
+      path: "/admin/gangguanPenyulang/target-gangguan",
+      element: <TargetGangguan />,
+    },
+    {
+      path: "/admin/gangguanPenyulang/tambahTargetgangguan",
+      element: <TambahTargetGangguan />,
+    },
     {
       path: "/admin/gangguanPenyulang/peta-gangguan",
       element: <PetaGangguan />,

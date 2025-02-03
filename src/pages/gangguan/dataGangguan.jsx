@@ -2,17 +2,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/firebase/firebaseConfig";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 const TotalGangguan = () => {
   const [totalGangguan, setTotalGangguan] = useState(0);
+  const startDate = new Date(new Date().getFullYear(), 0, 1); // Default awal tahun ini
+  const endDate = new Date(); // Hari ini // Default hari ini
 
   useEffect(() => {
     const fetchTotalGangguan = async () => {
       try {
         const q = query(
           collection(db, "gangguanPenyulang"), // Sesuaikan dengan nama koleksi Firebase
-          where("tanggalGangguan", ">=", "2024-01-01"),
-          where("tanggalGangguan", "<=", "2024-12-31")
+          where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
+          where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
         );
 
         const querySnapshot = await getDocs(q);
@@ -25,7 +28,7 @@ const TotalGangguan = () => {
     };
 
     fetchTotalGangguan();
-  }, []);
+  });
   return (
     <div className="flex gap-4">
       <div>
