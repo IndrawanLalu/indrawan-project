@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { format } from "date-fns"; // For handling date formats
+// import { format } from "date-fns"; // For handling date formats
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,7 +14,7 @@ import {
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { useState, useEffect } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/firebase/firebaseConfig"; // Sesuaikan dengan konfigurasi Firebase Anda
 ChartJS.register(
   CategoryScale,
@@ -29,17 +29,17 @@ ChartJS.register(
 );
 
 const DiagramGangguanPenyulang = ({ startDate, endDate }) => {
-  const [targetGangguan2024, setTargetGangguan2024] = useState([]);
-  const [gangguan2024, setGangguan2024] = useState([]);
+  const [gangguanTahunLalu, setGangguanTahunLalu] = useState([]);
+  const [gangguannTahunIni, setGangguanTahunIni] = useState([]);
 
   // Fetch data from Firebase
   useEffect(() => {
     const fetchData = async () => {
       try {
         const q = query(
-          collection(db, "gangguanPenyulang"), // Sesuaikan nama koleksi
-          where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
-          where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
+          collection(db, "gangguanPenyulang") // Sesuaikan nama koleksi
+          // where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
+          // where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
         );
         const querySnapshot = await getDocs(q);
         const dataGangguan = querySnapshot.docs.map((doc) => ({
@@ -48,16 +48,27 @@ const DiagramGangguanPenyulang = ({ startDate, endDate }) => {
         }));
 
         // Misalnya Anda ingin menampilkan jumlah gangguan per bulan:
-        const gangguanByMonth = Array(12).fill(0);
+        const tahunIni = new Date().getFullYear();
+        const tahunLalu = tahunIni - 1;
+
+        // Inisialisasi array dengan 12 bulan
+        const gangguanTahunIni = Array(12).fill(0);
+        const gangguanTahunLalu = Array(12).fill(0);
+
         dataGangguan.forEach((item) => {
-          const bulan = new Date(item.tanggalGangguan).getMonth();
-          gangguanByMonth[bulan] += 1; // Misalnya menghitung jumlah gangguan
+          const tanggal = new Date(item.tanggalGangguan);
+          const bulan = tanggal.getMonth();
+          const tahun = tanggal.getFullYear();
+
+          if (tahun === tahunIni) {
+            gangguanTahunIni[bulan] += 1;
+          } else if (tahun === tahunLalu) {
+            gangguanTahunLalu[bulan] += 1;
+          }
         });
 
-        setGangguan2024(gangguanByMonth); // Simpan data gangguan
-
-        // Ambil juga target gangguan, misalnya dari static JSON atau koleksi lain
-        setTargetGangguan2024([8, 7, 8, 4, 3, 4, 5, 5, 4, 7, 14, 12]);
+        setGangguanTahunIni(gangguanTahunIni);
+        setGangguanTahunLalu(gangguanTahunLalu);
       } catch (error) {
         console.error("Error fetching data from Firebase:", error);
       }
@@ -83,16 +94,16 @@ const DiagramGangguanPenyulang = ({ startDate, endDate }) => {
     ],
     datasets: [
       {
-        label: "Gangguan",
-        data: gangguan2024, // Data gangguan per bulan
+        label: "Tahun Ini",
+        data: gangguannTahunIni, // Data gangguan per bulan
         borderColor: "rgba(75,192,192,1)",
         backgroundColor: "rgba(75,192,192,0.2)",
         borderWidth: 2,
         fill: true,
       },
       {
-        label: "Target",
-        data: targetGangguan2024, // Data target per bulan
+        label: "Tahun Lalu",
+        data: gangguanTahunLalu, // Data target per bulan
         borderColor: "rgba(234, 63, 151, 0.8)",
         borderWidth: 2,
         fill: true,
@@ -109,7 +120,7 @@ const DiagramGangguanPenyulang = ({ startDate, endDate }) => {
       },
       title: {
         display: true,
-        text: "Gangguan Penyulang 2024",
+        text: "Gangguan Penyulang",
       },
       datalabels: {
         anchor: "end", // Position label at the end of each point

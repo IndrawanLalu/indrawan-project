@@ -46,18 +46,18 @@ const Top10gangguan = ({ startDate, endDate }) => {
         // Hitung frekuensi gangguan berdasarkan penyebab atau kode gangguan
         const gangguanCounts = {};
         dataGangguan.forEach((item) => {
-          const keypoint = item.keypoint; // Bisa juga pakai item.kodeGangguan
-          if (gangguanCounts[keypoint]) {
-            gangguanCounts[keypoint] += 1;
+          const penyulang = item.penyulang; // Bisa juga pakai item.kodeGangguan
+          if (gangguanCounts[penyulang]) {
+            gangguanCounts[penyulang] += 1;
           } else {
-            gangguanCounts[keypoint] = 1;
+            gangguanCounts[penyulang] = 1;
           }
         });
 
         // Ubah object menjadi array, urutkan berdasarkan frekuensi, dan ambil top 10
         const sortedGangguan = Object.entries(gangguanCounts)
           .sort((a, b) => b[1] - a[1]) // Sort descending by count
-          .slice(0, 10); // Take top 10
+          .slice(0, 16); // Take top 10
 
         setGangguanTerbanyak(sortedGangguan);
       } catch (error) {

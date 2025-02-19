@@ -105,6 +105,16 @@ const TambahTemuan = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  const sendWhatsAppMessage = (message, imageUrl) => {
+    const groupId = "120363277434509822"; // Ganti dengan ID grup WhatsApp Anda
+    const encodedMessage = encodeURIComponent(
+      `${message}\n\n📸 Foto: ${imageUrl}`
+    );
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=&text=${encodedMessage}&group_id=${groupId}`;
+
+    window.open(whatsappUrl, "_blank");
+  };
   const handleSubmitTemuan = async (e) => {
     e.preventDefault();
     console.log("Form submitted"); // Debugging log
@@ -160,6 +170,18 @@ const TambahTemuan = () => {
             keterangan: "",
             location: `${location.lat}, ${location.lng}`,
           });
+
+          // Buat pesan yang akan dikirim ke WhatsApp
+          const message = `📢 Temuan Baru 📢
+        🔹 Temuan: ${temuan}
+        📍 Lokasi: ${lokasi}
+        📅 Tgl Inspeksi: ${tglInspeksi}
+        👷‍♂️ Inspektor: ${inspektor}
+        🔌 Penyulang: ${penyulang}
+        🏗️ Kategori: ${category}
+        🌍 Koordinat: ${location.lat}, ${location.lng}`;
+
+          sendWhatsAppMessage(message, imageUrl);
 
           setTemuan("");
           setLokasi("");
