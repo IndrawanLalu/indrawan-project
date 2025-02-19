@@ -7,7 +7,7 @@ import Padam from "./pages/Padam";
 import Login from "./pages/Login/Login";
 import "./firebase/firebaseConfig";
 import ProtectedRoute from "./components/ProtectedRoutes";
-import NavBarKu from "./components/NavBarKu";
+// import NavBarKu from "./components/NavBarKu";
 import Temuan from "./pages/Inspeksi/Temuan";
 import Pemeliharaan from "./pages/Pemeliharaan/Pemeliharaan";
 import EksekusiTemuan from "./pages/Pemeliharaan/EksekusiTemuan";
@@ -95,7 +95,7 @@ function App() {
 
   return (
     <>
-      <NavBarKu />
+      {/* <NavBarKu /> */}
       <Routes>
         {/* Route Public */}
         <Route path="/" element={<Home />} />
