@@ -106,9 +106,9 @@ const Temuan = () => {
   return (
     <div className="mb-16">
       <div className=" border-main border-b pb-2 flex fixed left-2 right-40 top-0 md:left-40 md:top-20 items-center">
-        <h2 className="font-semibold text-start md:text-2xl pt-2">
-          Hasil Temuan
-        </h2>
+        <h4 className="font-semibold text-start md:text-2xl pt-2 text-xl">
+          🎯Hasil Temuan
+        </h4>
         <div className="pl-4 pt-2">
           <Link
             to="/tambahTemuan"
@@ -137,9 +137,8 @@ const Temuan = () => {
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className=" flex flex-col col-start-4 md:col-start-4 colsspan-3 text-start items-center">
-                    <span>Penyulang</span>
-                    <h2 className="font-semibold">{item.penyulang}</h2>
+                  <div className=" flex flex-col col-start-4 md:col-start-4 colsspan-3 text-center items-center">
+                    <span>P.{item.penyulang}</span>
                   </div>
                   <div className="hidden md:flex flex-col  md:col-start-5 colsspan-1 text-start items-center">
                     <span>Inspektor</span>

@@ -284,13 +284,14 @@ const TambahTemuan = () => {
               location
             </Label>
             <input
+              type="text"
+              name="location"
               id="location"
               value={
                 location.lat && location.lng
                   ? `${location.lat}, ${location.lng}`
                   : "Fetching location..."
               }
-              readOnly
               className="col-span-3 border border-gray-300 p-2"
             />
             {error && (
@@ -384,7 +385,7 @@ const TambahTemuan = () => {
             />
           </div>
         </div>
-        <Button type="submit" disabled={isLoading} className="w-full">
+        <Button type="submit" disabled={isLoading} className="w-full mt-6">
           {isLoading ? "Uploading..." : "Simpan"}
         </Button>
         {progress > 0 && (

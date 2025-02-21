@@ -84,6 +84,7 @@ function App() {
   const protectedRouteDiandra = [{ path: "/diandra", element: <Diandra /> }];
   // Routes yang dapat diakses oleh admin dan inspektor
   const sharedRoutes = [
+    { path: "/", element: <Home /> },
     { path: "/amg", element: <Amg /> },
     { path: "/padam", element: <Padam /> },
     { path: "/menu", element: <Menu /> },
@@ -98,7 +99,7 @@ function App() {
       {/* <NavBarKu /> */}
       <Routes>
         {/* Route Public */}
-        <Route path="/" element={<Home />} />
+
         <Route path="/login" element={<Login />} />
         <Route path="/unauthorized" element={<Unauthorrized />} />
 

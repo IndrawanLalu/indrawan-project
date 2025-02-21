@@ -1,8 +1,9 @@
-import { db } from "@/firebase/firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { db, storage } from "@/firebase/firebaseConfig";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CgDanger } from "react-icons/cg";
@@ -72,6 +73,30 @@ const DaftarPemeliharaan = () => {
         (filterPenyulang === "all" || item.penyulang === filterPenyulang) // Tambah filter penyulang
     );
   };
+  const handleDelete = async (id, imageUrl) => {
+    const confirmDelete = window.confirm(
+      "Apakah Anda yakin ingin menghapus data ini?"
+    );
+    if (!confirmDelete) return; // Jika user batal, keluar dari fungsi
+    try {
+      // Hapus dokumen dari Firestore
+      await deleteDoc(doc(db, "inspeksi", id));
+
+      // Jika ada gambar terkait, hapus dari Firebase Storage
+      if (imageUrl) {
+        const imageRef = ref(storage, imageUrl);
+        await deleteObject(imageRef);
+      }
+
+      // Perbarui state agar data terbaru tampil di UI
+      setData(data.filter((item) => item.id !== id));
+
+      alert("Data berhasil dihapus!");
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+      alert("Gagal menghapus data");
+    }
+  };
   return (
     <Layouts>
       <div className="font-semibold text-start md:text-2xl md:pt-2">
@@ -109,7 +134,7 @@ const DaftarPemeliharaan = () => {
           </div>
           {/* Dropdown Filter Penyulang */}
         </div>
-        <div className=" hidden md:grid grid-cols-8 justify-start text-center py-2 border font-semibold items-center bg-main/30">
+        <div className=" hidden md:grid grid-cols-9 justify-start text-center py-2 border font-semibold items-center bg-main/30">
           <h1 className="col-span-1">Temuan</h1>
           <Select onValueChange={setFilterPenyulang}>
             <SelectTrigger className="">
@@ -130,6 +155,7 @@ const DaftarPemeliharaan = () => {
           <h1>Alamat</h1>
           <h1>Titik Lokasi</h1>
           <h1 className="">Status</h1>
+          <h1 className="text-end"></h1>
         </div>
         <TabsContent value="Temuan">
           <div className=" ">
@@ -137,7 +163,7 @@ const DaftarPemeliharaan = () => {
               {filteredDataByCategoryAndPenyulang("Temuan").map((item) => (
                 <div
                   key={item.id}
-                  className="grid grid-cols-8 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
+                  className="grid grid-cols-9 justify-start py-2 hover:bg-main/10 border-b border-main/30 items-center"
                 >
                   <div className="col-span-3 md:col-span-1 md:content-center text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
@@ -194,6 +220,14 @@ const DaftarPemeliharaan = () => {
                         )}
                       </Link>
                     </div>
+                  </div>
+                  <div className="col-span-1 text-end">
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleDelete(item.id, item.imageUrl)}
+                    >
+                      <FaTrash className="w-4 h-4 text-red-500" />
+                    </Button>
                   </div>
                 </div>
               ))}

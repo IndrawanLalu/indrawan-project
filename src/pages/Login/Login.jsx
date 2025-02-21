@@ -91,7 +91,7 @@ const Login = () => {
       <div className="relative w-full min-h-screen">
         <div className="hidden  relative w-full min-h-screen items-center justify-center">
           {/* Gambar SVG sebagai background */}
-          <img src="/login.svg" alt="login" className="h-[800px]" />
+          <img src="/petasan.webp" alt="login" className="h-[800px]" />
 
           {/* Form login yang diatur agar terletak di atas gambar */}
           <form
@@ -116,59 +116,61 @@ const Login = () => {
             </button>
           </form>
         </div>
-        <div className=" flex flex-col gap-2 content-center justify-center items-center min-h-screen">
-          <Card>
-            <CardHeader>
-              <CardTitle>Login Form</CardTitle>
-              <CardDescription></CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleLogin}>
-                <div className="grid w-full items-center gap-4 mb-6">
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Email</Label>
-                    <Input
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      type="email"
-                      placeholder="input Your Email"
-                    />
+        <div className="relative w-full min-h-screen bg-[url('/petasan.webp')] bg-cover bg-center">
+          <div className="flex flex-col gap-2 content-center justify-center items-center min-h-screen bg-white/70 p-6 rounded-md shadow-md">
+            <Card>
+              <CardHeader>
+                <CardTitle>Login Form</CardTitle>
+                <CardDescription></CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleLogin}>
+                  <div className="grid w-full items-center gap-4 mb-6">
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="email">Email</Label>
+                      <Input
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        type="email"
+                        placeholder="Input Your Email"
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="grid w-full items-center gap-4">
-                  <div className="flex flex-col space-y-1.5">
-                    <Label htmlFor="name">Password</Label>
-                    <Input
-                      id="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      type="password"
-                      placeholder="input Your password"
-                    />
+                  <div className="grid w-full items-center gap-4">
+                    <div className="flex flex-col space-y-1.5">
+                      <Label htmlFor="password">Password</Label>
+                      <Input
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        placeholder="Input Your Password"
+                      />
+                    </div>
                   </div>
+                  <Button size="lg" type="submit" className="mt-6 w-full">
+                    {loading ? "Loading..." : "Login"}
+                  </Button>
+                  {error && <span className="text-red-600">{error}</span>}
+                </form>
+              </CardContent>
+              <CardFooter>
+                <div className="grid w-full items-center content-center justify-items-center">
+                  <span>Belum punya akun?</span>
+                  <Button variant="ghost" size="lg" className="w-full">
+                    <Link
+                      to={"https://wa.me/6287761506513"}
+                      target="_blank"
+                      className="text-blue-600"
+                    >
+                      Contact Admin &rarr;
+                    </Link>
+                  </Button>
                 </div>
-                <Button size="lg" type="submit" className="mt-6 w-full">
-                  {loading ? "Loading..." : "Login"}
-                </Button>
-                {error && <span className="text-red-600">{error}</span>}
-              </form>
-            </CardContent>
-            <CardFooter>
-              <div className="grid w-full items-center  content-center justify-items-center">
-                <span>Belum punya akun ?</span>
-                <Button variant="ghost" size="lg" className="w-full">
-                  <Link
-                    to={"https://wa.me/6287761506513"}
-                    target="_blank"
-                    className="text-blue-600"
-                  >
-                    Contact Admin &rarr;{" "}
-                  </Link>{" "}
-                </Button>
-              </div>
-            </CardFooter>
-          </Card>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
       </div>
     </>

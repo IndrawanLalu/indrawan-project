@@ -26,10 +26,10 @@ const transactions = [
 ];
 
 const services = [
-  { id: 1, name: "Beban Gardu", icon: "🏠" },
-  { id: 2, name: "Inspeksi", icon: "🎯" },
-  { id: 3, name: "Gangguan Penyulang", icon: "⚡" },
-  { id: 4, name: "Topup", icon: "📥" },
+  { id: 1, name: "Beban Gardu", icon: "🏠", link: "/amg" },
+  { id: 2, name: "Temuan Inspeksi", icon: "🎯", link: "/inspeksi" },
+  { id: 3, name: "Gangguan Penyulang", icon: "⚡", link: "#" },
+  { id: 4, name: "Topup", icon: "📥", link: "#" },
 ];
 const Home = () => {
   // const user = useSelector ((state) => state.auth.user);
@@ -66,13 +66,15 @@ const Home = () => {
         <p className="text-lg font-semibold">Menu</p>
         <div className="grid grid-cols-4 gap-4 mt-2">
           {services.map((service) => (
-            <div
-              key={service.id}
-              className="flex flex-col items-center p-3 bg-white rounded-xl shadow-md hover:bg-gray-100 cursor-pointer transition-transform transform hover:scale-110"
-            >
-              <span className="text-2xl">{service.icon}</span>
-              <p className="text-sm mt-1">{service.name}</p>
-            </div>
+            <Link to={service.link} key={service.id}>
+              <div
+                key={service.id}
+                className="flex flex-col items-center p-3 bg-white rounded-xl shadow-md hover:bg-gray-100 cursor-pointer transition-transform transform hover:scale-110"
+              >
+                <span className="text-2xl">{service.icon}</span>
+                <p className="text-sm mt-1">{service.name}</p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

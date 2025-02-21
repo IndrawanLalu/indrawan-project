@@ -46,11 +46,9 @@ const SearchAmg = () => {
   };
 
   return (
-    <div>
-      <div className="py-2">
-        <Button variant="neutral" className="py-4 gap-4">
-          Beban Gardu Selong
-        </Button>
+    <div className="p-4">
+      <div className="py-2 bg-main rounded-md">
+        <span className="py-4 gap-4 font-semibold">🏠 Beban Gardu Selong</span>
       </div>
       <Input
         className="mb-4 mt-4"
