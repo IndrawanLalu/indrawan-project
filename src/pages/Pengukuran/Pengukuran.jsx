@@ -23,15 +23,15 @@ const Pengukuran = () => {
   const [data, setData] = useState([]);
   const [pengukuran, setPengukuran] = useState({
     tanggalUkur: "",
-    R: 0,
-    S: 0,
-    T: 0,
-    N: 0,
+    R: "",
+    S: "",
+    T: "",
+    N: "",
     perJurusan: {
-      R: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-      S: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-      T: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-      N: { A: 0, B: 0, C: 0, D: 0, K: 0 },
+      R: { A: "", B: "", C: "", D: "", K: "" },
+      S: { A: "", B: "", C: "", D: "", K: "" },
+      T: { A: "", B: "", C: "", D: "", K: "" },
+      N: { A: "", B: "", C: "", D: "", K: "" },
     },
   });
 
@@ -145,15 +145,15 @@ const Pengukuran = () => {
         tanggalUkur: "",
         petugas: "",
         jamUkur: "",
-        R: 0,
-        S: 0,
-        T: 0,
-        N: 0,
+        R: "",
+        S: "",
+        T: "",
+        N: "",
         perJurusan: {
-          R: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-          S: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-          T: { A: 0, B: 0, C: 0, D: 0, K: 0 },
-          N: { A: 0, B: 0, C: 0, D: 0, K: 0 },
+          R: { A: "", B: "", C: "", D: "", K: "" },
+          S: { A: "", B: "", C: "", D: "", K: "" },
+          T: { A: "", B: "", C: "", D: "", K: "" },
+          N: { A: "", B: "", C: "", D: "", K: "" },
         },
       });
       // Tunggu beberapa detik sebelum navigasi (opsional)
