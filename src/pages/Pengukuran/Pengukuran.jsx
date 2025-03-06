@@ -116,7 +116,7 @@ const Pengukuran = () => {
       setShowModal(true);
       return;
     }
-    if (pengukuran.R === 0 || pengukuran.S === 0 || pengukuran.T === 0) {
+    if (pengukuran.R === "" || pengukuran.S === "" || pengukuran.T === "") {
       setErrorMessage("Minimal satu beban harus lebih dari 0!");
       setShowModal(true);
       return;
