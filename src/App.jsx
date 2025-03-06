@@ -34,6 +34,8 @@ import DetailGardu from "./pages/Gardu/DetailGardu";
 import RencanaPekerjaan from "./pages/Gardu/RencanaPekerjaan";
 import TargetGangguan from "./pages/gangguan/TargetGangguan";
 import TambahTargetGangguan from "./pages/gangguan/TanbahTargetGangguann";
+import Pengukuran from "./pages/Pengukuran/Pengukuran";
+import DataPengukuran from "./pages/Pengukuran/DataPengukuran";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -58,6 +60,10 @@ function App() {
     { path: "/admin/tambahGangguan", element: <TambahGangguan /> },
     { path: "/admin/data-gardu", element: <BebanGardu /> },
     { path: "/admin/detail-gardu/:nama", element: <DetailGardu /> },
+    {
+      path: "/admin/pengukuran-gardu",
+      element: <DataPengukuran />,
+    },
     {
       path: "/admin/gardu/rencana-pemeliharaan",
       element: <RencanaPekerjaan />,
@@ -89,6 +95,7 @@ function App() {
     { path: "/padam", element: <Padam /> },
     { path: "/menu", element: <Menu /> },
     { path: "/inspeksi", element: <Temuan /> },
+    { path: "/pengukuran", element: <Pengukuran /> },
     { path: "/tambahTemuan", element: <TambahTemuan /> },
     { path: "/pemeliharaan", element: <Pemeliharaan /> },
     { path: "/eksekusi/:id", element: <EksekusiTemuan /> },
@@ -134,7 +141,9 @@ function App() {
             key={path}
             path={path}
             element={
-              <ProtectedRoute allowedRoles={["admin", "inspektor", "har"]}>
+              <ProtectedRoute
+                allowedRoles={["admin", "inspektor", "har", "yantek"]}
+              >
                 {element}
               </ProtectedRoute>
             }

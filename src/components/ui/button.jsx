@@ -28,6 +28,7 @@ const buttonVariants = cva(
         icon: "h-10 w-10",
         sidebar: "h-10 min-w-full justify-start px-2",
         menuMobile: "h-10 px-2",
+        full: "h-10 w-full",
       },
     },
     defaultVariants: {

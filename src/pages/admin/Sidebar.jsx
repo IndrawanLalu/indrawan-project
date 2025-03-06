@@ -49,8 +49,10 @@ const navigation = [
     name: "Data Gardu",
     href: "/admin/data-gardu",
     icon: FaBinoculars,
-    accName: "Rencana Pekerjaan",
-    accHref: "/admin/gardu/rencana-pemeliharaan",
+    accName: "Pengukuran Gardu",
+    accHref: "/admin/pengukuran-gardu",
+    accName2: "Rencana Pekerjaan",
+    accHref2: "/admin/gardu/rencana-pemeliharaan",
   },
   { name: "Surat Masuk", href: "/admin/surat-masuk", icon: FaEnvelope },
 ];

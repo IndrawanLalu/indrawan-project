@@ -278,7 +278,9 @@ const GangguanPenyulang = () => {
                     <TableCell>{item.arusN}</TableCell>
                     <TableCell>{item.penyebab}</TableCell>
                     <TableCell>
-                      {item.lokasiGangguan ? (
+                      {item.lokasiGangguan === "-" ? (
+                        "-"
+                      ) : item.lokasiGangguan ? (
                         <Link
                           to={
                             "https://www.google.com/maps/place/" +

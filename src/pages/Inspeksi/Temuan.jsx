@@ -19,252 +19,156 @@ import {
   limit,
   startAfter,
 } from "firebase/firestore";
-
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { FaCheck, FaPlusCircle } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 import { CgDanger } from "react-icons/cg";
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import ImagePreview from "../ImagePreview";
 
 const Temuan = () => {
   const [data, setData] = useState([]);
-  // useEffect(() => {
-  //     const fetchData = async () => {
-  //     try {
-  //         const querySnapshot = await getDocs(collection(db, "inspeksi"));
-  //         const fetchedData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-  //         // Mengurutkan data berdasarkan tglInspeksi dari yang terbaru ke terlama
-  //         const sortedData = fetchedData.sort((a, b) => new Date(b.tglInspeksi) - new Date(a.tglInspeksi));
-
-  //     setData(sortedData);
-  //     } catch (error) {
-  //         console.error("Error fetching data: ", error);
-  //     }
-  //     };
-  //     fetchData();
-  // }, []);
   const lastDocRef = useRef(null);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true); // Untuk memeriksa apakah ada data lebih lanjut
-  const limitPerPage = 10; // Batas data per halaman
+  const [hasMore, setHasMore] = useState(true);
+  const limitPerPage = 10;
 
-  const fetchData = useCallback(
-    async (loadMore = false) => {
-      setLoading(true);
-      try {
-        const ref = collection(db, "inspeksi");
-        let q;
+  const fetchData = async (loadMore = false) => {
+    setLoading(true);
+    try {
+      const ref = collection(db, "inspeksi");
+      let q = query(ref, orderBy("tglInspeksi", "desc"), limit(limitPerPage));
 
-        if (loadMore && lastDocRef.current) {
-          q = query(
-            ref,
-            orderBy("tglInspeksi", "desc"),
-            startAfter(lastDocRef.current),
-            limit(limitPerPage)
-          );
-        } else {
-          q = query(ref, orderBy("tglInspeksi", "desc"), limit(limitPerPage));
-        }
-
-        const querySnapshot = await getDocs(q);
-        const fetchedData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        // Simpan dokumen terakhir tanpa memicu re-render
-        lastDocRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
-
-        // Cek apakah ada data lebih lanjut
-        setHasMore(querySnapshot.docs.length >= limitPerPage);
-
-        // Update data
-        setData((prevData) =>
-          loadMore ? [...prevData, ...fetchedData] : fetchedData
+      if (loadMore && lastDocRef.current) {
+        q = query(
+          ref,
+          orderBy("tglInspeksi", "desc"),
+          startAfter(lastDocRef.current),
+          limit(limitPerPage)
         );
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
       }
-    },
-    [limitPerPage]
-  );
 
-  useEffect(() => {
-    fetchData(); // Ambil data pertama kali
-  }, [fetchData]);
+      const querySnapshot = await getDocs(q);
+      const fetchedData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-  const loadMoreData = () => {
-    if (!loading && hasMore) {
-      fetchData(true); // Ambil data halaman berikutnya
+      lastDocRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
+      setHasMore(querySnapshot.docs.length >= limitPerPage);
+
+      setData((prevData) =>
+        loadMore ? [...prevData, ...fetchedData] : fetchedData
+      );
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="mb-16">
-      <div className=" border-main border-b pb-2 flex fixed left-2 right-40 top-0 md:left-40 md:top-20 items-center">
-        <h4 className="font-semibold text-start md:text-2xl pt-2 text-xl">
-          🎯Hasil Temuan
-        </h4>
-        <div className="pl-4 pt-2">
-          <Link
-            to="/tambahTemuan"
-            className="flex items-center content-center justify-center rounded-full h-6 w-6 bg-main border-2 border-border dark:border-darkBorder shadow-light dark:shadow-dark hover:translate-x-boxShadowX hover:translate-y-boxShadowY hover:shadow-none dark:hover:shadow-none'"
-          >
-            <FaPlusCircle />
+    <div className="bg-gray-100 min-h-screen flex justify-center">
+      <div className="bg-white shadow-lg rounded-lg p-4 w-full max-w-md">
+        <div className="flex items-center justify-between border-b pb-2 mb-4">
+          <h2 className="text-xl font-bold flex items-center">
+            🎯 Hasil Temuan
+          </h2>
+          <Link to="/tambahTemuan">
+            <button className="bg-green-500 text-white p-2 rounded-full shadow-md hover:bg-green-600 transition">
+              ➕
+            </button>
           </Link>
         </div>
-      </div>
-      <div className="fixed left-0 right-0 top-10 md:left-48 md:right-48 md:top-40">
-        <ScrollArea className="w-full h-screen px-2 md:h-screen">
+
+        <ScrollArea className="fixed left-0 right-0 top-2 md:left-48 md:right-48 md:top-40 h-screen">
           {data.map((item) => (
             <Dialog key={item.id}>
               <DialogTrigger asChild>
-                <div
-                  key={item.id}
-                  className="grid grid-cols-6 py-2 hover:bg-main/10 content-center justify-center items-center border-b border-main/50 dark:border-main/50"
-                >
-                  {/* <div className="content-center pl-2">
-                    <Avatar>
-                      <AvatarImage src={item.imageUrl} />
-                      <AvatarFallback>SB</AvatarFallback>
-                    </Avatar>
-                  </div> */}
-                  <div className="col-start-1 col-span-3 md:col-span-3 text-start">
+                <div className="grid grid-cols-6 py-2 bg-white shadow-md rounded-lg p-2 border border-gray-200 hover:shadow-lg transition">
+                  <div className="col-span-3 text-start">
                     <h2 className="font-semibold">{item.temuan}</h2>
                     <p className="text-sm">{item.lokasi}</p>
                   </div>
-                  <div className=" flex flex-col col-start-4 md:col-start-4 colsspan-3 text-center items-center">
+                  <div className="col-start-4 text-center">
                     <span>P.{item.penyulang}</span>
                   </div>
-                  <div className="hidden md:flex flex-col  md:col-start-5 colsspan-1 text-start items-center">
+                  <div className="hidden md:flex col-start-5 flex-col text-start">
                     <span>Inspektor</span>
                     <h2 className="font-semibold">{item.inspektor}</h2>
                   </div>
-                  <div className="flex flex-col justify-center text-end col-span-2 md:col-span-1 md:mr-4">
-                    <div className="text-[10px]">
-                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "2-digit",
-                        year: "numeric",
-                      })}
-                    </div>
-                    <div className="">
-                      {item.status === "Temuan" ? (
-                        <Badge variant="temuan">{item.status} </Badge>
-                      ) : item.status === "Pending" ? (
-                        <Badge variant="pending">
-                          <CgDanger />
-                          {item.status}{" "}
-                        </Badge>
-                      ) : (
-                        <Badge>
-                          <FaCheck />
-                          {item.status}{" "}
-                        </Badge>
-                      )}
-                    </div>
+                  <div className="text-end col-span-2 md:col-span-1">
+                    <span className="text-[10px]">
+                      {new Date(item.tglInspeksi).toLocaleDateString("id-ID")}
+                    </span>
+                    <Badge variant={item.status.toLowerCase()}>
+                      {item.status === "Temuan" ? <CgDanger /> : <FaCheck />}{" "}
+                      {item.status}
+                    </Badge>
                   </div>
                 </div>
               </DialogTrigger>
+
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>Detail Temuan</DialogTitle>
                   <DialogDescription>
-                    Pastikan Detail Temuan anda Benar
+                    Pastikan Detail Temuan Anda Benar
                   </DialogDescription>
                 </DialogHeader>
+
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="foto" className="text-right">
-                      Foto
-                    </Label>
+                    <Label className="text-right">Foto</Label>
                     <ImagePreview
                       src={item.imageUrl}
-                      alt="foto"
-                      className="w-20 h-20 rounded-md md:w-36 md:h-36"
+                      className="w-20 h-20 md:w-36 md:h-36 rounded-md"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="temuan" className="text-right">
-                      Temuan
-                    </Label>
-                    <Input
-                      id="temuan"
-                      defaultValue={item.temuan}
-                      className="col-span-3"
-                      readOnly
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="lokasi" className="text-right">
-                      Lokasi
-                    </Label>
-                    <Input
-                      id="lokasi"
-                      defaultValue={item.lokasi}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="inspektor" className="text-right">
-                      Inspektor
-                    </Label>
-                    <Input
-                      id="inspektor"
-                      defaultValue={item.inspektor}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="penyulang" className="text-right">
-                      Penyulang
-                    </Label>
-                    <Input
-                      id="penyulang"
-                      defaultValue={item.penyulang}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="category" className="text-right">
-                      Kategory
-                    </Label>
-                    <Input
-                      id="category"
-                      defaultValue={item.category}
-                      className="col-span-3"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="tanggalInspeksi" className="text-right">
-                      Tgl Inspeksi
-                    </Label>
-                    <Input
-                      id="tanggalInspeksi"
-                      defaultValue={item.tglInspeksi}
-                      className="col-span-3"
-                    />
-                  </div>
+                  {[
+                    { label: "Temuan", value: item.temuan },
+                    { label: "Lokasi", value: item.lokasi },
+                    { label: "Inspektor", value: item.inspektor },
+                    { label: "Penyulang", value: item.penyulang },
+                    { label: "Kategori", value: item.category },
+                    { label: "Tgl Inspeksi", value: item.tglInspeksi },
+                  ].map(({ label, value }, index) => (
+                    <div
+                      key={index}
+                      className="grid grid-cols-4 items-center gap-4"
+                    >
+                      <Label className="text-right">{label}</Label>
+                      <Input
+                        defaultValue={value}
+                        className="col-span-3"
+                        readOnly
+                      />
+                    </div>
+                  ))}
                 </div>
+
                 <DialogFooter>
                   <Button type="submit">Save changes</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
           ))}
-          <div className="flex justify-center">
+
+          <div className="flex justify-center mt-4">
             {hasMore && !loading && (
-              <Button onClick={loadMoreData} className="mt-4">
+              <Button size="full" onClick={() => fetchData(true)}>
                 Load More
               </Button>
             )}
             {loading && <p>Loading...</p>}
           </div>
-          <div className=" pb-20 mb-20  pt-2 text-sm flex justify-center">
+
+          <div className="pb-20 pt-2 text-sm flex justify-center">
             <p>Hasil temuan Inspeksi</p>
           </div>
         </ScrollArea>
