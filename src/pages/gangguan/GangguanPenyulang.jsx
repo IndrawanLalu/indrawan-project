@@ -50,7 +50,7 @@ const GangguanPenyulang = () => {
 
   const { toast } = useToast();
   const [startDate, setStartDate] = useState(
-    new Date(new Date().getFullYear(), 0, 1)
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
   ); // Default awal tahun ini
   const [endDate, setEndDate] = useState(new Date()); // Default hari ini
 

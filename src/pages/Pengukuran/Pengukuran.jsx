@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { debounce } from "lodash";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -23,6 +24,8 @@ const Pengukuran = () => {
   const [data, setData] = useState([]);
   const [pengukuran, setPengukuran] = useState({
     tanggalUkur: "",
+    kva: 0,
+    alamat: "",
     R: "",
     S: "",
     T: "",
@@ -32,6 +35,15 @@ const Pengukuran = () => {
       S: { A: "", B: "", C: "", D: "", K: "" },
       T: { A: "", B: "", C: "", D: "", K: "" },
       N: { A: "", B: "", C: "", D: "", K: "" },
+    },
+    petugas: "",
+    tegangan: {
+      R_N: "",
+      S_N: "",
+      T_N: "",
+      R_S: "",
+      R_T: "",
+      S_T: "",
     },
   });
 
@@ -52,7 +64,7 @@ const Pengukuran = () => {
   }, []);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const searchGardu = debounce(() => {
       if (query) {
         setResults(
           data.filter((item) =>
@@ -62,9 +74,10 @@ const Pengukuran = () => {
       } else {
         setResults([]);
       }
-    }, 2000);
+    }, 2000); // Debounce 500ms agar tidak terlalu sering memanggil pencarian
 
-    return () => clearTimeout(timeout);
+    searchGardu();
+    return () => searchGardu.cancel();
   }, [query, data]);
 
   // Handle perubahan input total manual
@@ -84,6 +97,17 @@ const Pengukuran = () => {
       perJurusan: {
         ...prev.perJurusan,
         [phase]: { ...prev.perJurusan[phase], [line]: parseFloat(value) || 0 },
+      },
+    }));
+  };
+
+  const handleTeganganChange = (e, key) => {
+    const { value } = e.target;
+    setPengukuran((prev) => ({
+      ...prev,
+      tegangan: {
+        ...prev.tegangan,
+        [key]: parseFloat(value) || 0,
       },
     }));
   };
@@ -121,10 +145,30 @@ const Pengukuran = () => {
       setShowModal(true);
       return;
     }
+    if (
+      pengukuran.tegangan.R_N === "" ||
+      pengukuran.tegangan.S_N === "" ||
+      pengukuran.tegangan.T_N === "" ||
+      pengukuran.tegangan.R_S === "" ||
+      pengukuran.tegangan.R_T === "" ||
+      pengukuran.tegangan.S_T === ""
+    ) {
+      setErrorMessage("Minimal satu tegangan harus lebih dari 0!");
+      setShowModal(true);
+      return;
+    }
+    const selectedGardu = data.find((item) => item.id === garduId);
+    if (!selectedGardu) {
+      setErrorMessage("Gardu tidak ditemukan!");
+      setShowModal(true);
+      return;
+    }
     try {
       await addDoc(collection(db, "Pengukuran"), {
-        nama: results[0].nama,
+        nama: selectedGardu.nama,
         garduId,
+        kva: selectedGardu.kva,
+        alamat: selectedGardu.alamat,
         tanggalUkur: pengukuran.tanggalUkur,
         jamUkur: pengukuran.jamUkur,
         R: pengukuran.R,
@@ -132,6 +176,7 @@ const Pengukuran = () => {
         T: pengukuran.T,
         N: pengukuran.N,
         perJurusan: pengukuran.perJurusan,
+        tegangan: pengukuran.tegangan,
         bebanKva,
         persenKva,
         unbalance,
@@ -154,6 +199,14 @@ const Pengukuran = () => {
           S: { A: "", B: "", C: "", D: "", K: "" },
           T: { A: "", B: "", C: "", D: "", K: "" },
           N: { A: "", B: "", C: "", D: "", K: "" },
+        },
+        tegangan: {
+          R_N: "",
+          S_N: "",
+          T_N: "",
+          R_S: "",
+          R_T: "",
+          S_T: "",
         },
       });
       // Tunggu beberapa detik sebelum navigasi (opsional)
@@ -286,6 +339,29 @@ const Pengukuran = () => {
                           </div>
                         ))}
                       </div>
+                      <div>
+                        <p className="py-2 font-semibold">Tegangan (Volt)</p>
+                        <div className="grid grid-cols-3 gap-4 border-main border-b py-2">
+                          {["R_N", "S_N", "T_N", "R_S", "R_T", "S_T"].map(
+                            (key) => (
+                              <div key={key} className="flex flex-col">
+                                <Label className="font-bold">
+                                  {key.replace("_", " - ")} :
+                                </Label>
+                                <Input
+                                  type="number"
+                                  value={pengukuran.tegangan[key]}
+                                  onChange={(e) => handleTeganganChange(e, key)}
+                                  className="w-24 h-8 text-center font-mono"
+                                  step="any"
+                                  required
+                                />
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <div></div>
                       <div>
                         <h2>Kesimpulan</h2>
                         <p> Beban KVA = {bebanKva.toFixed(2)}</p>

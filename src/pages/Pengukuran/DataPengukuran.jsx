@@ -10,14 +10,20 @@ import {
 import {
   collection,
   query,
-  orderBy,
   onSnapshot,
   getDocs,
+  where,
 } from "firebase/firestore";
 import Layouts from "../admin/Layouts";
 import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import DatePicker from "react-datepicker";
 
 const PengukuranTable = () => {
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  ); // Default awal tahun ini
+  const [endDate, setEndDate] = useState(new Date()); // Default hari ini
   const [pengukuranList, setPengukuranList] = useState([]);
   const [garduData, setGarduData] = useState({});
 
@@ -46,7 +52,11 @@ const PengukuranTable = () => {
 
   // Ambil data pengukuran dari Firestore
   useEffect(() => {
-    const q = query(collection(db, "Pengukuran"), orderBy("createdAt", "desc"));
+    const q = query(
+      collection(db, "Pengukuran"),
+      where("tanggalUkur", ">=", format(startDate, "yyyy-MM-dd")),
+      where("tanggalUkur", "<=", format(endDate, "yyyy-MM-dd"))
+    );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => {
@@ -63,16 +73,34 @@ const PengukuranTable = () => {
     });
 
     return () => unsubscribe();
-  }, [garduData]); // Gunakan garduData sebagai dependency agar update saat berubah
+  }, [garduData, startDate, endDate]); // Gunakan garduData sebagai dependency agar update saat berubah
 
   return (
     <Layouts>
       <div className="container mx-auto p-4">
-        <h2 className="text-xl font-bold mb-4">Data Pengukuran</h2>
+        <div className="flex justify-between">
+          <h2 className="text-xl font-bold mb-4">Data Pengukuran</h2>
+          <div className="flex gap-2 justify-items-center justify-end px-6">
+            <label>Start Date: </label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="bg-transparent border border-main rounded-md px-2 text-black"
+              dateFormat={"dd/MM/yyyy"}
+            />
+            <label>End Date: </label>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              className="bg-transparent border border-main rounded-md px-2 text-black"
+              dateFormat={"dd/MM/yyyy"}
+            />
+          </div>
+        </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300">
+          <table className="min-w-full bg-transparent border-main">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-main ">
                 <th className="px-4 py-2 border">Nama Gardu</th>
                 <th className="px-4 py-2 border">Alamat</th>
                 <th className="px-4 py-2 border">KVA</th>
@@ -181,6 +209,20 @@ const PengukuranTable = () => {
                       ))}
                     </tbody>
                   </table>
+
+                  <h3 className="mt-2 font-bold">Tegangan</h3>
+                  <div className="flex flex-row gap-6">
+                    <div className="">
+                      <p>R-N : {selectedGardu.tegangan.R_N} Volt</p>
+                      <p>S-N : {selectedGardu.tegangan.S_N} Volt</p>
+                      <p>T-N : {selectedGardu.tegangan.T_N} Volt</p>
+                    </div>
+                    <div className="">
+                      <p>R-N : {selectedGardu.tegangan.R_N} Volt</p>
+                      <p>S-N : {selectedGardu.tegangan.S_N} Volt</p>
+                      <p>T-N : {selectedGardu.tegangan.T_N} Volt</p>
+                    </div>
+                  </div>
                 </div>
               )}
 
