@@ -36,10 +36,14 @@ import TargetGangguan from "./pages/gangguan/TargetGangguan";
 import TambahTargetGangguan from "./pages/gangguan/TanbahTargetGangguann";
 import Pengukuran from "./pages/Pengukuran/Pengukuran";
 import DataPengukuran from "./pages/Pengukuran/DataPengukuran";
+import DashboardPengukuran from "./pages/Pengukuran/DashboardPengukuran";
+import NotificationsPage from "./pages/NotificationsPage";
+import { NotificationProvider } from "./contexts/notifications";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
   const protectedRouteAdmin = [
+    { path: "/notifications", element: <NotificationsPage /> },
     { path: "/admin/aset/penyulang", element: <Penyulang /> },
     { path: "/admin/aset/maps", element: <Maps /> },
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
@@ -65,8 +69,16 @@ function App() {
       element: <DataPengukuran />,
     },
     {
+      path: "/admin/dashboard-pengukuran",
+      element: <DashboardPengukuran />,
+    },
+    {
       path: "/admin/gardu/rencana-pemeliharaan",
       element: <RencanaPekerjaan />,
+    },
+    {
+      path: "/admin/gardu/notifikasi",
+      element: <NotificationsPage />,
     },
 
     { path: "/admin/seeder", element: <SeedSegment /> },
@@ -103,58 +115,60 @@ function App() {
 
   return (
     <>
-      {/* <NavBarKu /> */}
-      <Routes>
-        {/* Route Public */}
+      <NotificationProvider>
+        {/* <NavBarKu /> */}
+        <Routes>
+          {/* Route Public */}
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/unauthorized" element={<Unauthorrized />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/unauthorized" element={<Unauthorrized />} />
 
-        {/* Route Admin */}
-        {protectedRouteAdmin.map(({ path, element }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <ProtectedRoute allowedRoles={["admin"]}>
-                {element}
-              </ProtectedRoute>
-            }
-          />
-        ))}
-        {/* Route Admin */}
-        {protectedRouteDiandra.map(({ path, element }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <ProtectedRoute allowedRoles={["diandra", "admin"]}>
-                {element}
-              </ProtectedRoute>
-            }
-          />
-        ))}
+          {/* Route Admin */}
+          {protectedRouteAdmin.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <ProtectedRoute allowedRoles={["admin"]}>
+                  {element}
+                </ProtectedRoute>
+              }
+            />
+          ))}
+          {/* Route Admin */}
+          {protectedRouteDiandra.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <ProtectedRoute allowedRoles={["diandra", "admin"]}>
+                  {element}
+                </ProtectedRoute>
+              }
+            />
+          ))}
 
-        {/* Route untuk Admin dan Inspektor */}
-        {sharedRoutes.map(({ path, element }) => (
-          <Route
-            key={path}
-            path={path}
-            element={
-              <ProtectedRoute
-                allowedRoles={["admin", "inspektor", "har", "yantek"]}
-              >
-                {element}
-              </ProtectedRoute>
-            }
-          />
-        ))}
+          {/* Route untuk Admin dan Inspektor */}
+          {sharedRoutes.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <ProtectedRoute
+                  allowedRoles={["admin", "inspektor", "har", "yantek"]}
+                >
+                  {element}
+                </ProtectedRoute>
+              }
+            />
+          ))}
 
-        {/* Catch-All Route */}
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+          {/* Catch-All Route */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
 
-      <Toaster />
+        <Toaster />
+      </NotificationProvider>
     </>
   );
 }

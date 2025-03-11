@@ -21,12 +21,34 @@ import { db } from "@/firebase/firebaseConfig";
 const Login = () => {
   const userLogin = useSelector((state) => state.auth.user); // Mengambil user dari Redux
   const nav = useNavigate();
+
+  // useEffect ini menangani initial redirect berdasarkan role jika user sudah login
   useEffect(() => {
-    if (userLogin) {
-      // Jika user sudah login, redirect ke halaman lain
-      nav("/");
+    // Hanya jika userLogin ada dan memiliki role, lakukan redirect sesuai role
+    if (userLogin && userLogin.role) {
+      const role = userLogin.role;
+      switch (role) {
+        case "inspektor":
+          nav("/inspeksi");
+          break;
+        case "admin":
+          nav("/admin/dashboard");
+          break;
+        case "diandra":
+          nav("/diandra");
+          break;
+        case "har":
+          nav("/pemeliharaan");
+          break;
+        default:
+          // Default untuk role lain
+          nav("/dashboard");
+          break;
+      }
+      console.log("Redirecting based on role:", role);
     }
   }, [userLogin, nav]);
+
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
@@ -51,15 +73,22 @@ const Login = () => {
 
       // Periksa apakah role sudah ada di Firestore
       const roleRef = doc(db, "userRoles", user.uid);
-      const roleDoc = await getDoc(roleRef);
-      // Jika role belum ada, tambahkan role
+      let roleDoc = await getDoc(roleRef);
+      let role;
+
+      // Jika role belum ada, tambahkan role default
       if (!roleDoc.exists()) {
         await setDoc(doc(db, "userRoles", user.uid), {
-          role: "user", // Ganti dengan role yang sesuai
+          role: "user", // Role default
           email: user.email,
         });
+        role = "user";
+      } else {
+        // Ambil role dari dokumen yang ada
+        role = roleDoc.data().role;
       }
-      const role = roleDoc.data().role;
+
+      // Simpan data user ke Redux store
       dispatch(
         login({
           uid: user.uid,
@@ -70,22 +99,44 @@ const Login = () => {
       );
       console.log("User logged in and role checked/added role: ", role);
       console.log("Login berhasil", userCredentials);
-      if (role === "inspektor") {
-        nav("/inspeksi");
-      } else if (role === "admin") {
-        nav("/admin/dashboard");
-      } else if (role === "diandra") {
-        nav("/diandra");
-      } else if (role === "har") {
-        nav("/pemeliharaan");
-      }
+
+      // Simpan role dalam localStorage agar tersedia setelah refresh halaman (opsional)
+      localStorage.setItem("userRole", role);
+
+      // Tunggu beberapa waktu agar Redux state terupdate dengan baik
+      setTimeout(() => {
+        // Redirect berdasarkan role
+        switch (role) {
+          case "inspektor":
+            nav("/inspeksi");
+            break;
+          case "admin":
+            nav("/admin/dashboard");
+            break;
+          case "diandra":
+            nav("/diandra");
+            break;
+          case "har":
+            nav("/pemeliharaan");
+            break;
+          default:
+            // Default redirect untuk user biasa atau role lainnya
+            nav("/dashboard"); // atau halaman default lainnya
+            break;
+        }
+        console.log(
+          "Redirecting to:",
+          role === "admin" ? "/admin/dashboard" : "/" + role
+        );
+      }, 100); // Penundaan singkat untuk memastikan dispatch selesai
     } catch (error) {
       console.error("Error during login: ", error);
       setError(error.message);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
   return (
     <>
       <div className="relative w-full min-h-screen">

@@ -1,404 +1,395 @@
-import { useState, useEffect } from "react";
-import { debounce } from "lodash";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useEffect, useState } from "react";
 import { db } from "@/firebase/firebaseConfig";
-import { addDoc, collection, getDocs } from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  collection,
+  query,
+  onSnapshot,
+  getDocs,
+  where,
+} from "firebase/firestore";
+import Layouts from "../admin/Layouts";
+import { Button } from "@/components/ui/button";
+import { format } from "date-fns";
+import DatePicker from "react-datepicker";
+import * as XLSX from "xlsx";
 
-const Pengukuran = () => {
-  const nav = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [data, setData] = useState([]);
-  const [pengukuran, setPengukuran] = useState({
-    tanggalUkur: "",
-    kva: 0,
-    alamat: "",
-    R: "",
-    S: "",
-    T: "",
-    N: "",
-    perJurusan: {
-      R: { A: "", B: "", C: "", D: "", K: "" },
-      S: { A: "", B: "", C: "", D: "", K: "" },
-      T: { A: "", B: "", C: "", D: "", K: "" },
-      N: { A: "", B: "", C: "", D: "", K: "" },
-    },
-    petugas: "",
-    tegangan: {
-      R_N: "",
-      S_N: "",
-      T_N: "",
-      R_S: "",
-      R_T: "",
-      S_T: "",
-    },
-  });
+const PengukuranTable = () => {
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+  ); // Default awal tahun ini
+  const [endDate, setEndDate] = useState(new Date()); // Default hari ini
+  const [pengukuranList, setPengukuranList] = useState([]);
+  const [garduData, setGarduData] = useState({});
 
+  const [selectedGardu, setSelectedGardu] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const handleSelectGardu = (gardu) => {
+    setSelectedGardu(gardu);
+    setIsOpen(true);
+  };
+
+  // Ambil data gardu dari Firestore
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "gardu"));
-        const garduData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setData(garduData);
-      } catch (error) {
-        console.error("Error fetching data from Firestore:", error);
-      }
+    const fetchGarduData = async () => {
+      const querySnapshot = await getDocs(collection(db, "gardu"));
+      const garduMap = {};
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        garduMap[data.nama] = { alamat: data.alamat, kva: data.kva }; // Mapping berdasarkan nama gardu
+      });
+      setGarduData(garduMap);
     };
-    fetchData();
+
+    fetchGarduData();
   }, []);
 
+  // Ambil data pengukuran dari Firestore
   useEffect(() => {
-    const searchGardu = debounce(() => {
-      if (query) {
-        setResults(
-          data.filter((item) =>
-            item.nama.toLowerCase().includes(query.toLowerCase())
-          )
-        );
-      } else {
-        setResults([]);
-      }
-    }, 2000); // Debounce 500ms agar tidak terlalu sering memanggil pencarian
+    const q = query(
+      collection(db, "Pengukuran"),
+      where("tanggalUkur", ">=", format(startDate, "yyyy-MM-dd")),
+      where("tanggalUkur", "<=", format(endDate, "yyyy-MM-dd"))
+    );
 
-    searchGardu();
-    return () => searchGardu.cancel();
-  }, [query, data]);
-
-  // Handle perubahan input total manual
-  const handleTotalInputChange = (e, phase) => {
-    const { value } = e.target;
-    setPengukuran((prev) => ({
-      ...prev,
-      [phase]: parseFloat(value) || 0,
-    }));
-  };
-
-  // Handle perubahan input per jurusan
-  const handleInputChange = (e, phase, line) => {
-    const { value } = e.target;
-    setPengukuran((prev) => ({
-      ...prev,
-      perJurusan: {
-        ...prev.perJurusan,
-        [phase]: { ...prev.perJurusan[phase], [line]: parseFloat(value) || 0 },
-      },
-    }));
-  };
-
-  const handleTeganganChange = (e, key) => {
-    const { value } = e.target;
-    setPengukuran((prev) => ({
-      ...prev,
-      tegangan: {
-        ...prev.tegangan,
-        [key]: parseFloat(value) || 0,
-      },
-    }));
-  };
-  // Hitung Beban KVA
-  const bebanKva = ((pengukuran.R + pengukuran.S + pengukuran.T) * 231) / 1000;
-
-  // Hitung Persentase KVA
-  const kvaNumber = Number(results[0]?.kva);
-
-  const persenKva = (bebanKva / kvaNumber) * 100;
-
-  // Hitung Unbalance
-  const maxArus = Math.max(pengukuran.R, pengukuran.S, pengukuran.T);
-  const minArus = Math.min(pengukuran.R, pengukuran.S, pengukuran.T);
-  const unbalance = ((maxArus - minArus) / maxArus) * 100;
-  // Simpan data ke Firestore
-  const handleSavePengukuran = async (garduId) => {
-    if (!pengukuran.tanggalUkur) {
-      setErrorMessage("Tanggal ukur harus diisi!");
-      setShowModal(true);
-      return;
-    }
-    if (!pengukuran.jamUkur) {
-      setErrorMessage("Jam ukur harus diisi!");
-      setShowModal(true);
-      return;
-    }
-    if (!pengukuran.petugas) {
-      setErrorMessage("Petugas harus diisi!");
-      setShowModal(true);
-      return;
-    }
-    if (pengukuran.R === "" || pengukuran.S === "" || pengukuran.T === "") {
-      setErrorMessage("Minimal satu beban harus lebih dari 0!");
-      setShowModal(true);
-      return;
-    }
-    if (
-      pengukuran.tegangan.R_N === "" ||
-      pengukuran.tegangan.S_N === "" ||
-      pengukuran.tegangan.T_N === "" ||
-      pengukuran.tegangan.R_S === "" ||
-      pengukuran.tegangan.R_T === "" ||
-      pengukuran.tegangan.S_T === ""
-    ) {
-      setErrorMessage("Minimal satu tegangan harus lebih dari 0!");
-      setShowModal(true);
-      return;
-    }
-    const selectedGardu = data.find((item) => item.id === garduId);
-    if (!selectedGardu) {
-      setErrorMessage("Gardu tidak ditemukan!");
-      setShowModal(true);
-      return;
-    }
-    try {
-      await addDoc(collection(db, "Pengukuran"), {
-        nama: selectedGardu.nama,
-        garduId,
-        kva: selectedGardu.kva,
-        alamat: selectedGardu.alamat,
-        tanggalUkur: pengukuran.tanggalUkur,
-        jamUkur: pengukuran.jamUkur,
-        R: pengukuran.R,
-        S: pengukuran.S,
-        T: pengukuran.T,
-        N: pengukuran.N,
-        perJurusan: pengukuran.perJurusan,
-        tegangan: pengukuran.tegangan,
-        bebanKva,
-        persenKva,
-        unbalance,
-        petugas: pengukuran.petugas,
-        createdAt: new Date(),
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => {
+        const pengukuran = doc.data();
+        const gardu = garduData[pengukuran.nama] || {}; // Cocokkan berdasarkan nama gardu
+        return {
+          id: doc.id,
+          ...pengukuran,
+          alamat: gardu.alamat || "Tidak Diketahui",
+          kva: gardu.kva || "Tidak Diketahui",
+        };
       });
-      setErrorMessage("Pengukuran berhasil disimpan!");
-      setShowModal(true);
-      // Reset form setelah berhasil simpan
-      setPengukuran({
-        tanggalUkur: "",
-        petugas: "",
-        jamUkur: "",
-        R: "",
-        S: "",
-        T: "",
-        N: "",
-        perJurusan: {
-          R: { A: "", B: "", C: "", D: "", K: "" },
-          S: { A: "", B: "", C: "", D: "", K: "" },
-          T: { A: "", B: "", C: "", D: "", K: "" },
-          N: { A: "", B: "", C: "", D: "", K: "" },
-        },
-        tegangan: {
-          R_N: "",
-          S_N: "",
-          T_N: "",
-          R_S: "",
-          R_T: "",
-          S_T: "",
-        },
-      });
-      // Tunggu beberapa detik sebelum navigasi (opsional)
-      setTimeout(() => {
-        setShowModal(false); // Tutup modal
-        nav("/"); // Navigasi ke halaman utama
-      }, 2000); // 2 detik delay sebelum pindah halaman
-    } catch {
-      setErrorMessage("Gagal menyimpan pengukuran, coba lagi.");
-      setShowModal(true);
+      setPengukuranList(data);
+      // Hitung total pages berdasarkan jumlah data
+      setTotalPages(Math.ceil(data.length / itemsPerPage));
+    });
+
+    return () => unsubscribe();
+  }, [garduData, startDate, endDate, itemsPerPage]); // Gunakan garduData sebagai dependency agar update saat berubah
+
+  // Fungsi untuk mengubah halaman
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Fungsi untuk mengubah jumlah item per halaman
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Reset ke halaman pertama ketika mengubah jumlah item
+  };
+
+  // Menghitung data yang akan ditampilkan pada halaman saat ini
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = pengukuranList.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Fungsi untuk download data ke Excel
+  const downloadExcel = () => {
+    // Membuat workbook baru
+    const workbook = XLSX.utils.book_new();
+
+    // Membuat array data untuk Excel
+    const excelData = pengukuranList.map((item) => ({
+      "Nama Gardu": item.nama,
+      Alamat: item.alamat,
+      KVA: item.kva,
+      R: item.R,
+      S: item.S,
+      T: item.T,
+      N: item.N,
+      "Beban KVA": parseFloat(item.bebanKva).toFixed(2),
+      "Persen KVA": parseFloat(item.persenKva).toFixed(2),
+      UBL: parseFloat(item.unbalance).toFixed(2),
+      Petugas: item.petugas,
+      Jam: item.jamUkur,
+      "Tanggal Ukur": item.tanggalUkur,
+    }));
+
+    // Membuat worksheet dari data
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+
+    // Menambahkan worksheet ke workbook
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Data Pengukuran");
+
+    // Nama file
+    const fileName = `Data_Pengukuran_${format(
+      startDate,
+      "dd-MM-yyyy"
+    )}_sd_${format(endDate, "dd-MM-yyyy")}.xlsx`;
+
+    // Mengubah workbook menjadi file excel dan mendownloadnya
+    XLSX.writeFile(workbook, fileName);
+  };
+
+  // Pagination components
+  const renderPagination = () => {
+    const pages = [];
+
+    // Menambahkan tombol Previous
+    pages.push(
+      <Button
+        key="prev"
+        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+        disabled={currentPage === 1}
+        variant="outline"
+        className="mx-1"
+      >
+        Prev
+      </Button>
+    );
+
+    // Menambahkan tombol halaman
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(
+        <Button
+          key={i}
+          onClick={() => handlePageChange(i)}
+          variant={currentPage === i ? "default" : "outline"}
+          className="mx-1"
+        >
+          {i}
+        </Button>
+      );
     }
+
+    // Menambahkan tombol Next
+    pages.push(
+      <Button
+        key="next"
+        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+        disabled={currentPage === totalPages}
+        variant="outline"
+        className="mx-1"
+      >
+        Next
+      </Button>
+    );
+
+    return pages;
   };
 
   return (
-    <div className="p-4">
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md shadow-md">
-            <p>{errorMessage}</p>
-            <Button onClick={() => setShowModal(false)} className="mt-2">
-              OK
-            </Button>
+    <Layouts>
+      <div className="container mx-auto p-4">
+        <div className="flex justify-between mb-4">
+          <h2 className="text-xl font-bold">Data Pengukuran</h2>
+          <div className="flex gap-2 justify-items-center justify-end px-6">
+            <label>Start Date: </label>
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              className="bg-transparent border border-main rounded-md px-2 text-black"
+              dateFormat={"dd/MM/yyyy"}
+            />
+            <label>End Date: </label>
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              className="bg-transparent border border-main rounded-md px-2 text-black"
+              dateFormat={"dd/MM/yyyy"}
+            />
           </div>
         </div>
-      )}
-      <div className="py-2 bg-main rounded-md">
-        <span className="py-4 gap-4 font-semibold">🏠 Beban Gardu Selong</span>
+
+        {/* Excel Export Button */}
+        <div className="flex justify-end mb-4">
+          <Button
+            onClick={downloadExcel}
+            className="bg-green-600 hover:bg-green-700"
+          >
+            Download Excel
+          </Button>
+        </div>
+
+        {/* Pagination Controls - Items per page */}
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex items-center">
+            <span className="mr-2">Tampilkan:</span>
+            <select
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+              className="border border-main rounded-md px-2 py-1"
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+            <span className="ml-2">item per halaman</span>
+          </div>
+          <div>
+            <span>
+              Menampilkan {indexOfFirstItem + 1} -{" "}
+              {Math.min(indexOfLastItem, pengukuranList.length)} dari{" "}
+              {pengukuranList.length} data
+            </span>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-transparent border-main">
+            <thead>
+              <tr className="bg-main ">
+                <th className="px-4 py-2 border">Nama Gardu</th>
+                <th className="px-4 py-2 border">Alamat</th>
+                <th className="px-4 py-2 border">KVA</th>
+                <th className="px-4 py-2 border">R</th>
+                <th className="px-4 py-2 border">S</th>
+                <th className="px-4 py-2 border">T</th>
+                <th className="px-4 py-2 border">N</th>
+                <th className="px-4 py-2 border">Beban KVA</th>
+                <th className="px-4 py-2 border">Persen KVA</th>
+                <th className="px-4 py-2 border">UBL</th>
+                <th className="px-4 py-2 border">Petugas</th>
+                <th className="px-4 py-2 border">Jam</th>
+                <th className="px-4 py-2 border">Tanggal Ukur</th>
+                <th className="px-4 py-2 border"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentItems.map((item) => (
+                <tr
+                  key={item.id}
+                  className="text-center border cursor-pointer"
+                  onClick={() => handleSelectGardu(item)}
+                >
+                  <td className="px-4 py-2 border">{item.nama}</td>
+                  <td className="px-4 py-2 border">{item.alamat}</td>
+                  <td className="px-4 py-2 border">{item.kva}</td>
+                  <td className="px-4 py-2 border">{item.R}</td>
+                  <td className="px-4 py-2 border">{item.S}</td>
+                  <td className="px-4 py-2 border">{item.T}</td>
+                  <td className="px-4 py-2 border">{item.N}</td>
+                  <td className="px-4 py-2 border">
+                    {parseFloat(item.bebanKva).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {parseFloat(item.persenKva).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border">
+                    {parseFloat(item.unbalance).toFixed(2)}
+                  </td>
+                  <td className="px-4 py-2 border">{item.petugas}</td>
+                  <td className="px-4 py-2 border">{item.jamUkur}</td>
+                  <td className="px-4 py-2 border">{item.tanggalUkur}</td>
+                  <td className="border px-4 py-2">
+                    <Button
+                      variant="outline"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectGardu(item);
+                      }}
+                    >
+                      Detail
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Pagination */}
+          <div className="flex justify-center mt-4">{renderPagination()}</div>
+
+          {/* Modal atau Detail di Bawah Tabel */}
+          {/* MODAL DETAIL SHADCN */}
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle>Detail Beban Jurusan</DialogTitle>
+              </DialogHeader>
+
+              {selectedGardu && (
+                <div className="space-y-2">
+                  <p>
+                    <strong>Gardu:</strong> {selectedGardu.nama}
+                  </p>
+                  <p>
+                    <strong>Alamat:</strong> {selectedGardu.alamat}
+                  </p>
+                  <p>
+                    <strong>KVA:</strong>{" "}
+                    {parseFloat(selectedGardu.kva).toFixed(2)}
+                  </p>
+
+                  <h3 className="mt-2 font-bold">Beban Per Jurusan</h3>
+                  <table className="min-w-full border-collapse border mt-2 text-center">
+                    <thead>
+                      <tr>
+                        <th className="border px-4 py-2">Jurusan</th>
+                        <th className="border px-4 py-2">R</th>
+                        <th className="border px-4 py-2">S</th>
+                        <th className="border px-4 py-2">T</th>
+                        <th className="border px-4 py-2">N</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {["A", "B", "C", "D", "K"].map((line) => (
+                        <tr key={line}>
+                          <td className="border px-4 py-2 font-bold">
+                            Jurusan {line}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {selectedGardu.perJurusan?.R?.[line] || 0}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {selectedGardu.perJurusan?.S?.[line] || 0}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {selectedGardu.perJurusan?.T?.[line] || 0}
+                          </td>
+                          <td className="border px-4 py-2">
+                            {selectedGardu.perJurusan?.N?.[line] || 0}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+                  <h3 className="mt-2 font-bold">Tegangan</h3>
+                  <div className="flex flex-row gap-6">
+                    <div className="">
+                      <p>R-N : {selectedGardu.tegangan.R_N} Volt</p>
+                      <p>S-N : {selectedGardu.tegangan.S_N} Volt</p>
+                      <p>T-N : {selectedGardu.tegangan.T_N} Volt</p>
+                    </div>
+                    <div className="">
+                      <p>R-N : {selectedGardu.tegangan.R_N} Volt</p>
+                      <p>S-N : {selectedGardu.tegangan.S_N} Volt</p>
+                      <p>T-N : {selectedGardu.tegangan.T_N} Volt</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <DialogFooter>
+                <Button variant="destructive" onClick={() => setIsOpen(false)}>
+                  Tutup
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-
-      <Input
-        className="mb-4 mt-4"
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Cari nomor gardu..."
-      />
-
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {results.map((item) => (
-          <li key={item.id}>
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  <h2>
-                    {item.nama}-{item.kva} KVA
-                  </h2>
-                  <p className="text-sm">{item.alamat}</p>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Accordion type="single" collapsible className="w-full">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger>Data Beban Gardu</AccordionTrigger>
-                    <AccordionContent>
-                      <div className="grid grid-cols-2">
-                        <div className="flex flex-col gap-2">
-                          {["R", "S", "T", "N"].map((phase) => (
-                            <div
-                              key={phase}
-                              className="flex flex-row items-center gap-2 mt-2"
-                            >
-                              <Label className="font-bold">{phase} :</Label>
-                              <Input
-                                type="number"
-                                value={pengukuran[phase]}
-                                onChange={(e) =>
-                                  handleTotalInputChange(e, phase)
-                                }
-                                className="w-24 h-8 text-center"
-                                step="any"
-                                required
-                              />
-                            </div>
-                          ))}
-                        </div>
-                        <div>
-                          <Input
-                            type="date"
-                            value={pengukuran.tanggalUkur}
-                            onChange={(e) =>
-                              setPengukuran({
-                                ...pengukuran,
-                                tanggalUkur: e.target.value,
-                              })
-                            }
-                          ></Input>
-                          <Input
-                            className="mt-2"
-                            type="time"
-                            value={pengukuran.jamUkur}
-                            onChange={(e) =>
-                              setPengukuran({
-                                ...pengukuran,
-                                jamUkur: e.target.value,
-                              })
-                            }
-                          ></Input>
-                        </div>
-                      </div>
-
-                      <p className="py-2 font-semibold">Per Jurusan</p>
-                      <div className="grid grid-cols-6 border-t border-b py-2">
-                        <div className="flex flex-col items-start gap-3">
-                          <p className="font-bold">Fasa</p>
-                          <p className="font-bold">R</p>
-                          <p className="font-bold">S</p>
-                          <p className="font-bold">T</p>
-                          <p className="font-bold">N</p>
-                        </div>
-
-                        {["A", "B", "C", "D", "K"].map((line) => (
-                          <div key={line} className="flex flex-col items-start">
-                            <p className="font-bold">Line {line}</p>
-                            {["R", "S", "T", "N"].map((phase) => (
-                              <div
-                                className="flex items-center gap-1 mb-1"
-                                key={`${phase}_${line}`}
-                              >
-                                <Input
-                                  type="number"
-                                  value={pengukuran.perJurusan[phase][line]}
-                                  onChange={(e) =>
-                                    handleInputChange(e, phase, line)
-                                  }
-                                  className="w-16 h-8 text-center"
-                                  step="any"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        ))}
-                      </div>
-                      <div>
-                        <p className="py-2 font-semibold">Tegangan (Volt)</p>
-                        <div className="grid grid-cols-3 gap-4 border-main border-b py-2">
-                          {["R_N", "S_N", "T_N", "R_S", "R_T", "S_T"].map(
-                            (key) => (
-                              <div key={key} className="flex flex-col">
-                                <Label className="font-bold">
-                                  {key.replace("_", " - ")} :
-                                </Label>
-                                <Input
-                                  type="number"
-                                  value={pengukuran.tegangan[key]}
-                                  onChange={(e) => handleTeganganChange(e, key)}
-                                  className="w-24 h-8 text-center font-mono"
-                                  step="any"
-                                  required
-                                />
-                              </div>
-                            )
-                          )}
-                        </div>
-                      </div>
-                      <div></div>
-                      <div>
-                        <h2>Kesimpulan</h2>
-                        <p> Beban KVA = {bebanKva.toFixed(2)}</p>
-                        <p> Persentase KVA = {persenKva.toFixed(2)}%</p>
-                        <p>Unbalance = {unbalance.toFixed(2)}</p>
-                      </div>
-
-                      <div className="mt-4">
-                        <h2>Petugas</h2>
-                        <Input
-                          type="text"
-                          value={pengukuran.petugas}
-                          onChange={(e) =>
-                            setPengukuran({
-                              ...pengukuran,
-                              petugas: e.target.value,
-                            })
-                          }
-                        />
-                      </div>
-
-                      <Button
-                        onClick={() => handleSavePengukuran(item.id)}
-                        className="mt-4 w-full"
-                      >
-                        Simpan Pengukuran
-                      </Button>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </CardContent>
-            </Card>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </Layouts>
   );
 };
 
-export default Pengukuran;
+export default PengukuranTable;

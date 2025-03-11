@@ -49,10 +49,12 @@ const navigation = [
     name: "Data Gardu",
     href: "/admin/data-gardu",
     icon: FaBinoculars,
-    accName: "Pengukuran Gardu",
-    accHref: "/admin/pengukuran-gardu",
-    accName2: "Rencana Pekerjaan",
-    accHref2: "/admin/gardu/rencana-pemeliharaan",
+    accName2: "Pengukuran Gardu",
+    accHref2: "/admin/pengukuran-gardu",
+    accName: "Dashboard Pengukuran",
+    accHref: "/admin/dashboard-pengukuran",
+    accName3: "Notofikasi Pengukuran",
+    accHref3: "/admin/gardu/notifikasi",
   },
   { name: "Surat Masuk", href: "/admin/surat-masuk", icon: FaEnvelope },
 ];
@@ -94,6 +96,9 @@ const Sidebar = ({ isCollapsed }) => {
 
                   <div className=" hover:bg-[#DAF5F0]">
                     <Link to={item.accHref2}>{item.accName2}</Link>
+                  </div>
+                  <div className=" hover:bg-[#DAF5F0]">
+                    <Link to={item.accHref3}>{item.accName3}</Link>
                   </div>
                 </AccordionContent>
               </AccordionItem>

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { logout } from "@/redux/authSlice";
+import NotificationBell from "@/components/NotificationBell";
 
 const Layouts = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(false); // State untuk mengontrol collapsible
@@ -50,6 +51,9 @@ const Layouts = ({ children }) => {
           <div className={`${isCollapsed ? "hidden" : "px-4"}`}>
             <p className="text-sm">{user?.email}</p>
             <span className="text-sm">{user?.role}</span>
+          </div>
+          <div className="flex justify-end items-end">
+            <NotificationBell />
           </div>
         </div>
         {/* Navigation List */}
