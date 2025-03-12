@@ -34,9 +34,9 @@ const services = [
   { id: 1, name: "Beban Gardu", icon: "🏠", link: "/amg" },
   { id: 2, name: "Temuan Inspeksi", icon: "🎯", link: "/inspeksi" },
   { id: 3, name: "Gangguan Penyulang", icon: "⚡", link: "#" },
-  { id: 4, name: "Ukur Gardu", icon: "📥", link: "/pengukuran" },
+  { id: 4, name: "Ukur Gardu", icon: "📥", link: "/pengukuran-form" },
 ];
-const allowedServicesForYantek = ["/pengukuran"]; // Daftar link yang boleh diakses oleh "yantek"
+const allowedServicesForYantek = ["/pengukuran-form"]; // Daftar link yang boleh diakses oleh "yantek"
 const Home = () => {
   const nav = useNavigate();
   const user = useSelector((state) => state.auth.user); // Mengambil user dari Redux

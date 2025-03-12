@@ -34,7 +34,7 @@ import DetailGardu from "./pages/Gardu/DetailGardu";
 import RencanaPekerjaan from "./pages/Gardu/RencanaPekerjaan";
 import TargetGangguan from "./pages/gangguan/TargetGangguan";
 import TambahTargetGangguan from "./pages/gangguan/TanbahTargetGangguann";
-import Pengukuran from "./pages/Pengukuran/Pengukuran";
+import Pengukuran from "./pages/Pengukuran/Pengukuran-form";
 import DataPengukuran from "./pages/Pengukuran/DataPengukuran";
 import DashboardPengukuran from "./pages/Pengukuran/DashboardPengukuran";
 import NotificationsPage from "./pages/NotificationsPage";
@@ -107,7 +107,7 @@ function App() {
     { path: "/padam", element: <Padam /> },
     { path: "/menu", element: <Menu /> },
     { path: "/inspeksi", element: <Temuan /> },
-    { path: "/pengukuran", element: <Pengukuran /> },
+    { path: "/pengukuran-form", element: <Pengukuran /> },
     { path: "/tambahTemuan", element: <TambahTemuan /> },
     { path: "/pemeliharaan", element: <Pemeliharaan /> },
     { path: "/eksekusi/:id", element: <EksekusiTemuan /> },
