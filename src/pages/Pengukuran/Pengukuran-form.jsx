@@ -14,8 +14,12 @@ import { Input } from "@/components/ui/input";
 import { db } from "@/firebase/firebaseConfig";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import SidebarMobile from "../admin/SidebarMobile";
+import { useSelector } from "react-redux";
 
 const Pengukuran = () => {
+  const user = useSelector((state) => state.auth.user);
+  const allowedServicesForYantek = ["/pengukuran-form", "/"];
   const nav = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -232,6 +236,11 @@ const Pengukuran = () => {
           </div>
         </div>
       )}
+      <div className="fixed top-0 right-0 bg-main text-white px-4 py-2 h-16 w-full z-10 flex items-center justify-center bg-gradient-to-r from-main to-blue-500 font-semibold">
+        PENGUKURAN BEBAN GARDU
+      </div>
+      {/* Sidebar Mobile */}
+      <SidebarMobile pengguna={user} ruteDisetujui={allowedServicesForYantek} />
       <div className="py-2 bg-main rounded-md">
         <span className="py-4 gap-4 font-semibold">🏠 Beban Gardu Selong</span>
       </div>
