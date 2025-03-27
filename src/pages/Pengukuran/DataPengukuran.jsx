@@ -199,6 +199,24 @@ const PengukuranTable = () => {
         return unbalance <= parseFloat(filters.unbalanceMax);
       });
     }
+    result.sort((a, b) => {
+      // Konversi string tanggal ke objek Date
+      const dateA = a.tanggalUkur
+        ? new Date(a.tanggalUkur.split("-").join("/"))
+        : new Date(0);
+      const dateB = b.tanggalUkur
+        ? new Date(b.tanggalUkur.split("-").join("/"))
+        : new Date(0);
+
+      // Jika tanggal sama, bandingkan jam
+      if (dateA.getTime() === dateB.getTime()) {
+        const timeA = a.jamUkur || "00:00";
+        const timeB = b.jamUkur || "00:00";
+        return timeB.localeCompare(timeA); // Jam terbaru lebih dulu
+      }
+
+      return dateB - dateA; // Tanggal terbaru lebih dulu
+    });
 
     setFilteredData(result);
     // Hitung total pages berdasarkan data yang telah difilter

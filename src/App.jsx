@@ -39,6 +39,7 @@ import DataPengukuran from "./pages/Pengukuran/DataPengukuran";
 import DashboardPengukuran from "./pages/Pengukuran/DashboardPengukuran";
 import NotificationsPage from "./pages/NotificationsPage";
 import { NotificationProvider } from "./contexts/notifications";
+import GarduDetailPage from "./pages/Pengukuran/GarduDetailPage";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -71,6 +72,10 @@ function App() {
     {
       path: "/admin/dashboard-pengukuran",
       element: <DashboardPengukuran />,
+    },
+    {
+      path: "/admin/history-pengukuran",
+      element: <GarduDetailPage />,
     },
     {
       path: "/admin/gardu/rencana-pemeliharaan",
