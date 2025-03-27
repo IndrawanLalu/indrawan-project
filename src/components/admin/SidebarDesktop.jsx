@@ -41,7 +41,10 @@ const navigasi = [
     href: "/pemeliharaan",
     icon: FaBinoculars,
     submenu: [
-      { nama: "Validasi Pemeliharaan", href: "/daftar-pemeliharaan" },
+      {
+        nama: "Validasi Pemeliharaan",
+        href: "/admin/pemeliharaan/daftar-pemeliharaan",
+      },
       { nama: "Daftar Semua Pemeliharaan", href: "/cetak-wo" },
     ],
   },
