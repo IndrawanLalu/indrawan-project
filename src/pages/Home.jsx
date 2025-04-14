@@ -9,10 +9,11 @@ import {
   getDocs,
   getFirestore,
 } from "firebase/firestore";
+import { IoIosWarning } from "react-icons/io";
 import {
   FaTachometerAlt,
   FaBolt,
-  FaCalendarCheck,
+  // FaCalendarCheck,
   FaExclamationTriangle,
   FaSpinner,
 } from "react-icons/fa";
@@ -287,7 +288,7 @@ const Home = () => {
     }
   };
 
-  // Fungsi untuk menampilkan status pemadaman berdasarkan jumlah gangguan
+  // Fungsi untuk menampilkan status preventife
   const [preventiveHariIni, setPreventiveHariIni] = useState(0);
   const fetchPreventiveHariIni = async () => {
     try {
@@ -309,6 +310,45 @@ const Home = () => {
       return 0;
     }
   };
+  // Tambahkan state baru untuk preventive stats
+  const [preventiveStats, setPreventiveStats] = useState({
+    total: 0,
+    completed: 0,
+    pending: 0,
+  });
+
+  // Tambahkan fungsi untuk mengambil statistik preventif
+  const fetchPreventiveStats = async () => {
+    try {
+      const db = getFirestore();
+
+      // Query untuk mengambil semua temuan preventif
+      const preventiveQuery = query(
+        collection(db, "inspeksi"),
+        where("category", "==", "Preventive")
+      );
+
+      const preventiveSnapshot = await getDocs(preventiveQuery);
+
+      let total = preventiveSnapshot.size;
+      let completed = 0;
+
+      preventiveSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.status === "Selesai") {
+          completed++;
+        }
+      });
+
+      // Hitung yang belum selesai
+      let pending = total - completed;
+
+      return { total, completed, pending };
+    } catch (error) {
+      console.error("Error mengambil statistik preventif:", error);
+      return { total: 0, completed: 0, pending: 0 };
+    }
+  };
 
   // Mengambil semua data saat komponen dimounting
   useEffect(() => {
@@ -323,6 +363,10 @@ const Home = () => {
         // Tambahkan ini untuk mengambil data preventive hari ini
         const jumlahPreventiveHariIni = await fetchPreventiveHariIni();
         setPreventiveHariIni(jumlahPreventiveHariIni);
+
+        // Tambahkan ini untuk mengambil statistik preventif
+        const preventiveStatsData = await fetchPreventiveStats();
+        setPreventiveStats(preventiveStatsData);
 
         // Panggil fungsi-fungsi fetch data lainnya secara paralel
         await Promise.all([fetchDashboardData(), fetchTotalGardu()]);
@@ -410,7 +454,33 @@ const Home = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {/* Metrik 1: Gardu Hari Ini */}
               {/* Metrik 3: Status Pemadaman */}
+              {/* Metrik 4: Temuan Hari Ini */}
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <Link to="/preventive">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-gray-500 text-sm">
+                      Temuan Preventif belum di Eksekusi
+                    </h3>
+                    <div className="bg-green-100 p-2 rounded-lg">
+                      <IoIosWarning className="text-red-500" />
+                    </div>
+                  </div>
+                </Link>
+                <p className="text-2xl font-bold">{preventiveStats.pending}</p>
+                <div className="mt-2 text-xs text-gray-500">
+                  <div className="flex justify-between">
+                    <span className="flex items-center">
+                      <div className="w-2 h-2 rounded-full bg-green-500 mr-1"></div>
+                      <span>{preventiveHariIni} Selesai hari ini</span>
+                    </span>
+                    <span className="flex items-center">
+                      <div className="w-2 h-2 rounded-full bg-red-500 mr-1"></div>
+                      <span>{preventiveStats.pending} Belum</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              {/* <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="text-gray-500 text-sm">Preventif Hari Ini</h3>
                   <div className="bg-green-100 p-2 rounded-lg">
@@ -421,7 +491,7 @@ const Home = () => {
                 <div className="mt-2 text-xs text-gray-500">
                   Jumlah pekerjaan preventif yang diselesaikan hari ini
                 </div>
-              </div>
+              </div> */}
 
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-center mb-3">
@@ -455,24 +525,6 @@ const Home = () => {
                 </p>
                 <div className="mt-2 text-xs text-gray-500">
                   Dari {dashboardData.gangguanBulanIni} gangguan bulan ini
-                </div>
-              </div>
-
-              {/* Metrik 4: Temuan Hari Ini */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-gray-500 text-sm">
-                    Temuan Inspeksi Hari Ini
-                  </h3>
-                  <div className="bg-green-100 p-2 rounded-lg">
-                    <FaCalendarCheck className="text-green-500" />
-                  </div>
-                </div>
-                <p className="text-2xl font-bold">
-                  {dashboardData.temuanHariIni}
-                </p>
-                <div className="mt-2 text-xs text-gray-500">
-                  Titik temuan yang perlu ditindaklanjuti
                 </div>
               </div>
             </div>

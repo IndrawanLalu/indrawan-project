@@ -129,6 +129,10 @@ const GarduDetailPage = () => {
       if (!historySnapshot.empty) {
         const historyData = historySnapshot.docs.map((doc) => ({
           id: doc.id,
+          petugas:
+            typeof doc.data().petugas === "string"
+              ? doc.data().petugas
+              : doc.data().petugas?.nama || "Unknown",
           ...doc.data(),
         }));
 

@@ -209,7 +209,7 @@ const TambahTemuan = () => {
         <div className="text-center w-full">INPUT TEMUAN</div>
       </div>
       <form onSubmit={handleSubmitTemuan}>
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 py-4 pt-20">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="image" className="text-right">
               Foto

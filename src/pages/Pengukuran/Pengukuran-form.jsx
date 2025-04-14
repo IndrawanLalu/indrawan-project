@@ -43,7 +43,7 @@ const Pengukuran = () => {
       T: { A: "", B: "", C: "", D: "", K: "" },
       N: { A: "", B: "", C: "", D: "", K: "" },
     },
-    petugas: selectedPetugas.map((p) => p.nama).join(", "),
+    // petugas: selectedPetugas.map((p) => p.nama).join(", "),
     tegangan: {
       R_N: "",
       S_N: "",
@@ -195,7 +195,7 @@ const Pengukuran = () => {
         bebanKva,
         persenKva,
         unbalance,
-        petugas: selectedPetugas,
+        petugas: pengukuran.petugas,
         createdAt: new Date(),
       });
       setErrorMessage("Pengukuran berhasil disimpan!");

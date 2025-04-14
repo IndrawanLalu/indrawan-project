@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { redirect, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { db, storage } from "@/firebase/firebaseConfig";
 import PropTypes from "prop-types";
@@ -13,10 +13,13 @@ import {
   addDoc,
   orderBy,
   Timestamp,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet"; // Import Leaflet directly for custom marker icons
 
 // UI Components
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,7 +33,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
   Select,
@@ -56,6 +58,8 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import { Textarea } from "@/components/ui/textarea";
+// Popover dihapus karena belum diinstall
 
 // Icons
 import {
@@ -71,6 +75,8 @@ import {
   LuPaperclip,
   LuUsers,
   LuCheck,
+  LuFolderOpen,
+  LuMap,
 } from "react-icons/lu";
 
 // Fungsi helper untuk mendapatkan tanggal lokal dalam format YYYY-MM-DD
@@ -130,8 +136,18 @@ const getAvatarColor = (name) => {
   return colors[sum % colors.length];
 };
 
-// Komponen ChatMessage
-const ChatMessage = ({ item, isSameDay, onClick }) => {
+// Custom marker icon for map
+const createCustomIcon = () => {
+  return L.divIcon({
+    className: "custom-pin-marker",
+    html: '<div class="custom-pin bg-red-500 animate-pulse w-4 h-4 rounded-full border-2 border-white shadow-md"></div>',
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+  });
+};
+
+// Komponen ChatMessage dengan parameter default langsung di destructuring
+const ChatMessage = ({ item, isSameDay = false, onClick }) => {
   const isCompleted = item.status === "Selesai";
 
   return (
@@ -279,8 +295,80 @@ ChatMessage.propTypes = {
   onClick: PropTypes.func.isRequired,
 };
 
-ChatMessage.defaultProps = {
-  isSameDay: false,
+// Custom Marker untuk Peta dengan Popup
+const MapMarker = ({ item, onExecFromMap }) => {
+  // Parse string coordinates to numbers
+  const getCoordinates = () => {
+    if (item.location && item.location.includes(",")) {
+      const coords = item.location.split(",").map((coord) => coord.trim());
+      // Ensure we have valid numbers, not NaN
+      if (!isNaN(parseFloat(coords[0])) && !isNaN(parseFloat(coords[1]))) {
+        return coords.map(Number);
+      }
+    }
+    // Default coordinates for Jakarta if location is invalid
+    return [-6.2088, 106.8456];
+  };
+
+  const coordinates = getCoordinates();
+
+  return (
+    <Marker position={coordinates} icon={createCustomIcon()}>
+      <Popup className="temuan-popup">
+        <div className="p-1">
+          <h3 className="font-semibold text-md mb-1">{item.temuan}</h3>
+          <div className="flex items-center mb-1 text-xs text-gray-500">
+            <LuMapPin className="mr-1" size={12} />
+            <span>{item.lokasi}</span>
+            {item.noGardu && (
+              <span className="ml-1">• Gardu: {item.noGardu}</span>
+            )}
+          </div>
+
+          <div className="rounded-md overflow-hidden my-2">
+            <img
+              src={item.imageUrl}
+              alt={item.temuan}
+              className="w-full h-32 object-cover"
+            />
+          </div>
+
+          <div className="flex justify-between items-center text-xs mb-1">
+            <Badge className="bg-red-100 text-red-800">Perlu Tindakan</Badge>
+            <span className="text-gray-500">
+              {formatChatTime(item.tglInspeksi)}
+            </span>
+          </div>
+
+          <Button
+            size="sm"
+            onClick={() => onExecFromMap(item)}
+            className="w-full mt-2 bg-green-500 hover:bg-green-600 text-white text-xs h-8"
+          >
+            <LuCheckCircle className="mr-1" size={14} /> Eksekusi Temuan
+          </Button>
+        </div>
+      </Popup>
+    </Marker>
+  );
+};
+
+MapMarker.propTypes = {
+  item: PropTypes.shape({
+    id: PropTypes.string,
+    temuan: PropTypes.string,
+    lokasi: PropTypes.string,
+    noGardu: PropTypes.string,
+    imageUrl: PropTypes.string,
+    tglInspeksi: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.instanceOf(Date),
+    ]),
+    location: PropTypes.string,
+  }).isRequired,
+  onExecClick: PropTypes.func,
+  onExecFromMap: PropTypes.func.isRequired,
 };
 
 const Preventive = () => {
@@ -291,18 +379,33 @@ const Preventive = () => {
   const [selectedPetugas, setSelectedPetugas] = useState([]);
   const allowedServicesForYantek = ["/pengukuran-form", "/", "/preventive"];
   const chatEndRef = useRef(null);
+  const scrollTopRef = useRef(null); // Referensi untuk elemen di bagian atas
 
   // State
   const [temuanList, setTemuanList] = useState([]);
   const [filteredTemuanList, setFilteredTemuanList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filterCategory, setFilterCategory] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("Temuan");
   const [selectedTemuan, setSelectedTemuan] = useState(null);
   const [execDialogOpen, setExecDialogOpen] = useState(false);
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [manualDialogOpen, setManualDialogOpen] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [firstVisible, setFirstVisible] = useState(null);
+  const [hasMoreOlder, setHasMoreOlder] = useState(true);
+  const ITEMS_PER_PAGE = 10;
+
+  // Tabs state
+  const [activeTab, setActiveTab] = useState("chat");
+
+  // Map state
+  const [mapCenter, setMapCenter] = useState([-6.2088, 106.8456]); // Default to Jakarta
+  const [mapZoom, setMapZoom] = useState(12);
+  const [allPendingTemuanForMap, setAllPendingTemuanForMap] = useState([]); // New state for all pending items
+  const [mapLoading, setMapLoading] = useState(true);
+  const [isDataReady, setIsDataReady] = useState(false); // New state to track data readiness
 
   // Execution state
   const [afterImage, setAfterImage] = useState(null);
@@ -315,13 +418,9 @@ const Preventive = () => {
   // Manual execution state
   const [manualExecution, setManualExecution] = useState({
     temuan: "",
-    lokasi: "",
-    noGardu: "",
-    category: "Preventive",
     penyulang: "",
     beforeImage: null,
     afterImage: null,
-    keterangan: "",
   });
   const [beforeImagePreview, setBeforeImagePreview] = useState(null);
   const [manualAfterImagePreview, setManualAfterImagePreview] = useState(null);
@@ -330,6 +429,7 @@ const Preventive = () => {
   const [locationError, setLocationError] = useState(null);
   const [processingManual, setProcessingManual] = useState(false);
   const [manualExecDate, setManualExecDate] = useState(getTodayLocal()); // Format: YYYY-MM-DD
+  // State untuk popover dihapus karena menggunakan pendekatan langsung
 
   const routerLocation = useLocation();
 
@@ -339,6 +439,201 @@ const Preventive = () => {
       chatEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [filteredTemuanList]);
+
+  // Fetch all pending items for map (separate from pagination)
+  useEffect(() => {
+    const fetchAllPendingForMap = async () => {
+      setMapLoading(true);
+      try {
+        // Query all items with status not "Selesai" (without limit)
+        const q = query(
+          collection(db, "inspeksi"),
+          where("category", "==", "Preventive"),
+          where("status", "!=", "Selesai")
+        );
+        const querySnapshot = await getDocs(q);
+        const fetchedData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          tglInspeksi: doc.data().tglInspeksi
+            ? new Date(doc.data().tglInspeksi)
+            : null,
+          tglEksekusi: doc.data().tglEksekusi
+            ? new Date(doc.data().tglEksekusi)
+            : null,
+        }));
+
+        // Filter only for items with valid location
+        const validLocationItems = fetchedData.filter(
+          (item) => item.location && item.location.includes(",")
+        );
+
+        setAllPendingTemuanForMap(validLocationItems);
+
+        // Set map center to the first valid temuan location if available
+        if (validLocationItems.length > 0) {
+          const firstItemWithValidLocation = validLocationItems[0];
+          try {
+            const coords = firstItemWithValidLocation.location
+              .split(",")
+              .map(Number);
+            if (!isNaN(coords[0]) && !isNaN(coords[1])) {
+              setMapCenter(coords);
+            }
+          } catch (error) {
+            console.error("Error parsing coordinates:", error);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching map data: ", error);
+      } finally {
+        setMapLoading(false);
+      }
+    };
+
+    fetchAllPendingForMap();
+  }, []); // Execute once on component mount
+
+  // Load data yang lebih lama (tanggal lebih awal) ketika scrolling ke atas
+  const loadOlderData = useCallback(async () => {
+    if (!hasMoreOlder || loadingMore) return;
+
+    setLoadingMore(true);
+
+    // Tangkap elemen chat container dan simpan informasi scrollnya
+    const chatContainer = document.querySelector(".overflow-y-auto");
+    let scrollInfo = null;
+
+    if (chatContainer) {
+      scrollInfo = {
+        scrollHeight: chatContainer.scrollHeight,
+        scrollTop: chatContainer.scrollTop,
+        clientHeight: chatContainer.clientHeight,
+        scrollBottom: chatContainer.scrollHeight - chatContainer.scrollTop,
+      };
+    }
+
+    try {
+      const q = query(
+        collection(db, "inspeksi"),
+        where("category", "==", "Preventive"),
+        orderBy("tglEksekusi", "desc"),
+        startAfter(firstVisible),
+        limit(ITEMS_PER_PAGE)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        setHasMoreOlder(false);
+        setLoadingMore(false);
+        return;
+      }
+
+      const fetchedData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+        tglInspeksi: doc.data().tglInspeksi
+          ? new Date(doc.data().tglInspeksi)
+          : null,
+        tglEksekusi: doc.data().tglEksekusi
+          ? new Date(doc.data().tglEksekusi)
+          : null,
+      }));
+
+      // Update firstVisible for next pagination
+      setFirstVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+
+      // Update states in batch
+      const updateStates = () => {
+        setTemuanList((prevData) => {
+          const existingIds = new Set(prevData.map((item) => item.id));
+          const uniqueNewData = fetchedData.filter(
+            (item) => !existingIds.has(item.id)
+          );
+          return [...prevData, ...uniqueNewData];
+        });
+
+        // Apply filters to new data
+        setFilteredTemuanList((prevData) => {
+          const existingIds = new Set(prevData.map((item) => item.id));
+          let uniqueNewData = fetchedData.filter(
+            (item) => !existingIds.has(item.id)
+          );
+
+          if (searchQuery) {
+            uniqueNewData = uniqueNewData.filter(
+              (item) =>
+                item.temuan.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                item.lokasi.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (item.noGardu &&
+                  item.noGardu
+                    .toLowerCase()
+                    .includes(searchQuery.toLowerCase()))
+            );
+          }
+
+          if (filterCategory !== "all") {
+            uniqueNewData = uniqueNewData.filter(
+              (item) => item.status === filterCategory
+            );
+          }
+
+          return [...prevData, ...uniqueNewData];
+        });
+      };
+
+      // Update states
+      updateStates();
+
+      // Restore scroll position properly
+      if (scrollInfo) {
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            if (chatContainer) {
+              chatContainer.scrollTop =
+                chatContainer.scrollHeight - scrollInfo.scrollBottom;
+            }
+          });
+        }, 100);
+      }
+    } catch (error) {
+      console.error("Error fetching older data: ", error);
+    } finally {
+      setLoadingMore(false);
+    }
+  }, [firstVisible, hasMoreOlder, loadingMore, searchQuery, filterCategory]);
+
+  // Setup IntersectionObserver untuk infinite scrolling ke atas
+  useEffect(() => {
+    const options = {
+      root: null,
+      rootMargin: "100px",
+      threshold: 0.1,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      const first = entries[0];
+      if (first.isIntersecting && hasMoreOlder && !loadingMore) {
+        const debounceTimer = setTimeout(() => {
+          loadOlderData();
+        }, 100);
+
+        return () => clearTimeout(debounceTimer);
+      }
+    }, options);
+
+    const currentRef = scrollTopRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [scrollTopRef, hasMoreOlder, loadingMore, loadOlderData]);
 
   // Effect untuk membuka modal saat parameter URL terdeteksi
   useEffect(() => {
@@ -452,7 +747,7 @@ const Preventive = () => {
     fetchPenyulang();
   }, []);
 
-  // Fetch temuan with preventive category
+  // Fetch temuan with preventive category with pagination
   useEffect(() => {
     const fetchTemuan = async () => {
       setLoading(true);
@@ -460,7 +755,8 @@ const Preventive = () => {
         const q = query(
           collection(db, "inspeksi"),
           where("category", "==", "Preventive"),
-          orderBy("tglInspeksi", "desc")
+          orderBy("tglInspeksi", "desc"), // Desc = data terbaru terlebih dahulu
+          limit(ITEMS_PER_PAGE)
         );
         const querySnapshot = await getDocs(q);
         const fetchedData = querySnapshot.docs.map((doc) => ({
@@ -473,8 +769,19 @@ const Preventive = () => {
             ? new Date(doc.data().tglEksekusi)
             : null,
         }));
+
+        // Simpan referensi dokumen terakhir untuk pagination
+        if (querySnapshot.docs.length > 0) {
+          setFirstVisible(querySnapshot.docs[querySnapshot.docs.length - 1]);
+        } else {
+          setHasMoreOlder(false);
+        }
+
         setTemuanList(fetchedData);
         setFilteredTemuanList(fetchedData);
+
+        // Tandai data sudah siap untuk filter
+        setIsDataReady(true);
       } catch (error) {
         console.error("Error fetching temuan data: ", error);
       } finally {
@@ -484,28 +791,31 @@ const Preventive = () => {
     fetchTemuan();
   }, []);
 
-  // Filter temuan based on search and filter
+  // Filter temuan based on search and filter AFTER data is ready
   useEffect(() => {
-    let filtered = [...temuanList];
+    // Only apply filters when data is ready
+    if (isDataReady) {
+      let filtered = [...temuanList];
 
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (item) =>
-          item.temuan.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          item.lokasi.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (item.noGardu &&
-            item.noGardu.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
+      // Apply search filter
+      if (searchQuery) {
+        filtered = filtered.filter(
+          (item) =>
+            item.temuan.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            item.lokasi.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            (item.noGardu &&
+              item.noGardu.toLowerCase().includes(searchQuery.toLowerCase()))
+        );
+      }
+
+      // Apply status filter
+      if (filterCategory !== "all") {
+        filtered = filtered.filter((item) => item.status === filterCategory);
+      }
+
+      setFilteredTemuanList(filtered);
     }
-
-    // Apply status filter
-    if (filterCategory !== "all") {
-      filtered = filtered.filter((item) => item.status === filterCategory);
-    }
-
-    setFilteredTemuanList(filtered);
-  }, [searchQuery, filterCategory, temuanList]);
+  }, [searchQuery, filterCategory, temuanList, isDataReady]);
 
   // Handle image change for execution
   const handleAfterImageChange = (e) => {
@@ -519,6 +829,8 @@ const Preventive = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  // Fungsi camera dan gallery diimplementasikan langsung dalam tombol
 
   // Handle manual execution image changes
   const handleManualImageChange = (e, type) => {
@@ -635,6 +947,11 @@ const Preventive = () => {
           setTemuanList(updatedTemuanList);
           setFilteredTemuanList(updatedTemuanList);
 
+          // Update map data (remove this item from map)
+          setAllPendingTemuanForMap((prevMapData) =>
+            prevMapData.filter((item) => item.id !== selectedTemuan.id)
+          );
+
           // Reset state
           setAfterImage(null);
           setAfterImagePreview(null);
@@ -657,25 +974,9 @@ const Preventive = () => {
 
   // Handle manual execution submit dengan tanggal yang dipilih
   const handleSubmitManualExecution = async () => {
-    const {
-      temuan,
-      lokasi,
-      noGardu,
-      category,
-      penyulang,
-      beforeImage,
-      afterImage,
-      keterangan,
-    } = manualExecution;
+    const { temuan, penyulang, beforeImage, afterImage } = manualExecution;
 
-    if (
-      !temuan ||
-      !lokasi ||
-      !penyulang ||
-      !beforeImage ||
-      !afterImage ||
-      !keterangan
-    ) {
+    if (!temuan || !penyulang || !beforeImage || !afterImage) {
       alert("Silakan lengkapi semua field yang diperlukan");
       return;
     }
@@ -742,22 +1043,30 @@ const Preventive = () => {
                 afterUploadTask.snapshot.ref
               );
 
+              // Dapatkan alamat/lokasi dari koordinat
+              const lokasi =
+                location.lat && location.lng
+                  ? `Lokasi Koordinat: ${location.lat.toFixed(
+                      6
+                    )}, ${location.lng.toFixed(6)}`
+                  : "Lokasi tidak tersedia";
+
               // Add new document dengan tanggal yang dipilih
               await addDoc(collection(db, "inspeksi"), {
                 imageUrl: beforeImageUrl,
                 imageEksekusiURL: afterImageUrl,
                 temuan,
-                lokasi,
-                noGardu: noGardu || "",
+                lokasi: lokasi,
+                noGardu: "",
                 inspektor: selectedPetugas.map((p) => p.nama).join(", "),
                 eksekutor: selectedPetugas.map((p) => p.nama).join(", "),
                 petugasIds: selectedPetugas.map((p) => p.id),
                 penyulang,
-                category,
+                category: "Preventive",
                 tglInspeksi: getTodayLocal(),
                 tglEksekusi: manualExecDate,
                 status: "Selesai",
-                keterangan,
+                keterangan: "Eksekusi langsung oleh petugas",
                 location:
                   location.lat && location.lng
                     ? `${location.lat}, ${location.lng}`
@@ -769,13 +1078,9 @@ const Preventive = () => {
               // Reset state
               setManualExecution({
                 temuan: "",
-                lokasi: "",
-                noGardu: "",
-                category: "Preventive",
                 penyulang: "",
                 beforeImage: null,
                 afterImage: null,
-                keterangan: "",
               });
               setBeforeImagePreview(null);
               setManualAfterImagePreview(null);
@@ -784,11 +1089,12 @@ const Preventive = () => {
               setProcessingManual(false);
               setManualExecDate(getTodayLocal()); // Reset tanggal ke hari ini lokal
 
-              // Fetch updated temuan list
+              // Fetch temuan baru di halaman pertama
               const q = query(
                 collection(db, "inspeksi"),
                 where("category", "==", "Preventive"),
-                orderBy("tglInspeksi", "desc")
+                orderBy("tglInspeksi", "desc"),
+                limit(ITEMS_PER_PAGE)
               );
               const querySnapshot = await getDocs(q);
               const fetchedData = querySnapshot.docs.map((doc) => ({
@@ -802,11 +1108,19 @@ const Preventive = () => {
                   : null,
               }));
 
+              if (querySnapshot.docs.length > 0) {
+                setFirstVisible(
+                  querySnapshot.docs[querySnapshot.docs.length - 1]
+                );
+                setHasMoreOlder(true);
+              }
+
               setTemuanList(fetchedData);
               setFilteredTemuanList(fetchedData);
 
               // Show success message
               alert("Eksekusi manual berhasil disimpan!");
+              redirect("/preventive");
             }
           );
         }
@@ -829,9 +1143,21 @@ const Preventive = () => {
     }
   };
 
+  // Handler khusus untuk eksekusi dari map
+  const handleExecFromMap = (item) => {
+    // Beralih ke tab chat terlebih dahulu
+    setActiveTab("chat");
+
+    // Setelah beralih tab, baru buka dialog eksekusi
+    setTimeout(() => {
+      setSelectedTemuan(item);
+      setExecDialogOpen(true);
+    }, 100); // Delay kecil untuk memastikan tab beralih dulu
+  };
+
   // Render WhatsApp-style chat interface
   const renderChatView = () => {
-    if (loading) {
+    if (loading && temuanList.length === 0) {
       return (
         <div className="flex justify-center items-center h-full">
           <LuLoader2 className="animate-spin text-main mr-2" size={24} />
@@ -865,6 +1191,30 @@ const Preventive = () => {
       <div className="flex flex-col h-full">
         {/* Chat messages container */}
         <div className="flex-1 overflow-y-auto p-4 bg-[#e5e5e5]">
+          {/* Loading indicator di atas untuk data yang lebih lama */}
+          {hasMoreOlder && (
+            <div
+              ref={scrollTopRef}
+              className="flex justify-center items-center py-4"
+            >
+              {loadingMore ? (
+                <div className="flex items-center">
+                  <LuLoader2
+                    className="animate-spin text-main mr-2"
+                    size={20}
+                  />
+                  <span className="text-sm text-gray-500">
+                    Memuat data lama...
+                  </span>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-500">
+                  Scroll ke atas untuk melihat data lebih lama
+                </div>
+              )}
+            </div>
+          )}
+
           {filteredTemuanList.map((item, index) => (
             <ChatMessage
               key={item.id}
@@ -883,6 +1233,7 @@ const Preventive = () => {
               onClick={handleChatItemClick}
             />
           ))}
+
           <div ref={chatEndRef} />
         </div>
 
@@ -935,25 +1286,121 @@ const Preventive = () => {
     );
   };
 
+  // Render Map view (now using allPendingTemuanForMap)
+  const renderMapView = () => {
+    if (mapLoading) {
+      return (
+        <div className="flex justify-center items-center h-full">
+          <LuLoader2 className="animate-spin text-main mr-2" size={24} />
+          <span>Memuat peta temuan...</span>
+        </div>
+      );
+    }
+
+    if (allPendingTemuanForMap.length === 0) {
+      return (
+        <div className="flex flex-col justify-center items-center h-full">
+          <div className="bg-gray-50 p-8 rounded-full mb-4">
+            <LuMap className="text-gray-400" size={48} />
+          </div>
+          <p className="text-gray-500">
+            Tidak ada temuan yang perlu ditindaklanjuti saat ini
+          </p>
+          <Button
+            onClick={() => setManualDialogOpen(true)}
+            className="mt-4 bg-main hover:bg-blue-700"
+          >
+            <LuPlus size={16} className="mr-2" /> Tambah Temuan Baru
+          </Button>
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col h-full">
+        {/* Map container */}
+        <div className="flex-1 relative">
+          {/* Map info panel */}
+          <div className="absolute top-2 left-2 right-2 z-10 bg-white bg-opacity-90 rounded-lg p-3 shadow-md">
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold text-gray-800">
+                Peta Temuan Preventif
+              </h3>
+              <Badge className="bg-red-100 text-red-800">
+                {allPendingTemuanForMap.length} Perlu Tindakan
+              </Badge>
+            </div>
+            <p className="text-xs text-gray-600 mt-1">
+              Klik pada titik merah untuk melihat detail temuan
+            </p>
+          </div>
+
+          {/* Map view */}
+          <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            style={{ height: "100%", width: "100%" }}
+            zoomControl={false}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+
+            {allPendingTemuanForMap.map((item) => (
+              <MapMarker
+                key={item.id}
+                item={item}
+                onExecClick={handleChatItemClick}
+                onExecFromMap={handleExecFromMap}
+              />
+            ))}
+          </MapContainer>
+
+          {/* Map controls */}
+          <div className="absolute bottom-4 right-4 z-10 flex flex-col gap-2">
+            <Button
+              variant="secondary"
+              size="sm"
+              className="bg-white shadow-md hover:bg-gray-100 h-10 w-10 p-0 rounded-full"
+              onClick={() => setMapZoom((prev) => Math.min(prev + 1, 18))}
+            >
+              <span className="text-xl">+</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="bg-white shadow-md hover:bg-gray-100 h-10 w-10 p-0 rounded-full"
+              onClick={() => setMapZoom((prev) => Math.max(prev - 1, 5))}
+            >
+              <span className="text-xl">-</span>
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="bg-white shadow-md hover:bg-gray-100 h-10 w-10 p-0 rounded-full"
+              onClick={() => {
+                // Get user's current location if available
+                if (location.lat && location.lng) {
+                  setMapCenter([location.lat, location.lng]);
+                  setMapZoom(15);
+                }
+              }}
+            >
+              <LuMapPin size={18} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="h-screen flex flex-col bg-white">
       {/* WhatsApp-style header */}
       <div className="fixed top-0 right-0 bg-[#128C7E] text-white h-16 w-full z-10 flex items-center px-4 shadow-md">
         <div className="flex items-center">
-          {/* <Avatar className="w-10 h-10 mr-3">
-            <AvatarImage src="/logo.png" alt="ULP Selong" />
-            <AvatarFallback className="bg-green-700">ULP</AvatarFallback>
-          </Avatar> */}
-          <div>
-            {/* <div className="font-semibold">Preventif ULP Selong 🔍🔌</div>
-            <div className="text-xs text-gray-100">
-              {selectedPetugas.length > 0
-                ? `${selectedPetugas.length} petugas online: ${selectedPetugas
-                    .map((p) => p.nama)
-                    .join(", ")}`
-                : "Tidak ada petugas yang aktif"}
-            </div> */}
-          </div>
+          <div>{/* Header content */}</div>
         </div>
 
         <div className="ml-auto flex items-center space-x-4">
@@ -981,10 +1428,17 @@ const Preventive = () => {
 
       {/* Main content - WhatsApp chat style atau Traditional tabs */}
       <div className="mt-16 flex-1 flex flex-col h-[calc(100vh-4rem)]">
-        <Tabs defaultValue="chat" className="w-full h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-2 mb-1">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full h-full flex flex-col"
+        >
+          <TabsList className="grid w-full grid-cols-3 mb-1">
             <TabsTrigger value="chat" className="text-sm flex items-center">
-              <LuUsers className="mr-2" /> Chat Group Preventif
+              <LuUsers className="mr-2" /> Chat Group
+            </TabsTrigger>
+            <TabsTrigger value="map" className="text-sm flex items-center">
+              <LuMap className="mr-2" /> Peta Temuan
             </TabsTrigger>
             <TabsTrigger value="manual" className="text-sm flex items-center">
               <LuPlus className="mr-2" /> Tambah Eksekusi
@@ -993,6 +1447,10 @@ const Preventive = () => {
 
           <TabsContent value="chat" className="flex-1 overflow-hidden">
             {renderChatView()}
+          </TabsContent>
+
+          <TabsContent value="map" className="flex-1 overflow-hidden">
+            {renderMapView()}
           </TabsContent>
 
           <TabsContent value="manual" className="p-4">
@@ -1017,6 +1475,45 @@ const Preventive = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* Tambahkan CSS untuk animasi peta */}
+      <style>{`
+        .custom-pin {
+          animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+          0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+          }
+          
+          70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 6px rgba(255, 0, 0, 0);
+          }
+          
+          100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
+          }
+        }
+        
+        .temuan-popup .leaflet-popup-content-wrapper {
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        
+        /* Dialog di atas map */
+        .dialog-overlay {
+          z-index: 1001 !important;
+        }
+        
+        /* Pastikan modal dialog selalu tampil di atas peta */
+        [data-radix-popper-content-wrapper] {
+          z-index: 1100 !important;
+        }
+      `}</style>
 
       {/* Modal Detail Temuan */}
       <Dialog open={detailDialogOpen} onOpenChange={setDetailDialogOpen}>
@@ -1190,8 +1687,17 @@ const Preventive = () => {
       </Dialog>
 
       {/* Modal Eksekusi Temuan */}
-      <Dialog open={execDialogOpen} onOpenChange={setExecDialogOpen}>
-        <DialogContent className="sm:max-w-xl">
+      <Dialog
+        open={execDialogOpen}
+        onOpenChange={(open) => {
+          setExecDialogOpen(open);
+          // Jika dialog ditutup, pastikan tab map tidak aktif untuk menghindari konflik UI
+          if (!open && activeTab === "map") {
+            setActiveTab("chat");
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-xl z-50">
           <DialogHeader>
             <DialogTitle>Eksekusi Temuan</DialogTitle>
             <DialogDescription>
@@ -1251,12 +1757,38 @@ const Preventive = () => {
                           className="mx-auto text-gray-400 mb-2"
                           size={32}
                         />
-                        <Label
-                          htmlFor="afterImage"
-                          className="cursor-pointer text-main hover:text-blue-700"
-                        >
-                          Upload Foto
-                        </Label>
+
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input =
+                                document.getElementById("afterImage");
+                              input.setAttribute("capture", "environment");
+                              input.click();
+                            }}
+                          >
+                            <LuCamera className="mr-1" size={16} />
+                            <span>Kamera</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input =
+                                document.getElementById("afterImage");
+                              input.removeAttribute("capture");
+                              input.click();
+                            }}
+                          >
+                            <LuFolderOpen className="mr-1" size={16} />
+                            <span>Galeri</span>
+                          </Button>
+                        </div>
+
                         <Input
                           id="afterImage"
                           type="file"
@@ -1282,7 +1814,7 @@ const Preventive = () => {
                 />
               </div>
 
-              {/* Gunakan input tanggal standar HTML */}
+              {/* Gunakan input tanggal standar HTML - disabled */}
               <div>
                 <Label htmlFor="tglEksekusi">Tanggal Eksekusi</Label>
                 <Input
@@ -1291,6 +1823,7 @@ const Preventive = () => {
                   value={execDate}
                   onChange={(e) => setExecDate(e.target.value)}
                   className="mt-1"
+                  disabled={true}
                 />
               </div>
 
@@ -1370,61 +1903,30 @@ const Preventive = () => {
                   >
                     Temuan
                   </Label>
-                  <Textarea
-                    id="manual-temuan"
+                  {/* Dropdown untuk temuan */}
+                  <Select
                     value={manualExecution.temuan}
-                    onChange={(e) =>
+                    onValueChange={(value) =>
                       setManualExecution({
                         ...manualExecution,
-                        temuan: e.target.value,
+                        temuan: value,
                       })
                     }
-                    placeholder="Jelaskan temuan yang ditemukan. contoh: Pisang / Kelapa / merambat / Pohon / Sarang Burung / Layangan / dll"
-                    className="mt-1"
-                    rows={3}
-                  />
+                  >
+                    <SelectTrigger id="manual-temuan" className="mt-1">
+                      <SelectValue placeholder="Pilih jenis temuan" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Pohon">Pohon</SelectItem>
+                      <SelectItem value="Layangan">Layangan</SelectItem>
+                      <SelectItem value="Sarang burung">
+                        Sarang burung
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="col-span-2">
-                  <Label
-                    htmlFor="manual-lokasi"
-                    className="text-sm font-medium"
-                  >
-                    Lokasi
-                  </Label>
-                  <Input
-                    id="manual-lokasi"
-                    value={manualExecution.lokasi}
-                    onChange={(e) =>
-                      setManualExecution({
-                        ...manualExecution,
-                        lokasi: e.target.value,
-                      })
-                    }
-                    placeholder="Alamat atau lokasi temuan"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="manual-gardu" className="text-sm font-medium">
-                    No. Gardu (Opsional)
-                  </Label>
-                  <Input
-                    id="manual-gardu"
-                    value={manualExecution.noGardu}
-                    onChange={(e) =>
-                      setManualExecution({
-                        ...manualExecution,
-                        noGardu: e.target.value,
-                      })
-                    }
-                    placeholder="Nomor gardu jika ada"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
                   <Label
                     htmlFor="manual-penyulang"
                     className="text-sm font-medium"
@@ -1443,12 +1945,14 @@ const Preventive = () => {
                     <SelectTrigger id="manual-penyulang" className="mt-1">
                       <SelectValue placeholder="Pilih penyulang" />
                     </SelectTrigger>
-                    <SelectContent>
-                      {penyulangList.map((item) => (
-                        <SelectItem key={item.id} value={item.penyulang}>
-                          {item.penyulang}
-                        </SelectItem>
-                      ))}
+                    <SelectContent className="max-h-60 overflow-y-auto">
+                      <ScrollArea className="h-40">
+                        {penyulangList.map((item) => (
+                          <SelectItem key={item.id} value={item.penyulang}>
+                            {item.penyulang}
+                          </SelectItem>
+                        ))}
+                      </ScrollArea>
                     </SelectContent>
                   </Select>
                 </div>
@@ -1473,12 +1977,38 @@ const Preventive = () => {
                           className="mx-auto text-gray-400 mb-2"
                           size={32}
                         />
-                        <Label
-                          htmlFor="manual-before-image"
-                          className="cursor-pointer text-main hover:text-blue-700"
-                        >
-                          Upload Foto
-                        </Label>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input = document.getElementById(
+                                "manual-before-image"
+                              );
+                              input.setAttribute("capture", "environment");
+                              input.click();
+                            }}
+                          >
+                            <LuCamera className="mr-1" size={16} />
+                            <span>Kamera</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input = document.getElementById(
+                                "manual-before-image"
+                              );
+                              input.removeAttribute("capture");
+                              input.click();
+                            }}
+                          >
+                            <LuFolderOpen className="mr-1" size={16} />
+                            <span>Galeri</span>
+                          </Button>
+                        </div>
                         <Input
                           id="manual-before-image"
                           type="file"
@@ -1513,12 +2043,36 @@ const Preventive = () => {
                           className="mx-auto text-gray-400 mb-2"
                           size={32}
                         />
-                        <Label
-                          htmlFor="manual-after-image"
-                          className="cursor-pointer text-main hover:text-blue-700"
-                        >
-                          Upload Foto
-                        </Label>
+                        <div className="flex space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input =
+                                document.getElementById("manual-after-image");
+                              input.setAttribute("capture", "environment");
+                              input.click();
+                            }}
+                          >
+                            <LuCamera className="mr-1" size={16} />
+                            <span>Kamera</span>
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center"
+                            onClick={() => {
+                              const input =
+                                document.getElementById("manual-after-image");
+                              input.removeAttribute("capture");
+                              input.click();
+                            }}
+                          >
+                            <LuFolderOpen className="mr-1" size={16} />
+                            <span>Galeri</span>
+                          </Button>
+                        </div>
                         <Input
                           id="manual-after-image"
                           type="file"
@@ -1533,29 +2087,7 @@ const Preventive = () => {
                   </div>
                 </div>
 
-                <div className="col-span-2">
-                  <Label
-                    htmlFor="manual-keterangan"
-                    className="text-sm font-medium"
-                  >
-                    Keterangan Pengerjaan
-                  </Label>
-                  <Textarea
-                    id="manual-keterangan"
-                    value={manualExecution.keterangan}
-                    onChange={(e) =>
-                      setManualExecution({
-                        ...manualExecution,
-                        keterangan: e.target.value,
-                      })
-                    }
-                    placeholder="Jelaskan detail pengerjaan yang dilakukan..."
-                    className="mt-1"
-                    rows={4}
-                  />
-                </div>
-
-                {/* Gunakan input tanggal standar HTML untuk eksekusi manual */}
+                {/* Tanggal Eksekusi - disabled */}
                 <div className="col-span-2">
                   <Label
                     htmlFor="manual-tglEksekusi"
@@ -1569,6 +2101,7 @@ const Preventive = () => {
                     value={manualExecDate}
                     onChange={(e) => setManualExecDate(e.target.value)}
                     className="mt-1"
+                    disabled={true}
                   />
                 </div>
 
@@ -1632,13 +2165,9 @@ const Preventive = () => {
                 setManualDialogOpen(false);
                 setManualExecution({
                   temuan: "",
-                  lokasi: "",
-                  noGardu: "",
-                  category: "Preventive",
                   penyulang: "",
                   beforeImage: null,
                   afterImage: null,
-                  keterangan: "",
                 });
                 setBeforeImagePreview(null);
                 setManualAfterImagePreview(null);
@@ -1653,11 +2182,9 @@ const Preventive = () => {
               onClick={handleSubmitManualExecution}
               disabled={
                 !manualExecution.temuan ||
-                !manualExecution.lokasi ||
                 !manualExecution.penyulang ||
                 !manualExecution.beforeImage ||
                 !manualExecution.afterImage ||
-                !manualExecution.keterangan ||
                 processingManual
               }
               className="bg-main hover:bg-blue-700"

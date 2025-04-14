@@ -253,9 +253,16 @@ const PengukuranTable = () => {
         const data = snapshot.docs.map((doc) => {
           const pengukuran = doc.data();
           const gardu = garduData[pengukuran.nama] || {};
+          // Tambahkan pemrosesan data petugas di sini
+          const petugasName =
+            typeof pengukuran.petugas === "string"
+              ? pengukuran.petugas
+              : pengukuran.petugas?.nama || "Unknown";
+
           return {
             id: doc.id,
             ...pengukuran,
+            petugas: petugasName,
             alamat: gardu.alamat || "Tidak Diketahui",
             kva: gardu.kva || "Tidak Diketahui",
           };
@@ -414,7 +421,7 @@ const PengukuranTable = () => {
 
   return (
     <Layouts>
-      <div className="container mx-auto p-4">
+      <div className=" mx-auto p-4">
         <div className="flex justify-between mb-4">
           <h2 className="text-xl font-bold">Data Pengukuran</h2>
           <div className="flex gap-2 justify-items-center justify-end px-6">
