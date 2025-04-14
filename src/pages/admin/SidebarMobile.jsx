@@ -35,6 +35,7 @@ const navigasi = [
     ],
   },
   { nama: "Ukur Gardu", href: "/pengukuran-form", icon: FaPeopleCarry },
+  { nama: "Preventive", href: "/preventive", icon: FaPeopleCarry },
   {
     nama: "Data Pemeliharaan",
     href: "/pemeliharaan",

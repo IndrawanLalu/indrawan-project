@@ -1,5 +1,8 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { Provider } from "react-redux"; // Tambahkan import Provider
+import { PersistGate } from "redux-persist/integration/react"; // Tambahkan import PersistGate
+import { store, persistor } from "./redux/store"; // Import store dan persistor
 import Amg from "./pages/Amg";
 import Diandra from "./pages/Diandra";
 import Home from "./pages/Home";
@@ -40,6 +43,10 @@ import DashboardPengukuran from "./pages/Pengukuran/DashboardPengukuran";
 import NotificationsPage from "./pages/NotificationsPage";
 import { NotificationProvider } from "./contexts/notifications";
 import GarduDetailPage from "./pages/Pengukuran/GarduDetailPage";
+import PetugasSelection from "./components/PetugasSelection";
+import Preventive from "./pages/Inspeksi/Preventive";
+import PreventiveDashboard from "./pages/Pemeliharaan/PreventiveDashboard";
+import ManajemenPetugas from "./pages/admin/ManajemenPetugas ";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -100,9 +107,14 @@ function App() {
       path: "/admin/pemeliharaan/cetak-wo",
       element: <CetakWo />,
     },
+    {
+      path: "/admin/dashboard-preventive",
+      element: <PreventiveDashboard />,
+    },
 
     { path: "/admin/surat-masuk", element: <SuratMasuk /> },
     { path: "/admin/tambah-surat-masuk", element: <TambahSuratMasuk /> },
+    { path: "/admin/manajemen-petugas", element: <ManajemenPetugas /> },
   ];
   const protectedRouteDiandra = [{ path: "/diandra", element: <Diandra /> }];
   // Routes yang dapat diakses oleh admin dan inspektor
@@ -116,65 +128,70 @@ function App() {
     { path: "/tambahTemuan", element: <TambahTemuan /> },
     { path: "/pemeliharaan", element: <Pemeliharaan /> },
     { path: "/eksekusi/:id", element: <EksekusiTemuan /> },
+    { path: "/pilih-petugas", element: <PetugasSelection /> }, // Perbaiki double slash
+    { path: "/preventive", element: <Preventive /> },
   ];
 
   return (
-    <>
-      <NotificationProvider>
-        {/* <NavBarKu /> */}
-        <Routes>
-          {/* Route Public */}
+    // Tambahkan Provider dan PersistGate di sini
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <NotificationProvider>
+          {/* <NavBarKu /> */}
+          <Routes>
+            {/* Route Public */}
 
-          <Route path="/login" element={<Login />} />
-          <Route path="/unauthorized" element={<Unauthorrized />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/unauthorized" element={<Unauthorrized />} />
 
-          {/* Route Admin */}
-          {protectedRouteAdmin.map(({ path, element }) => (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <ProtectedRoute allowedRoles={["admin"]}>
-                  {element}
-                </ProtectedRoute>
-              }
-            />
-          ))}
-          {/* Route Admin */}
-          {protectedRouteDiandra.map(({ path, element }) => (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <ProtectedRoute allowedRoles={["diandra", "admin"]}>
-                  {element}
-                </ProtectedRoute>
-              }
-            />
-          ))}
+            {/* Route Admin */}
+            {protectedRouteAdmin.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    {element}
+                  </ProtectedRoute>
+                }
+              />
+            ))}
+            {/* Route Admin */}
+            {protectedRouteDiandra.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <ProtectedRoute allowedRoles={["diandra", "admin"]}>
+                    {element}
+                  </ProtectedRoute>
+                }
+              />
+            ))}
 
-          {/* Route untuk Admin dan Inspektor */}
-          {sharedRoutes.map(({ path, element }) => (
-            <Route
-              key={path}
-              path={path}
-              element={
-                <ProtectedRoute
-                  allowedRoles={["admin", "inspektor", "har", "yantek"]}
-                >
-                  {element}
-                </ProtectedRoute>
-              }
-            />
-          ))}
+            {/* Route untuk Admin dan Inspektor */}
+            {sharedRoutes.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <ProtectedRoute
+                    allowedRoles={["admin", "inspektor", "har", "yantek"]}
+                  >
+                    {element}
+                  </ProtectedRoute>
+                }
+              />
+            ))}
 
-          {/* Catch-All Route */}
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+            {/* Catch-All Route */}
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
 
-        <Toaster />
-      </NotificationProvider>
-    </>
+          <Toaster />
+        </NotificationProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

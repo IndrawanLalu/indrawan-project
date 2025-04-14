@@ -4,8 +4,6 @@ import PropTypes from "prop-types";
 import {
   FaBookMedical,
   FaChartLine,
-  FaChartPie,
-  FaPeopleCarry,
   FaBars,
   FaTimes,
   FaAngleDown,
@@ -14,6 +12,11 @@ import {
   FaSignOutAlt,
   FaUser,
 } from "react-icons/fa";
+import {
+  FcCameraIdentification,
+  FcBinoculars,
+  FcInspection,
+} from "react-icons/fc";
 import { useDispatch } from "react-redux";
 import { getAuth, signOut } from "firebase/auth";
 import { logout } from "@/redux/authSlice";
@@ -22,14 +25,15 @@ import { logout } from "@/redux/authSlice";
 const navigasi = [
   { nama: "Beranda", href: "/", icon: FaHome },
   { nama: "Beban Gardu", href: "/amg", icon: FaChartLine },
-  { nama: "Temuan Inspeksi", href: "/inspeksi", icon: FaChartPie },
+  { nama: "Temuan Inspeksi", href: "/inspeksi", icon: FcBinoculars },
   {
     nama: "Gangguan Penyulang",
     href: "#",
     icon: FaBookMedical,
     submenu: [{ nama: "Gangguan Penyulang", href: "/admin/gangguanPenyulang" }],
   },
-  { nama: "Ukur Gardu", href: "/pengukuran-form", icon: FaPeopleCarry },
+  { nama: "Ukur Gardu", href: "/pengukuran-form", icon: FcInspection },
+  { nama: "Preventive", href: "/preventive", icon: FcCameraIdentification },
 ];
 
 const SidebarMobile = ({ pengguna, ruteDisetujui = [] }) => {

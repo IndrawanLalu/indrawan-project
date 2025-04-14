@@ -46,6 +46,7 @@ const navigasi = [
         href: "/admin/pemeliharaan/daftar-pemeliharaan",
       },
       { nama: "Daftar Semua Pemeliharaan", href: "/cetak-wo" },
+      { nama: "Dashboard Preventive", href: "/admin/dashboard-preventive" },
     ],
   },
   {
@@ -58,6 +59,11 @@ const navigasi = [
       { nama: "Dashboard Pengukuran", href: "/dashboard-pengukuran" },
       { nama: "Notifikasi Pengukuran", href: "/gardu/notifikasi" },
     ],
+  },
+  {
+    nama: "Manajement Petugas",
+    href: "/admin/manajemen-petugas",
+    icon: FaEnvelope,
   },
   { nama: "Tambah Temuan", href: "/tambahTemuan", icon: FaEnvelope },
 ];

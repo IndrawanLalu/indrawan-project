@@ -19,10 +19,14 @@ import {
 import SidebarLayout from "@/components/admin/SidebarLayout";
 
 // Daftar layanan/menu yang diizinkan untuk yantek
-const allowedServicesForYantek = ["/pengukuran-form", "/"];
+const allowedServicesForYantek = ["/pengukuran-form", "/", "/preventive"];
 
 const Home = () => {
   const user = useSelector((state) => state.auth.user);
+  // Ambil petugas dari Redux dengan fallback ke localStorage
+  const selectedPetugas = useSelector(
+    (state) => state.petugas?.selectedPetugas || []
+  );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [dashboardData, setDashboardData] = useState({
@@ -284,11 +288,26 @@ const Home = () => {
   };
 
   // Fungsi untuk menampilkan status pemadaman berdasarkan jumlah gangguan
-  const getStatusPemadaman = () => {
-    if (dashboardData.gangguanHariIni === 0) return "Tidak Ada";
-    if (dashboardData.gangguanHariIni <= 2) return "Selong";
-    if (dashboardData.gangguanHariIni <= 4) return "Masbagik";
-    return "Beberapa Area";
+  const [preventiveHariIni, setPreventiveHariIni] = useState(0);
+  const fetchPreventiveHariIni = async () => {
+    try {
+      const db = getFirestore();
+      const todayString = getTodayString();
+
+      // Query untuk mengambil data inspeksi preventive yang diselesaikan hari ini
+      const preventiveQuery = query(
+        collection(db, "inspeksi"),
+        where("category", "==", "Preventive"),
+        where("status", "==", "Selesai"),
+        where("tglEksekusi", "==", todayString)
+      );
+
+      const preventiveSnapshot = await getDocs(preventiveQuery);
+      return preventiveSnapshot.size;
+    } catch (error) {
+      console.error("Error mengambil data preventive:", error);
+      return 0;
+    }
   };
 
   // Mengambil semua data saat komponen dimounting
@@ -300,6 +319,10 @@ const Home = () => {
       try {
         // Panggil fungsi untuk mendapatkan data gangguan tahunan
         const gangguanTahunanList = await fetchGangguanPenyulangTahunan();
+
+        // Tambahkan ini untuk mengambil data preventive hari ini
+        const jumlahPreventiveHariIni = await fetchPreventiveHariIni();
+        setPreventiveHariIni(jumlahPreventiveHariIni);
 
         // Panggil fungsi-fungsi fetch data lainnya secara paralel
         await Promise.all([fetchDashboardData(), fetchTotalGardu()]);
@@ -331,7 +354,7 @@ const Home = () => {
         {/* Konten Utama */}
         <div className="p-4 max-w-sm mx-auto md:max-w-3xl lg:max-w-5xl mt-10">
           {/* Header Section */}
-          <div className="mb-6">
+          <div className="mb-6 mt-2">
             <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
             <p className="text-gray-500">
               Selamat datang, {user?.email || "Inspektor"} |{" "}
@@ -355,6 +378,15 @@ const Home = () => {
                 <p className="text-sm opacity-90">
                   ULP Selong | {user?.role || "Inspektor"}
                 </p>
+                <p>
+                  {selectedPetugas.length > 0 && (
+                    <div className=" text-sm">
+                      <p>
+                        Petugas: {selectedPetugas.map((p) => p.nama).join(", ")}
+                      </p>
+                    </div>
+                  )}
+                </p>
               </div>
               <div className="bg-white/20 p-3 rounded-lg">
                 <FaTachometerAlt size={24} />
@@ -377,6 +409,20 @@ const Home = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {/* Metrik 1: Gardu Hari Ini */}
+              {/* Metrik 3: Status Pemadaman */}
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="text-gray-500 text-sm">Preventif Hari Ini</h3>
+                  <div className="bg-green-100 p-2 rounded-lg">
+                    <FaCalendarCheck className="text-green-500" />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold">{preventiveHariIni}</p>
+                <div className="mt-2 text-xs text-gray-500">
+                  Jumlah pekerjaan preventif yang diselesaikan hari ini
+                </div>
+              </div>
+
               <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="text-gray-500 text-sm">
@@ -409,20 +455,6 @@ const Home = () => {
                 </p>
                 <div className="mt-2 text-xs text-gray-500">
                   Dari {dashboardData.gangguanBulanIni} gangguan bulan ini
-                </div>
-              </div>
-
-              {/* Metrik 3: Status Pemadaman */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center mb-3">
-                  <h3 className="text-gray-500 text-sm">Pemadaman Hari Ini</h3>
-                  <div className="bg-yellow-100 p-2 rounded-lg">
-                    <FaExclamationTriangle className="text-yellow-500" />
-                  </div>
-                </div>
-                <p className="text-2xl font-bold">{getStatusPemadaman()}</p>
-                <div className="mt-2 text-xs text-gray-500">
-                  Status pemadaman berdasarkan gangguan
                 </div>
               </div>
 
@@ -688,11 +720,19 @@ const Home = () => {
           </div>
 
           {/* Floating Action Button */}
-          <Link to="/tambahTemuan">
-            <button className="fixed bottom-6 right-6 bg-main text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all hover:scale-110 flex items-center justify-center">
-              <span className="text-xl">➕</span>
-            </button>
-          </Link>
+          {user?.role === "yantek" ? (
+            <Link to="/preventive?action=openManualDialog">
+              <button className="fixed bottom-6 right-6 bg-main text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all hover:scale-110 flex items-center justify-center">
+                <span className="text-xl">➕</span>
+              </button>
+            </Link>
+          ) : (
+            <Link to="/tambahTemuan">
+              <button className="fixed bottom-6 right-6 bg-main text-white p-4 rounded-full shadow-lg hover:bg-blue-600 transition-all hover:scale-110 flex items-center justify-center">
+                <span className="text-xl">➕</span>
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </SidebarLayout>

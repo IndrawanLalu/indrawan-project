@@ -19,7 +19,10 @@ import { useSelector } from "react-redux";
 
 const Pengukuran = () => {
   const user = useSelector((state) => state.auth.user);
-  const allowedServicesForYantek = ["/pengukuran-form", "/"];
+  const selectedPetugas = useSelector(
+    (state) => state.petugas?.selectedPetugas || []
+  );
+  const allowedServicesForYantek = ["/pengukuran-form", "/", "/preventive"];
   const nav = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -40,7 +43,7 @@ const Pengukuran = () => {
       T: { A: "", B: "", C: "", D: "", K: "" },
       N: { A: "", B: "", C: "", D: "", K: "" },
     },
-    petugas: "",
+    petugas: selectedPetugas.map((p) => p.nama).join(", "),
     tegangan: {
       R_N: "",
       S_N: "",
@@ -50,7 +53,15 @@ const Pengukuran = () => {
       S_T: "",
     },
   });
-
+  useEffect(() => {
+    if (selectedPetugas.length > 0) {
+      const petugasNames = selectedPetugas.map((p) => p.nama).join(", ");
+      setPengukuran((prev) => ({
+        ...prev,
+        petugas: petugasNames,
+      }));
+    }
+  }, [selectedPetugas]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -184,7 +195,7 @@ const Pengukuran = () => {
         bebanKva,
         persenKva,
         unbalance,
-        petugas: pengukuran.petugas,
+        petugas: selectedPetugas,
         createdAt: new Date(),
       });
       setErrorMessage("Pengukuran berhasil disimpan!");
@@ -237,7 +248,14 @@ const Pengukuran = () => {
         </div>
       )}
       <div className="fixed top-0 right-0 bg-main text-white px-4 py-2 h-16 w-full z-10 flex items-center justify-center bg-gradient-to-r from-main to-blue-500 font-semibold">
-        PENGUKURAN BEBAN GARDU
+        <div className="text-center w-full">
+          PENGUKURAN BEBAN GARDU
+          {selectedPetugas.length > 0 && (
+            <div className=" text-sm">
+              <p>Petugas: {selectedPetugas.map((p) => p.nama).join(", ")}</p>
+            </div>
+          )}
+        </div>
       </div>
       {/* Sidebar Mobile */}
       <SidebarMobile pengguna={user} ruteDisetujui={allowedServicesForYantek} />
@@ -381,6 +399,7 @@ const Pengukuran = () => {
                       <div className="mt-4">
                         <h2>Petugas</h2>
                         <Input
+                          disabled
                           type="text"
                           value={pengukuran.petugas}
                           onChange={(e) =>
