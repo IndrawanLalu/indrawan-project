@@ -1945,8 +1945,12 @@ const Preventive = () => {
                     <SelectTrigger id="manual-penyulang" className="mt-1">
                       <SelectValue placeholder="Pilih penyulang" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-60 overflow-y-auto">
-                      <ScrollArea className="h-40">
+                    <SelectContent className="max-h-60 overflow-y-auto touch-action-manipulation">
+                      <ScrollArea
+                        className="h-40"
+                        type="auto"
+                        scrollbars="vertical"
+                      >
                         {penyulangList.map((item) => (
                           <SelectItem key={item.id} value={item.penyulang}>
                             {item.penyulang}

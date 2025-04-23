@@ -11,6 +11,10 @@ import {
   addMonths,
   subMonths,
   getDate,
+  addDays,
+  subDays,
+  startOfDay,
+  endOfDay,
 } from "date-fns";
 import { id } from "date-fns/locale";
 
@@ -82,7 +86,8 @@ const PreventiveDashboard = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date()); // Default tanggal hari ini
+  const [dateFilterEnabled, setDateFilterEnabled] = useState(true); // New state for date filter toggle
   const [viewMode, setViewMode] = useState("table");
   const [selectedPreventive, setSelectedPreventive] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -177,7 +182,28 @@ const PreventiveDashboard = () => {
     return isValid(parsedDate) ? parsedDate : null;
   };
 
-  // Filter data based on search query and filter status
+  // Format date for date input
+  const formatDateForInput = (date) => {
+    return format(date, "yyyy-MM-dd");
+  };
+
+  // Handler untuk perubahan tanggal
+  const handleDateChange = (event) => {
+    if (event.target.value) {
+      setSelectedDate(parseISO(event.target.value));
+    }
+  };
+
+  // Navigasi satu hari sebelumnya dan berikutnya
+  const goToPreviousDay = () => {
+    setSelectedDate((prev) => subDays(prev, 1));
+  };
+
+  const goToNextDay = () => {
+    setSelectedDate((prev) => addDays(prev, 1));
+  };
+
+  // Filter data based on search query, filter status, and selected date
   useEffect(() => {
     let result = [...preventiveData];
 
@@ -204,8 +230,30 @@ const PreventiveDashboard = () => {
       result = result.filter((item) => item.status === filterStatus);
     }
 
+    // Apply date filter if enabled
+    if (dateFilterEnabled && selectedDate) {
+      // Get the start and end of the selected date (full day)
+      const dayStart = startOfDay(selectedDate);
+      const dayEnd = endOfDay(selectedDate);
+
+      result = result.filter((item) => {
+        // For completed items, use execution date
+        // For pending items, use inspection date
+        const dateToCheck =
+          item.status === "Selesai" ? item.tglEksekusiObj : item.tglInspeksiObj;
+
+        return dateToCheck && dateToCheck >= dayStart && dateToCheck <= dayEnd;
+      });
+    }
+
     setFilteredData(result);
-  }, [searchQuery, filterStatus, preventiveData]);
+  }, [
+    searchQuery,
+    filterStatus,
+    preventiveData,
+    selectedDate,
+    dateFilterEnabled,
+  ]);
 
   // Sort data
   const sortedData = useMemo(() => {
@@ -395,6 +443,11 @@ const PreventiveDashboard = () => {
     setRefreshing((prev) => !prev);
   };
 
+  // Toggle date filter
+  const toggleDateFilter = () => {
+    setDateFilterEnabled(!dateFilterEnabled);
+  };
+
   return (
     <Layouts>
       <div className=" mx-auto p-6">
@@ -525,7 +578,8 @@ const PreventiveDashboard = () => {
               </CardHeader>
 
               <CardContent>
-                <div className="flex flex-col md:flex-row gap-4 mb-4">
+                <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row gap-4 mb-4">
+                  {/* Search and Filters */}
                   <div className="flex-1 relative">
                     <LuSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                     <Input
@@ -535,21 +589,68 @@ const PreventiveDashboard = () => {
                       onChange={(e) => setSearchQuery(e.target.value)}
                     />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <LuFilter className="text-gray-400" />
-                    <Select
-                      value={filterStatus}
-                      onValueChange={(value) => setFilterStatus(value)}
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {/* Date Filter Toggle Button */}
+                    <Button
+                      variant={dateFilterEnabled ? "default" : "outline"}
+                      size="sm"
+                      onClick={toggleDateFilter}
+                      className="flex items-center"
                     >
-                      <SelectTrigger className="w-40">
-                        <SelectValue placeholder="Filter status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Semua Status</SelectItem>
-                        <SelectItem value="Temuan">Belum Dikerjakan</SelectItem>
-                        <SelectItem value="Selesai">Selesai</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <LuCalendar className="mr-2 h-4 w-4" />
+                      <span>Filter Tanggal</span>
+                    </Button>
+
+                    {/* Date Selector */}
+                    {dateFilterEnabled && (
+                      <div className="flex items-center border rounded-md">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={goToPreviousDay}
+                          className="h-9 w-9"
+                        >
+                          <LuChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Input
+                          type="date"
+                          value={formatDateForInput(selectedDate)}
+                          onChange={handleDateChange}
+                          className="w-40 h-9 border-0"
+                        />
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={goToNextDay}
+                          className="h-9 w-9"
+                        >
+                          <LuChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    )}
+
+                    {/* Status Filter */}
+                    <div className="flex items-center">
+                      <LuFilter className="text-gray-400 mr-2" />
+                      <Select
+                        value={filterStatus}
+                        onValueChange={(value) => setFilterStatus(value)}
+                      >
+                        <SelectTrigger className="w-40">
+                          <SelectValue placeholder="Filter status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">Semua Status</SelectItem>
+                          <SelectItem value="Temuan">
+                            Belum Dikerjakan
+                          </SelectItem>
+                          <SelectItem value="Selesai">Selesai</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {/* View Mode Selector */}
                     <div className="hidden md:flex items-center ml-2">
                       <Button
                         variant={viewMode === "table" ? "default" : "outline"}
@@ -806,15 +907,26 @@ const PreventiveDashboard = () => {
                     Menampilkan {sortedData.length} dari {preventiveData.length}{" "}
                     temuan
                   </p>
-                  {filterStatus !== "all" && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setFilterStatus("all")}
-                    >
-                      Reset Filter
-                    </Button>
-                  )}
+                  <div className="flex gap-2">
+                    {filterStatus !== "all" && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setFilterStatus("all")}
+                      >
+                        Reset Filter Status
+                      </Button>
+                    )}
+                    {dateFilterEnabled && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setDateFilterEnabled(false)}
+                      >
+                        Reset Filter Tanggal
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardFooter>
             </Card>
