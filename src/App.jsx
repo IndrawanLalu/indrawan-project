@@ -66,7 +66,7 @@ function App() {
       element: <TambahTargetGangguan />,
     },
     {
-      path: "/admin/gangguanPenyulang/peta-gangguan",
+      path: "/admin/gangguan-penyulang/peta-gangguan",
       element: <PetaGangguan />,
     },
     { path: "/admin/tambahGangguan", element: <TambahGangguan /> },

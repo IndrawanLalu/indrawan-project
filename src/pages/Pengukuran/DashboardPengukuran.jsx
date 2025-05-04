@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { db } from "@/firebase/firebaseConfig";
 import {
   collection,
@@ -31,9 +31,14 @@ const DashboardPengukuran = () => {
   );
   const [endDate, setEndDate] = useState(new Date());
 
+  // State untuk pemilihan tahun pada tabel rekapitulasi
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [availableYears, setAvailableYears] = useState([]);
+
   // State untuk data
   const [pengukuranList, setPengukuranList] = useState([]);
   const [garduData, setGarduData] = useState({});
+  const [monthlyData, setMonthlyData] = useState([]);
 
   // State untuk KPI
   const [highestLoadGardu, setHighestLoadGardu] = useState(null);
@@ -44,6 +49,25 @@ const DashboardPengukuran = () => {
   const [barChartData, setBarChartData] = useState([]);
   const [lineChartData, setLineChartData] = useState([]);
   const [heatMapData, setHeatMapData] = useState([]);
+
+  // Nama bulan dalam bahasa Indonesia untuk tabel
+  const bulanIndonesia = useMemo(
+    () => [
+      "Januari",
+      "Februari",
+      "Maret",
+      "April",
+      "Mei",
+      "Juni",
+      "Juli",
+      "Agustus",
+      "September",
+      "Oktober",
+      "November",
+      "Desember",
+    ],
+    []
+  );
 
   // Ambil data gardu dari Firestore
   useEffect(() => {
@@ -58,6 +82,32 @@ const DashboardPengukuran = () => {
     };
 
     fetchGarduData();
+  }, []);
+
+  // Ambil semua data pengukuran untuk mendapatkan tahun-tahun yang tersedia
+  useEffect(() => {
+    const fetchAllYears = async () => {
+      const querySnapshot = await getDocs(collection(db, "Pengukuran"));
+      const years = new Set();
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.tanggalUkur) {
+          const year = data.tanggalUkur.split("-")[0];
+          if (year) years.add(parseInt(year));
+        }
+      });
+
+      const yearsArray = Array.from(years).sort((a, b) => b - a); // Urutkan tahun dari terbaru
+      setAvailableYears(yearsArray);
+
+      // Jika tidak ada tahun yang tersedia, tambahkan tahun sekarang
+      if (yearsArray.length === 0) {
+        setAvailableYears([new Date().getFullYear()]);
+      }
+    };
+
+    fetchAllYears();
   }, []);
 
   // Ambil data pengukuran dari Firestore
@@ -96,6 +146,80 @@ const DashboardPengukuran = () => {
 
     return () => unsubscribe();
   }, [garduData, startDate, endDate]);
+
+  // Ambil data untuk rekapitulasi bulanan berdasarkan tahun yang dipilih
+  useEffect(() => {
+    const fetchMonthlyData = async () => {
+      // Buat tanggal awal tahun dan akhir tahun
+      const startOfYear = `${selectedYear}-01-01`;
+      const endOfYear = `${selectedYear}-12-31`;
+
+      const q = query(
+        collection(db, "Pengukuran"),
+        where("tanggalUkur", ">=", startOfYear),
+        where("tanggalUkur", "<=", endOfYear)
+      );
+
+      const querySnapshot = await getDocs(q);
+
+      // Inisialisasi array untuk menyimpan jumlah pengukuran per bulan
+      // Index 0 = Januari, 11 = Desember
+      const monthCounts = Array(12).fill(0);
+      const monthlyAvgBeban = Array(12).fill(0);
+      const monthlyAvgUnbalance = Array(12).fill(0);
+      const monthlyTotalCounters = Array(12).fill(0);
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+
+        if (data.tanggalUkur) {
+          const dateParts = data.tanggalUkur.split("-");
+
+          if (dateParts.length === 3) {
+            const year = parseInt(dateParts[0]);
+            const month = parseInt(dateParts[1]) - 1; // Konversi ke index 0-11
+
+            if (year === selectedYear && month >= 0 && month < 12) {
+              // Tambahkan ke counter
+              monthCounts[month]++;
+
+              // Tambahkan nilai untuk menghitung rata-rata
+              if (data.bebanKva) {
+                monthlyAvgBeban[month] += parseFloat(data.bebanKva) || 0;
+                monthlyTotalCounters[month]++;
+              }
+
+              if (data.unbalance) {
+                monthlyAvgUnbalance[month] += parseFloat(data.unbalance) || 0;
+              }
+            }
+          }
+        }
+      });
+
+      // Hitung rata-rata
+      const monthlyStats = bulanIndonesia.map((bulan, index) => {
+        const count = monthCounts[index];
+        const avgBeban =
+          count > 0
+            ? (monthlyAvgBeban[index] / monthlyTotalCounters[index]).toFixed(2)
+            : 0;
+        const avgUnbalance =
+          count > 0 ? (monthlyAvgUnbalance[index] / count).toFixed(2) : 0;
+
+        return {
+          bulan,
+          jumlah: count,
+          avgBeban,
+          avgUnbalance,
+        };
+      });
+
+      setMonthlyData(monthlyStats);
+    };
+
+    fetchMonthlyData();
+  }, [selectedYear, bulanIndonesia]);
 
   // Proses data untuk visualisasi dan KPI
   const processData = (data) => {
@@ -203,6 +327,102 @@ const DashboardPengukuran = () => {
             />
           </div>
         </div>
+        {/* Tabel Rekapitulasi Bulanan */}
+        <Card className="mb-6 shadow-md">
+          <CardContent className="pt-6">
+            <div className="flex justify-between items-center mb-4">
+              <CardTitle className="text-lg">
+                Rekapitulasi Pengukuran Bulanan
+              </CardTitle>
+              <div className="flex items-center">
+                <label htmlFor="yearSelect" className="mr-2">
+                  Tahun:
+                </label>
+                <select
+                  id="yearSelect"
+                  value={selectedYear}
+                  onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+                  className="bg-transparent border border-main rounded-md px-2 py-1 text-black"
+                >
+                  {availableYears.map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-transparent border">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="px-4 py-2 border">Bulan</th>
+                    <th className="px-4 py-2 border">Jumlah Pengukuran</th>
+                    <th className="px-4 py-2 border">Rata-rata Beban (KVA)</th>
+                    <th className="px-4 py-2 border">
+                      Rata-rata Unbalance (%)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {monthlyData.map((item, index) => (
+                    <tr
+                      key={index}
+                      className={index % 2 === 0 ? "bg-gray-50" : ""}
+                    >
+                      <td className="px-4 py-2 border font-medium">
+                        {item.bulan}
+                      </td>
+                      <td className="px-4 py-2 border text-center">
+                        {item.jumlah}
+                      </td>
+                      <td className="px-4 py-2 border text-center">
+                        {item.avgBeban}
+                      </td>
+                      <td className="px-4 py-2 border text-center">
+                        {item.avgUnbalance}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot className="bg-gray-100 font-semibold">
+                  <tr>
+                    <td className="px-4 py-2 border">Total</td>
+                    <td className="px-4 py-2 border text-center">
+                      {monthlyData.reduce((sum, item) => sum + item.jumlah, 0)}
+                    </td>
+                    <td className="px-4 py-2 border text-center">
+                      {(
+                        monthlyData.reduce((sum, item) => {
+                          return (
+                            sum +
+                            (item.jumlah > 0 ? parseFloat(item.avgBeban) : 0)
+                          );
+                        }, 0) /
+                          monthlyData.filter((item) => item.jumlah > 0)
+                            .length || 0
+                      ).toFixed(2)}
+                    </td>
+                    <td className="px-4 py-2 border text-center">
+                      {(
+                        monthlyData.reduce((sum, item) => {
+                          return (
+                            sum +
+                            (item.jumlah > 0
+                              ? parseFloat(item.avgUnbalance)
+                              : 0)
+                          );
+                        }, 0) /
+                          monthlyData.filter((item) => item.jumlah > 0)
+                            .length || 0
+                      ).toFixed(2)}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">

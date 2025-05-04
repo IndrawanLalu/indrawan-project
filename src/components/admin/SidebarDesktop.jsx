@@ -31,7 +31,10 @@ const navigasi = [
     icon: FaBookMedical,
     submenu: [
       { nama: "Ganggaun Penyulang", href: "/admin/gangguanPenyulang" },
-      { nama: "Peta Gangguan", href: "/peta-gangguan" },
+      {
+        nama: "Peta Gangguan",
+        href: "/admin/gangguan-penyulang/peta-gangguan",
+      },
       { nama: "Target Gangguan", href: "/target-gangguan" },
     ],
   },
@@ -56,7 +59,7 @@ const navigasi = [
     submenu: [
       { nama: "Hystory Pengukuran", href: "/admin/history-pengukuran" },
       { nama: "Pengukuran Gardu", href: "/admin/pengukuran-gardu" },
-      { nama: "Dashboard Pengukuran", href: "/dashboard-pengukuran" },
+      { nama: "Dashboard Pengukuran", href: "/admin/dashboard-pengukuran" },
       { nama: "Notifikasi Pengukuran", href: "/gardu/notifikasi" },
     ],
   },
