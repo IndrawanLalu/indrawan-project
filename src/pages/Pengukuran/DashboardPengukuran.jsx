@@ -39,6 +39,7 @@ const DashboardPengukuran = () => {
   const [pengukuranList, setPengukuranList] = useState([]);
   const [garduData, setGarduData] = useState({});
   const [monthlyData, setMonthlyData] = useState([]);
+  const [kvaCapacities, setKvaCapacities] = useState([]);
 
   // State untuk KPI
   const [highestLoadGardu, setHighestLoadGardu] = useState(null);
@@ -165,9 +166,17 @@ const DashboardPengukuran = () => {
       // Inisialisasi array untuk menyimpan jumlah pengukuran per bulan
       // Index 0 = Januari, 11 = Desember
       const monthCounts = Array(12).fill(0);
-      const monthlyAvgBeban = Array(12).fill(0);
-      const monthlyAvgUnbalance = Array(12).fill(0);
-      const monthlyTotalCounters = Array(12).fill(0);
+
+      // Set untuk menyimpan semua nilai KVA unik yang ditemukan
+      const allKvaCapacities = new Set();
+
+      // Struktur baru untuk menyimpan data gardu dengan beban >= 80% per bulan
+      const highLoadGarduByMonth = Array(12)
+        .fill(0)
+        .map(() => ({
+          totalCount: 0,
+          byKvaCapacity: {}, // Akan diisi dengan kapasitas KVA sebagai key dan jumlah sebagai value
+        }));
 
       querySnapshot.forEach((doc) => {
         const data = doc.data();
@@ -183,43 +192,56 @@ const DashboardPengukuran = () => {
               // Tambahkan ke counter
               monthCounts[month]++;
 
-              // Tambahkan nilai untuk menghitung rata-rata
-              if (data.bebanKva) {
-                monthlyAvgBeban[month] += parseFloat(data.bebanKva) || 0;
-                monthlyTotalCounters[month]++;
-              }
+              // Cek apakah persenKva >= 80%
+              const persenKva = parseFloat(data.persenKva) || 0;
+              if (persenKva >= 80) {
+                // Dapatkan kapasitas KVA gardu
+                const garduKva = garduData[data.nama]?.kva || "Tidak Diketahui";
 
-              if (data.unbalance) {
-                monthlyAvgUnbalance[month] += parseFloat(data.unbalance) || 0;
+                // Tambahkan KVA ke set nilai unik
+                allKvaCapacities.add(garduKva);
+
+                // Increment total count
+                highLoadGarduByMonth[month].totalCount++;
+
+                // Increment count by KVA capacity
+                if (!highLoadGarduByMonth[month].byKvaCapacity[garduKva]) {
+                  highLoadGarduByMonth[month].byKvaCapacity[garduKva] = 1;
+                } else {
+                  highLoadGarduByMonth[month].byKvaCapacity[garduKva]++;
+                }
               }
             }
           }
         }
       });
 
-      // Hitung rata-rata
-      const monthlyStats = bulanIndonesia.map((bulan, index) => {
-        const count = monthCounts[index];
-        const avgBeban =
-          count > 0
-            ? (monthlyAvgBeban[index] / monthlyTotalCounters[index]).toFixed(2)
-            : 0;
-        const avgUnbalance =
-          count > 0 ? (monthlyAvgUnbalance[index] / count).toFixed(2) : 0;
+      // Sortir kapasitas KVA
+      const sortedKvaCapacities = Array.from(allKvaCapacities).sort((a, b) => {
+        // Konversi ke angka jika bisa, atau gunakan 0 jika tidak bisa
+        const numA = isNaN(parseInt(a)) ? 0 : parseInt(a);
+        const numB = isNaN(parseInt(b)) ? 0 : parseInt(b);
+        return numA - numB;
+      });
 
+      // Gabungkan data untuk hasil akhir
+      const monthlyStats = bulanIndonesia.map((bulan, index) => {
         return {
           bulan,
-          jumlah: count,
-          avgBeban,
-          avgUnbalance,
+          jumlah: monthCounts[index],
+          highLoadCount: highLoadGarduByMonth[index].totalCount,
+          byKvaCapacity: highLoadGarduByMonth[index].byKvaCapacity,
         };
       });
 
       setMonthlyData(monthlyStats);
+
+      // Store sorted KVA capacities in state
+      setKvaCapacities(sortedKvaCapacities);
     };
 
     fetchMonthlyData();
-  }, [selectedYear, bulanIndonesia]);
+  }, [selectedYear, bulanIndonesia, garduData]);
 
   // Proses data untuk visualisasi dan KPI
   const processData = (data) => {
@@ -305,6 +327,11 @@ const DashboardPengukuran = () => {
     }
   };
 
+  // Fungsi untuk mendapatkan jumlah gardu berdasarkan kapasitas KVA
+  const getKvaCount = (byKvaCapacity, kva) => {
+    return byKvaCapacity[kva] || 0;
+  };
+
   return (
     <Layouts>
       <div className="container mx-auto p-4">
@@ -358,10 +385,12 @@ const DashboardPengukuran = () => {
                   <tr className="bg-gray-100">
                     <th className="px-4 py-2 border">Bulan</th>
                     <th className="px-4 py-2 border">Jumlah Pengukuran</th>
-                    <th className="px-4 py-2 border">Rata-rata Beban (KVA)</th>
-                    <th className="px-4 py-2 border">
-                      Rata-rata Unbalance (%)
-                    </th>
+                    {kvaCapacities.map((kva) => (
+                      <th key={kva} className="px-4 py-2 border">
+                        {kva} KVA
+                      </th>
+                    ))}
+                    <th className="px-4 py-2 border">Total Gardu ≥ 80%</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -376,11 +405,13 @@ const DashboardPengukuran = () => {
                       <td className="px-4 py-2 border text-center">
                         {item.jumlah}
                       </td>
+                      {kvaCapacities.map((kva) => (
+                        <td key={kva} className="px-4 py-2 border text-center">
+                          {getKvaCount(item.byKvaCapacity, kva)}
+                        </td>
+                      ))}
                       <td className="px-4 py-2 border text-center">
-                        {item.avgBeban}
-                      </td>
-                      <td className="px-4 py-2 border text-center">
-                        {item.avgUnbalance}
+                        {item.highLoadCount || 0}
                       </td>
                     </tr>
                   ))}
@@ -391,31 +422,20 @@ const DashboardPengukuran = () => {
                     <td className="px-4 py-2 border text-center">
                       {monthlyData.reduce((sum, item) => sum + item.jumlah, 0)}
                     </td>
+                    {kvaCapacities.map((kva) => (
+                      <td key={kva} className="px-4 py-2 border text-center">
+                        {monthlyData.reduce(
+                          (sum, item) =>
+                            sum + getKvaCount(item.byKvaCapacity, kva),
+                          0
+                        )}
+                      </td>
+                    ))}
                     <td className="px-4 py-2 border text-center">
-                      {(
-                        monthlyData.reduce((sum, item) => {
-                          return (
-                            sum +
-                            (item.jumlah > 0 ? parseFloat(item.avgBeban) : 0)
-                          );
-                        }, 0) /
-                          monthlyData.filter((item) => item.jumlah > 0)
-                            .length || 0
-                      ).toFixed(2)}
-                    </td>
-                    <td className="px-4 py-2 border text-center">
-                      {(
-                        monthlyData.reduce((sum, item) => {
-                          return (
-                            sum +
-                            (item.jumlah > 0
-                              ? parseFloat(item.avgUnbalance)
-                              : 0)
-                          );
-                        }, 0) /
-                          monthlyData.filter((item) => item.jumlah > 0)
-                            .length || 0
-                      ).toFixed(2)}
+                      {monthlyData.reduce(
+                        (sum, item) => sum + item.highLoadCount,
+                        0
+                      )}
                     </td>
                   </tr>
                 </tfoot>

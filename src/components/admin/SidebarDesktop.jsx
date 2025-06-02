@@ -24,7 +24,11 @@ import { logout } from "@/redux/authSlice";
 const navigasi = [
   { nama: "Beranda", href: "/admin/dashboard", icon: FaHome },
   { nama: "Beban Gardu", href: "/amg", icon: FaChartLine },
-  { nama: "Temuan Inspeksi", href: "/inspeksi", icon: FaChartPie },
+  {
+    nama: "Inspeksi Mandorline",
+    href: "/admin/data-segment",
+    icon: FaChartPie,
+  },
   {
     nama: "Gangguan Penyulang",
     href: "#",
