@@ -47,6 +47,8 @@ import PetugasSelection from "./components/PetugasSelection";
 import Preventive from "./pages/Inspeksi/Preventive";
 import PreventiveDashboard from "./pages/Pemeliharaan/PreventiveDashboard";
 import ManajemenPetugas from "./pages/admin/ManajemenPetugas ";
+import ParetoGangguanAnalysis from "./pages/gangguan/ParetoGangguan";
+// import EnhancedDashboard from "./pages/admin/EnhancedDashboard ";
 
 function App() {
   // Routes yang dapat diakses oleh admin saja
@@ -56,10 +58,15 @@ function App() {
     { path: "/admin/aset/maps", element: <Maps /> },
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
     { path: "/admin/dashboard", element: <Dashboard /> },
+    // { path: "/admin/dashboard", element: <EnhancedDashboard /> },
     { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
     {
       path: "/admin/gangguanPenyulang/target-gangguan",
       element: <TargetGangguan />,
+    },
+    {
+      path: "/admin/pareto-gangguan",
+      element: <ParetoGangguanAnalysis />,
     },
     {
       path: "/admin/gangguanPenyulang/tambahTargetgangguan",

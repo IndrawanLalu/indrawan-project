@@ -14,7 +14,7 @@ const Layouts = ({ children }) => {
         {/* Main Content and Footer */}
         <div className="flex flex-col w-full min-h-screen">
           {/* Main Content */}
-          <main className="flex-grow p-4 bg-[#bec3bf1c]">{children}</main>
+          <main className="flex-grow  bg-[#bec3bf1c]">{children}</main>
 
           {/* Footer */}
           <footer className="bg-main/50 text-white p-4 text-center">
