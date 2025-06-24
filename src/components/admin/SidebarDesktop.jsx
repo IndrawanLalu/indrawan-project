@@ -13,6 +13,7 @@ import {
   FaUser,
   FaChevronLeft,
   FaChevronRight,
+  FaAddressCard,
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { getAuth, signOut } from "firebase/auth";
@@ -153,6 +154,11 @@ const navigasi = [
     nama: "Manajement Petugas",
     href: "/admin/manajemen-petugas",
     icon: FaEnvelope,
+  },
+  {
+    nama: "Manajement Penyulang",
+    href: "/admin/aset/penyulang",
+    icon: FaAddressCard,
   },
   // { nama: "Tambah Temuan", href: "/tambahTemuan", icon: FaEnvelope },
 ];
