@@ -4,10 +4,8 @@ import PropTypes from "prop-types";
 import {
   FaBinoculars,
   FaBookMedical,
-  FaChartLine,
   FaChartPie,
   FaEnvelope,
-  FaPeopleCarry,
   FaAngleDown,
   FaAngleRight,
   FaHome,
@@ -100,11 +98,12 @@ const breathingEffectStyles = `
     perspective: 1000;
   }
 `;
-
+let AppName = "SIEKAS";
+let Description = "Sistem Inspeksi dan Eksekusi Asset Selaparang";
 // Data navigasi - bisa dipindahkan ke file terpisah atau diterima sebagai props
 const navigasi = [
   { nama: "Beranda", href: "/admin/dashboard", icon: FaHome },
-  { nama: "Beban Gardu", href: "/amg", icon: FaChartLine },
+  // { nama: "Beban Gardu", href: "/amg", icon: FaChartLine },
   {
     nama: "Inspeksi Mandorline",
     href: "/admin/data-segment",
@@ -124,7 +123,7 @@ const navigasi = [
       { nama: "Target Gangguan", href: "/target-gangguan" },
     ],
   },
-  { nama: "Ukur Gardu", href: "/pengukuran-form", icon: FaPeopleCarry },
+  // { nama: "Ukur Gardu", href: "/pengukuran-form", icon: FaPeopleCarry },
   {
     nama: "Data Pemeliharaan",
     href: "/pemeliharaan",
@@ -253,7 +252,9 @@ const SidebarDesktop = ({
               className="w-8 h-8 rounded-full flex-shrink-0 ring-2 ring-white/20"
             />
             {!isCollapsed && (
-              <h2 className="text-lg font-bold text-main truncate">PETASAN</h2>
+              <h2 className="text-lg font-bold text-main truncate">
+                {AppName}
+              </h2>
             )}
           </div>
         </div>
@@ -405,10 +406,10 @@ const SidebarDesktop = ({
           {!isCollapsed && (
             <div className="pt-4 mt-auto animate-in fade-in duration-300">
               <p className="text-sm text-white/80 text-center font-medium">
-                PETASAN v2.1
+                {AppName} v2.1
               </p>
               <p className="text-xs text-white/50 text-center mt-1">
-                PENGECEKAN TUNTAS SATU BULAN
+                {Description}
               </p>
             </div>
           )}

@@ -1,7 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { db } from "@/firebase/firebaseConfig";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { format } from "date-fns";
 import {
   TrendingUp,
@@ -11,94 +9,174 @@ import {
   RefreshCw,
 } from "lucide-react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
+import { fetchSheetData } from "@/utils/googleSheetsData";
 
 const TotalGangguan = ({ startDate, endDate }) => {
+  const userLogin = useSelector((state) => state.auth.user);
+  const userUnit = userLogin ? userLogin.unit : null;
+
   const [totalGangguan, setTotalGangguan] = useState(0);
   const [loading, setLoading] = useState(true);
   const [animatedTotal, setAnimatedTotal] = useState(0);
   const [animatedPercentage, setAnimatedPercentage] = useState(0);
   const [error, setError] = useState(null);
+  const [lastFetch, setLastFetch] = useState(null);
 
   const targetGangguan = 81;
-  // const startDate = new Date(new Date().getFullYear(), 0, 1); // Awal tahun ini
-  // const endDate = new Date(); // Hari ini
 
-  // Animated counter function
-  const animateCounter = (target, setter, duration = 2000) => {
+  // Memoized month mapping untuk performa yang lebih baik
+  const monthMap = useMemo(
+    () => ({
+      Januari: 0,
+      Februari: 1,
+      Maret: 2,
+      April: 3,
+      Mei: 4,
+      Juni: 5,
+      Juli: 6,
+      Agustus: 7,
+      September: 8,
+      Oktober: 9,
+      November: 10,
+      Desember: 11,
+    }),
+    []
+  );
+
+  // Fungsi animasi counter yang dioptimasi
+  const animateCounter = useCallback((target, setter, duration = 2000) => {
     let start = 0;
     const startTime = Date.now();
 
     const updateCounter = () => {
       const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-
-      // Easing function for smooth animation
       const easeOutQuart = 1 - Math.pow(1 - progress, 4);
       const current = Math.round(start + (target - start) * easeOutQuart);
-
       setter(current);
-
       if (progress < 1) {
         requestAnimationFrame(updateCounter);
       }
     };
-
     requestAnimationFrame(updateCounter);
-  };
+  }, []);
 
-  const fetchTotalGangguan = async () => {
+  // Fungsi parsing tanggal yang lebih robust
+  const parseDate = useCallback(
+    (dateString) => {
+      if (!dateString || typeof dateString !== "string") return null;
+
+      const parts = dateString.trim().split(" ");
+      if (parts.length !== 3) return null;
+
+      const day = parseInt(parts[0]);
+      const monthName = parts[1];
+      const year = parseInt(parts[2]);
+
+      const month = monthMap[monthName];
+
+      if (isNaN(day) || month === undefined || isNaN(year)) return null;
+      if (day < 1 || day > 31 || year < 1900 || year > 2100) return null;
+
+      return new Date(year, month, day);
+    },
+    [monthMap]
+  );
+
+  // Fungsi validasi dan filter data
+  const filterGangguanData = useCallback(
+    (data) => {
+      if (!Array.isArray(data) || !userUnit || !startDate || !endDate) {
+        return [];
+      }
+
+      return data.filter((item) => {
+        // Validasi unit
+        if (!item.ulp || typeof item.ulp !== "string") return false;
+        const isUnitMatch =
+          item.ulp.trim().toUpperCase() === userUnit.toUpperCase();
+
+        // Validasi tanggal
+        const itemDate = parseDate(item.tanggal);
+        if (!itemDate) return false;
+
+        const isDateInRange = itemDate >= startDate && itemDate <= endDate;
+
+        return isUnitMatch && isDateInRange;
+      });
+    },
+    [userUnit, startDate, endDate, parseDate]
+  );
+
+  // Fungsi fetch data dengan error handling yang lebih baik
+  const fetchTotalGangguan = useCallback(async () => {
+    if (!userUnit) {
+      setLoading(false);
+      setError("Unit pengguna tidak tersedia");
+      return;
+    }
+
     try {
       setLoading(true);
       setError(null);
 
-      const q = query(
-        collection(db, "gangguanPenyulang"), // Sesuaikan dengan nama koleksi Firebase
-        where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
-        where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
-      );
+      const allGangguanData = await fetchSheetData("gangguanPenyulang", "A:S");
 
-      const querySnapshot = await getDocs(q);
-      const total = querySnapshot.size; // Menghitung jumlah dokumen (gangguan)
+      if (!Array.isArray(allGangguanData)) {
+        throw new Error("Data yang diterima tidak valid");
+      }
 
-      setTotalGangguan(total); // Set jumlah total gangguan
+      const filteredData = filterGangguanData(allGangguanData);
+      const total = filteredData.length;
 
-      // Start animations after data is loaded
+      setTotalGangguan(total);
+      setLastFetch(new Date());
+
+      // Animasi dengan delay untuk efek yang lebih smooth
       setTimeout(() => {
         animateCounter(total, setAnimatedTotal);
-        animateCounter((total / targetGangguan) * 100, setAnimatedPercentage);
+        animateCounter(
+          total > 0 ? (total / targetGangguan) * 100 : 0,
+          setAnimatedPercentage
+        );
       }, 300);
-
-      setLoading(false);
     } catch (error) {
-      console.error("Error fetching data from Firebase:", error);
-      setError("Gagal memuat data. Silakan coba lagi.");
+      console.error("Error fetching gangguan data:", error);
+      setError(`Gagal memuat data: ${error.message}`);
+    } finally {
       setLoading(false);
     }
-  };
+  }, [userUnit, filterGangguanData, animateCounter, targetGangguan]);
 
+  // Effect untuk fetch data
   useEffect(() => {
     fetchTotalGangguan();
-  }, [startDate, endDate]);
+  }, [fetchTotalGangguan]);
 
-  const percentage =
-    totalGangguan > 0 ? (totalGangguan / targetGangguan) * 100 : 0;
+  // Computed values
+  const percentage = useMemo(
+    () => (totalGangguan > 0 ? (totalGangguan / targetGangguan) * 100 : 0),
+    [totalGangguan, targetGangguan]
+  );
 
-  const getStatusColor = () => {
+  const getStatusColor = useMemo(() => {
     if (percentage < 50) return "from-emerald-500 to-teal-600";
     if (percentage < 80) return "from-amber-500 to-orange-600";
     return "from-red-500 to-rose-600";
-  };
+  }, [percentage]);
 
-  const getStatusText = () => {
+  const getStatusText = useMemo(() => {
     if (percentage < 50) return "Rendah";
     if (percentage < 80) return "Sedang";
     return "Tinggi";
-  };
+  }, [percentage]);
 
-  const refreshData = () => {
+  const refreshData = useCallback(() => {
     fetchTotalGangguan();
-  };
+  }, [fetchTotalGangguan]);
 
+  // Error UI
   if (error) {
     return (
       <div className="relative min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
@@ -112,9 +190,12 @@ const TotalGangguan = ({ startDate, endDate }) => {
               <p className="text-red-300 mb-6">{error}</p>
               <button
                 onClick={refreshData}
-                className="px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto"
+                disabled={loading}
+                className="px-6 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto"
               >
-                <RefreshCw className="w-4 h-4" />
+                <RefreshCw
+                  className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                />
                 <span>Coba Lagi</span>
               </button>
             </CardContent>
@@ -133,16 +214,25 @@ const TotalGangguan = ({ startDate, endDate }) => {
             Dashboard Gangguan Penyulang
           </h1>
           <p className="text-gray-300 text-lg">
-            Monitor real-time gangguan Penyulang ULP SELONG
+            Monitor real-time gangguan Penyulang {userUnit || "ULP SELONG"}
           </p>
-          <button
-            onClick={refreshData}
-            disabled={loading}
-            className="mt-4 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-            <span>Refresh Data</span>
-          </button>
+          <div className="mt-4 flex items-center justify-center space-x-4">
+            <button
+              onClick={refreshData}
+              disabled={loading}
+              className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50"
+            >
+              <RefreshCw
+                className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+              />
+              <span>Refresh Data</span>
+            </button>
+            {lastFetch && (
+              <span className="text-sm text-white/60">
+                Terakhir diperbarui: {format(lastFetch, "HH:mm:ss")}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Main Cards */}
@@ -235,7 +325,6 @@ const TotalGangguan = ({ startDate, endDate }) => {
                   </div>
                 </div>
 
-                {/* Status Indicator */}
                 <div className="flex justify-center mt-6">
                   <div className="px-4 py-2 rounded-full bg-emerald-500/20 border border-emerald-400/30">
                     <span className="text-emerald-300 text-sm font-medium">
@@ -249,17 +338,15 @@ const TotalGangguan = ({ startDate, endDate }) => {
 
           {/* Persentase Card */}
           <div className="group">
-            <Card
-              className={`relative overflow-hidden bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-red-500/25`}
-            >
+            <Card className="relative overflow-hidden bg-white/10 backdrop-blur-lg border border-white/20 hover:bg-white/15 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-red-500/25">
               <div
-                className={`absolute inset-0 bg-gradient-to-br ${getStatusColor()}/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                className={`absolute inset-0 bg-gradient-to-br ${getStatusColor}/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
               ></div>
 
               <CardHeader className="relative z-10 pb-2">
                 <div className="flex items-center space-x-3">
                   <div
-                    className={`p-3 rounded-full bg-gradient-to-r ${getStatusColor()} group-hover:scale-110 transition-transform duration-300`}
+                    className={`p-3 rounded-full bg-gradient-to-r ${getStatusColor} group-hover:scale-110 transition-transform duration-300`}
                   >
                     <TrendingUp className="w-6 h-6 text-white" />
                   </div>
@@ -279,23 +366,21 @@ const TotalGangguan = ({ startDate, endDate }) => {
                   </div>
                 </div>
 
-                {/* Status Badge */}
                 <div className="flex justify-center mt-6">
                   <div
-                    className={`px-4 py-2 rounded-full bg-gradient-to-r ${getStatusColor()}/20 border border-white/20`}
+                    className={`px-4 py-2 rounded-full bg-gradient-to-r ${getStatusColor}/20 border border-white/20`}
                   >
                     <span className="text-white text-sm font-medium flex items-center space-x-2">
                       <Zap className="w-4 h-4" />
-                      <span>Status: {getStatusText()}</span>
+                      <span>Status: {getStatusText}</span>
                     </span>
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="mt-4">
                   <div className="w-full bg-white/10 rounded-full h-2">
                     <div
-                      className={`h-2 bg-gradient-to-r ${getStatusColor()} rounded-full transition-all duration-2000 ease-out`}
+                      className={`h-2 bg-gradient-to-r ${getStatusColor} rounded-full transition-all duration-2000 ease-out`}
                       style={{ width: `${Math.min(animatedPercentage, 100)}%` }}
                     ></div>
                   </div>
@@ -322,9 +407,10 @@ const TotalGangguan = ({ startDate, endDate }) => {
     </div>
   );
 };
+
 TotalGangguan.propTypes = {
-  startDate: PropTypes.instanceOf(Date),
-  endDate: PropTypes.instanceOf(Date),
+  startDate: PropTypes.instanceOf(Date).isRequired,
+  endDate: PropTypes.instanceOf(Date).isRequired,
 };
 
 export { TotalGangguan };

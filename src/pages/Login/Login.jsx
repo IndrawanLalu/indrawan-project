@@ -68,15 +68,18 @@ const Login = () => {
       const roleRef = doc(db, "userRoles", user.uid);
       let roleDoc = await getDoc(roleRef);
       let role;
+      let unit = null; // Inisialisasi unit
 
       if (!roleDoc.exists()) {
         await setDoc(doc(db, "userRoles", user.uid), {
           role: "user",
           email: user.email,
+          unit: null, // Tambahkan unit dengan nilai default null
         });
         role = "user";
       } else {
         role = roleDoc.data().role;
+        unit = roleDoc.data().unit || null; // Ambil unit jika ada
       }
 
       // Simpan data user ke Redux
@@ -85,10 +88,12 @@ const Login = () => {
           uid: user.uid,
           email: user.email,
           role: role,
+          unit: unit, // Tambahkan unit ke payload login
         })
       );
 
       localStorage.setItem("userRole", role);
+      localStorage.setItem("userUnit", unit); // Simpan unit ke localStorage
 
       // Redirect berdasarkan role
       setTimeout(() => {

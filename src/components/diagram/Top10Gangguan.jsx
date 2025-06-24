@@ -11,11 +11,11 @@ import {
   Legend,
 } from "chart.js";
 import ChartDataLabels from "chartjs-plugin-datalabels";
-import { useState, useEffect } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "@/firebase/firebaseConfig";
+import { useMemo, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Zap, BarChart3, RefreshCw, AlertTriangle } from "lucide-react";
+import { useTop10Gangguan } from "@/hooks/useTop10Gangguan";
+import { withErrorBoundary } from "@/components/ErrorBoundary";
 
 ChartJS.register(
   CategoryScale,
@@ -27,70 +27,30 @@ ChartJS.register(
   ChartDataLabels
 );
 
-const Top10gangguan = ({ startDate, endDate }) => {
-  const [gangguanTerbanyak, setGangguanTerbanyak] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const q = query(
-        collection(db, "gangguanPenyulang"),
-        where("tanggalGangguan", ">=", format(startDate, "yyyy-MM-dd")),
-        where("tanggalGangguan", "<=", format(endDate, "yyyy-MM-dd"))
-      );
-      const querySnapshot = await getDocs(q);
-      const dataGangguan = querySnapshot.docs.map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }));
-
-      // Hitung frekuensi gangguan berdasarkan penyulang
-      const gangguanCounts = {};
-      dataGangguan.forEach((item) => {
-        const penyulang = item.penyulang;
-        if (gangguanCounts[penyulang]) {
-          gangguanCounts[penyulang] += 1;
-        } else {
-          gangguanCounts[penyulang] = 1;
-        }
-      });
-
-      // Ubah object menjadi array, urutkan berdasarkan frekuensi, dan ambil top 10
-      const sortedGangguan = Object.entries(gangguanCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10); // Take top 10
-
-      setGangguanTerbanyak(sortedGangguan);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching data from Firebase:", error);
-      setError("Gagal memuat data top 10. Silakan coba lagi.");
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [startDate, endDate]);
-
-  // Calculate stats
-  const totalGangguan = gangguanTerbanyak.reduce(
-    (sum, [, count]) => sum + count,
-    0
-  );
-  const avgGangguan =
-    gangguanTerbanyak.length > 0
-      ? (totalGangguan / gangguanTerbanyak.length).toFixed(1)
-      : 0;
-  const topPenyulang =
-    gangguanTerbanyak.length > 0 ? gangguanTerbanyak[0] : null;
+const Top10GangguanWithHook = ({ startDate, endDate }) => {
+  // 🎯 Menggunakan custom hook untuk Top 10 data
+  const {
+    gangguanTerbanyak,
+    totalGangguan,
+    avgGangguan,
+    topPenyulang,
+    totalPenyulang,
+    loading,
+    error,
+    lastFetch,
+    refresh,
+    userUnit,
+  } = useTop10Gangguan({
+    startDate,
+    endDate,
+    filterByUnit: true,
+    top: 10,
+    autoRefresh: true,
+    refreshInterval: 300000, // 5 minutes
+  });
 
   // Generate gradient colors for bars
-  const generateGradientColors = (count) => {
+  const generateGradientColors = useCallback((count) => {
     const colors = [];
     const backgroundColors = [];
 
@@ -101,131 +61,138 @@ const Top10gangguan = ({ startDate, endDate }) => {
     }
 
     return { colors, backgroundColors };
-  };
+  }, []);
 
-  const { colors, backgroundColors } = generateGradientColors(
-    gangguanTerbanyak.length
+  const { colors, backgroundColors } = useMemo(
+    () => generateGradientColors(gangguanTerbanyak.length),
+    [generateGradientColors, gangguanTerbanyak.length]
   );
 
-  const data = {
-    labels: gangguanTerbanyak.map(([penyulang]) => penyulang),
-    datasets: [
-      {
-        label: "Kali Gangguan",
-        data: gangguanTerbanyak.map(([, count]) => count),
-        borderColor: colors,
-        backgroundColor: backgroundColors,
-        borderWidth: 2,
-        borderRadius: 6,
-        borderSkipped: false,
-      },
-    ],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: false,
-    indexAxis: "y",
-    layout: {
-      padding: {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 30,
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          color: "rgba(255, 255, 255, 0.1)",
-          borderColor: "rgba(255, 255, 255, 0.2)",
+  // Chart data
+  const chartData = useMemo(
+    () => ({
+      labels: gangguanTerbanyak.map(([penyulang]) => penyulang),
+      datasets: [
+        {
+          label: "Kali Gangguan",
+          data: gangguanTerbanyak.map(([, count]) => count),
+          borderColor: colors,
+          backgroundColor: backgroundColors,
+          borderWidth: 2,
+          borderRadius: 6,
+          borderSkipped: false,
         },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.8)",
-          font: {
-            size: 11,
-            weight: "500",
+      ],
+    }),
+    [gangguanTerbanyak, colors, backgroundColors]
+  );
+
+  // Chart options
+  const chartOptions = useMemo(
+    () => ({
+      responsive: true,
+      maintainAspectRatio: false,
+      indexAxis: "y",
+      layout: {
+        padding: {
+          top: 10,
+          bottom: 10,
+          left: 10,
+          right: 30,
+        },
+      },
+      scales: {
+        x: {
+          grid: {
+            color: "rgba(255, 255, 255, 0.1)",
+            borderColor: "rgba(255, 255, 255, 0.2)",
+          },
+          ticks: {
+            color: "rgba(255, 255, 255, 0.8)",
+            font: {
+              size: 11,
+              weight: "500",
+            },
+            stepSize: 1,
+          },
+          beginAtZero: true,
+        },
+        y: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "rgba(255, 255, 255, 0.8)",
+            font: {
+              size: 11,
+              weight: "500",
+            },
+            padding: 10,
+            maxRotation: 0,
+            callback: function (value) {
+              const label = this.getLabelForValue(value);
+              return label.length > 15 ? label.substring(0, 15) + "..." : label;
+            },
           },
         },
-        beginAtZero: true,
       },
-      y: {
-        grid: {
+      plugins: {
+        legend: {
           display: false,
         },
-        ticks: {
-          color: "rgba(255, 255, 255, 0.8)",
+        tooltip: {
+          backgroundColor: "rgba(0, 0, 0, 0.8)",
+          titleColor: "rgba(255, 255, 255, 1)",
+          bodyColor: "rgba(255, 255, 255, 0.9)",
+          borderColor: "rgba(139, 92, 246, 0.5)",
+          borderWidth: 1,
+          cornerRadius: 8,
+          callbacks: {
+            title: function (context) {
+              return context[0].label;
+            },
+            label: function (context) {
+              return `${context.parsed.x} kali gangguan`;
+            },
+          },
+        },
+        datalabels: {
+          display: function (context) {
+            return context.parsed && context.parsed.x && context.parsed.x > 0;
+          },
+          anchor: "end",
+          align: "right",
+          offset: 4,
+          formatter: (value) => {
+            return value && value > 0 ? `${value}x` : "";
+          },
+          color: "rgba(255, 255, 255, 0.9)",
           font: {
-            size: 11,
-            weight: "500",
+            size: 10,
+            weight: "bold",
           },
-          padding: 10,
-          maxRotation: 0,
-          callback: function (value) {
-            const label = this.getLabelForValue(value);
-            return label.length > 15 ? label.substring(0, 15) + "..." : label;
-          },
-        },
-      },
-    },
-    plugins: {
-      legend: {
-        display: false, // Hide legend for cleaner look
-      },
-      title: {
-        display: false, // We'll use custom title
-      },
-      tooltip: {
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        titleColor: "rgba(255, 255, 255, 1)",
-        bodyColor: "rgba(255, 255, 255, 0.9)",
-        borderColor: "rgba(139, 92, 246, 0.5)",
-        borderWidth: 1,
-        cornerRadius: 8,
-        displayColors: true,
-        callbacks: {
-          title: function (context) {
-            return context[0].label;
-          },
-          label: function (context) {
-            return `${context.parsed.x} kali gangguan`;
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          borderRadius: 4,
+          padding: {
+            top: 2,
+            bottom: 2,
+            left: 4,
+            right: 4,
           },
         },
       },
-      datalabels: {
-        display: function (context) {
-          return context.parsed && context.parsed.x && context.parsed.x > 0;
-        },
-        anchor: "end",
-        align: "right",
-        offset: 4,
-        formatter: (value) => {
-          return value && value > 0 ? `${value}x` : "";
-        },
-        color: "rgba(255, 255, 255, 0.9)",
-        font: {
-          size: 10,
-          weight: "bold",
-        },
-        backgroundColor: "rgba(0, 0, 0, 0.6)",
-        borderRadius: 4,
-        padding: {
-          top: 2,
-          bottom: 2,
-          left: 4,
-          right: 4,
-        },
+      animation: {
+        duration: 2000,
+        easing: "easeInOutQuart",
       },
-    },
-    animation: {
-      duration: 2000,
-      easing: "easeInOutQuart",
-    },
-  };
+    }),
+    []
+  );
 
+  // Error UI
   if (error) {
     return (
-      <Card className="bg-red-500/10 backdrop-blur-lg border border-red-500/20 hover:bg-red-500/15 transition-all duration-300">
+      <Card className="bg-red-500/10 backdrop-blur-lg border border-red-500/20">
         <CardContent className="text-center py-12">
           <BarChart3 className="w-16 h-16 text-red-400 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-white mb-2">
@@ -233,10 +200,11 @@ const Top10gangguan = ({ startDate, endDate }) => {
           </h3>
           <p className="text-red-300 mb-6">{error}</p>
           <button
-            onClick={fetchData}
-            className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto"
+            onClick={refresh}
+            disabled={loading}
+            className="px-4 py-2 bg-red-500 hover:bg-red-600 disabled:opacity-50 text-white rounded-lg transition-colors duration-200 flex items-center space-x-2 mx-auto"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
             <span>Coba Lagi</span>
           </button>
         </CardContent>
@@ -260,8 +228,15 @@ const Top10gangguan = ({ startDate, endDate }) => {
                 Top 10 Penyulang Bermasalah
               </CardTitle>
               <p className="text-white/60 text-sm">
-                Periode {format(startDate, "dd MMM")} -{" "}
-                {format(endDate, "dd MMM yyyy")}
+                {startDate && endDate ? (
+                  <>
+                    Periode {format(startDate, "dd MMM")} -{" "}
+                    {format(endDate, "dd MMM yyyy")}
+                  </>
+                ) : (
+                  "Semua data"
+                )}{" "}
+                {userUnit && `- ${userUnit}`}
               </p>
             </div>
           </div>
@@ -271,7 +246,7 @@ const Top10gangguan = ({ startDate, endDate }) => {
               <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
             )}
             <button
-              onClick={fetchData}
+              onClick={refresh}
               disabled={loading}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors duration-200 disabled:opacity-50"
               title="Refresh data"
@@ -283,18 +258,18 @@ const Top10gangguan = ({ startDate, endDate }) => {
           </div>
         </div>
 
-        {/* Summary Stats */}
+        {/* Summary Stats menggunakan data dari hook */}
         <div className="grid grid-cols-3 gap-4 mt-4">
           <div className="text-center p-3 rounded-lg bg-white/5 border border-white/10">
             <div className="text-2xl font-bold text-amber-300">
-              {loading ? "..." : gangguanTerbanyak.length}
+              {loading ? "..." : totalPenyulang}
             </div>
             <div className="text-xs text-white/70">Penyulang</div>
           </div>
 
           <div className="text-center p-3 rounded-lg bg-white/5 border border-white/10">
             <div className="text-2xl font-bold text-purple-300">
-              {loading ? "..." : totalGangguan}
+              {loading ? "..." : totalGangguan.toLocaleString()}
             </div>
             <div className="text-xs text-white/70">Total Gangguan</div>
           </div>
@@ -346,11 +321,11 @@ const Top10gangguan = ({ startDate, endDate }) => {
               </div>
             </div>
           ) : (
-            <Bar data={data} options={options} />
+            <Bar data={chartData} options={chartOptions} />
           )}
         </div>
 
-        {/* Legend */}
+        {/* Additional Info */}
         {!loading && gangguanTerbanyak.length > 0 && (
           <div className="mt-4 p-3 rounded-lg bg-white/5 border border-white/10">
             <div className="flex items-center justify-between text-white/70 text-sm">
@@ -360,10 +335,12 @@ const Top10gangguan = ({ startDate, endDate }) => {
               </div>
               <div className="text-xs">
                 Diperbarui:{" "}
-                {new Date().toLocaleTimeString("id-ID", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {lastFetch
+                  ? lastFetch.toLocaleTimeString("id-ID", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })
+                  : "Belum ada data"}
               </div>
             </div>
           </div>
@@ -373,9 +350,10 @@ const Top10gangguan = ({ startDate, endDate }) => {
   );
 };
 
-Top10gangguan.propTypes = {
+Top10GangguanWithHook.propTypes = {
   startDate: PropTypes.instanceOf(Date),
   endDate: PropTypes.instanceOf(Date),
 };
 
-export default Top10gangguan;
+// Export dengan error boundary
+export default withErrorBoundary(Top10GangguanWithHook);
