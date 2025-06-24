@@ -391,7 +391,7 @@ const Home = () => {
     <SidebarLayout pengguna={user} ruteDisetujui={allowedServicesForYantek}>
       <div className="relative bg-gray-50 min-h-screen">
         <div className="fixed top-0 right-0 bg-main text-white px-4 py-2 h-16 w-full z-10 flex items-center justify-center bg-gradient-to-r from-main to-blue-500 font-semibold">
-          PETASAN
+          SIEKAS
         </div>
         {/* Sidebar Mobile */}
 
@@ -415,9 +415,9 @@ const Home = () => {
           <div className="bg-gradient-to-r from-main to-blue-500 text-white p-5 rounded-xl shadow-md relative mb-8">
             <div className="flex justify-between items-start">
               <div>
-                <p className="text-sm font-bold">PETASAN</p>
+                <p className="text-sm font-bold">SIEKAS</p>
                 <h2 className="text-xl font-bold mb-2">
-                  PENGECEKAN TUNTAS SATU BULAN
+                  Sistem Inspeksi dan Eksekusi Asset Selaparang
                 </h2>
                 <p className="text-sm opacity-90">
                   ULP Selong | {user?.role || "Inspektor"}

@@ -136,7 +136,7 @@ const SidebarMobile = ({ pengguna, ruteDisetujui = [] }) => {
               alt="Logo"
               className="w-8 h-8 rounded-full"
             />
-            <h2 className="text-lg font-bold text-main">PETASAN</h2>
+            <h2 className="text-lg font-bold text-main">SIEKAS</h2>
           </div>
           <button
             onClick={() => setTerbuka(false)}
@@ -267,9 +267,9 @@ const SidebarMobile = ({ pengguna, ruteDisetujui = [] }) => {
 
         {/* Footer */}
         <div className="border-t p-4 mt-auto">
-          <p className="text-sm text-gray-500 text-center">PETASAN v1.0</p>
+          <p className="text-sm text-gray-500 text-center">SIEKAS v2.1</p>
           <p className="text-xs text-gray-400 text-center mt-1">
-            PENGECEKAN TUNTAS SATU BULAN
+            Sistem Inspeksi dan Eksekusi Asset Selaparang
           </p>
         </div>
       </aside>

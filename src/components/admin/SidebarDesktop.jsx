@@ -129,6 +129,7 @@ const navigasi = [
     href: "/pemeliharaan",
     icon: FaBinoculars,
     submenu: [
+      { nama: "Tambah Temuan", href: "/tambahTemuan", icon: FaEnvelope },
       {
         nama: "Validasi Pemeliharaan",
         href: "/admin/pemeliharaan/daftar-pemeliharaan",
@@ -153,7 +154,7 @@ const navigasi = [
     href: "/admin/manajemen-petugas",
     icon: FaEnvelope,
   },
-  { nama: "Tambah Temuan", href: "/tambahTemuan", icon: FaEnvelope },
+  // { nama: "Tambah Temuan", href: "/tambahTemuan", icon: FaEnvelope },
 ];
 
 const SidebarDesktop = ({
