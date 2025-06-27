@@ -48,6 +48,7 @@ import Preventive from "./pages/Inspeksi/Preventive";
 import PreventiveDashboard from "./pages/Pemeliharaan/PreventiveDashboard";
 import ManajemenPetugas from "./pages/admin/ManajemenPetugas ";
 import ParetoGangguanAnalysis from "./pages/gangguan/ParetoGangguan";
+import InspeksiPohon from "./pages/PetaPohon/InspeksiPohon";
 // import EnhancedDashboard from "./pages/admin/EnhancedDashboard ";
 
 function App() {
@@ -58,6 +59,11 @@ function App() {
     { path: "/admin/aset/maps", element: <Maps /> },
     { path: "/aset/tambahPenyulang", element: <TambahPenyulang /> },
     { path: "/admin/dashboard", element: <Dashboard /> },
+
+    {
+      path: "/admin/petapohon",
+      element: <InspeksiPohon />,
+    },
     // { path: "/admin/dashboard", element: <EnhancedDashboard /> },
     { path: "/admin/gangguanPenyulang", element: <GangguanPenyulang /> },
     {
