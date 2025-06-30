@@ -216,6 +216,9 @@ const ManajemenPetugas = () => {
   const [groups, setGroups] = useState([]);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  // State tambahan untuk mengelola mode grup baru
+  const [isNewGroup, setIsNewGroup] = useState(false);
+
   // Form state
   const [form, setForm] = useState({
     nama: "",
@@ -296,6 +299,7 @@ const ManajemenPetugas = () => {
     });
     setSelectedPetugas(petugasData);
     setIsEditing(true);
+    setIsNewGroup(false); // Reset state grup baru
     setFormOpen(true);
   };
 
@@ -316,6 +320,7 @@ const ManajemenPetugas = () => {
     });
     setSelectedPetugas(null);
     setIsEditing(false);
+    setIsNewGroup(false); // Reset state grup baru
   };
 
   // Submit form
@@ -666,20 +671,31 @@ const ManajemenPetugas = () => {
                   placeholder="Masukkan nama lengkap"
                 />
               </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="group" className="text-right">
                   Grup
                 </Label>
-                <div className="col-span-3">
-                  {groups.length > 0 ? (
-                    <Select
+                <div className="col-span-3 space-y-2">
+                  {/* Jika belum ada grup atau sedang membuat grup baru */}
+                  {groups.length === 0 || isNewGroup ? (
+                    <Input
                       value={form.group}
+                      onChange={(e) =>
+                        setForm({ ...form, group: e.target.value })
+                      }
+                      placeholder="Masukkan nama grup"
+                    />
+                  ) : (
+                    /* Dropdown untuk memilih grup yang sudah ada */
+                    <Select
+                      value={isNewGroup ? "new" : form.group}
                       onValueChange={(value) => {
                         if (value === "new") {
-                          // Jika "new" dipilih, tetap kosongkan field group
-                          // sehingga pengguna bisa mengisi sendiri
+                          setIsNewGroup(true);
                           setForm({ ...form, group: "" });
                         } else {
+                          setIsNewGroup(false);
                           setForm({ ...form, group: value });
                         }
                       }}
@@ -696,27 +712,35 @@ const ManajemenPetugas = () => {
                         <SelectItem value="new">+ Grup Baru</SelectItem>
                       </SelectContent>
                     </Select>
-                  ) : (
-                    <Input
-                      value={form.group}
-                      onChange={(e) =>
-                        setForm({ ...form, group: e.target.value })
-                      }
-                      placeholder="Masukkan nama grup"
-                    />
                   )}
-                  {form.group === "new" && (
-                    <Input
-                      className="mt-2"
-                      value=""
-                      onChange={(e) =>
-                        setForm({ ...form, group: e.target.value })
-                      }
-                      placeholder="Masukkan nama grup baru"
-                    />
+
+                  {/* Input untuk grup baru jika user memilih "Grup Baru" */}
+                  {isNewGroup && groups.length > 0 && (
+                    <div className="space-y-2">
+                      <Input
+                        value={form.group}
+                        onChange={(e) =>
+                          setForm({ ...form, group: e.target.value })
+                        }
+                        placeholder="Masukkan nama grup baru"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setIsNewGroup(false);
+                          setForm({ ...form, group: "" });
+                        }}
+                        className="text-sm"
+                      >
+                        Batal Grup Baru
+                      </Button>
+                    </div>
                   )}
                 </div>
               </div>
+
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="status" className="text-right">
                   Status
