@@ -18,6 +18,7 @@ import {
 import { useDispatch } from "react-redux";
 import { getAuth, signOut } from "firebase/auth";
 import { logout } from "@/redux/authSlice";
+import { TreeDeciduousIcon } from "lucide-react";
 
 // CSS untuk Breathing Effect
 const breathingEffectStyles = `
@@ -109,6 +110,11 @@ const navigasi = [
     nama: "Inspeksi Mandorline",
     href: "/admin/data-segment",
     icon: FaChartPie,
+  },
+  {
+    nama: "Peta Pohon",
+    href: "/admin/petapohon",
+    icon: TreeDeciduousIcon,
   },
   {
     nama: "Gangguan Penyulang",
