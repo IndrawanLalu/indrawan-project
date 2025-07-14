@@ -8,7 +8,7 @@ const Layouts = ({ children }) => {
   const user = useSelector((state) => state.auth.user); // Mengambil user dari Redux
 
   return (
-    <div className="min-h-screen flex">
+    <div className="flex min-h-screen">
       {/* Sidebar dan Konten Utama */}
       <SidebarLayout pengguna={user} ruteDisetujui={allowedServicesForYantek}>
         {/* Main Content and Footer */}
@@ -17,8 +17,8 @@ const Layouts = ({ children }) => {
           <main className="flex-grow  bg-[#bec3bf1c]">{children}</main>
 
           {/* Footer */}
-          <footer className="bg-main/50 text-white p-4 text-center">
-            <p>&copy; 2024 Teknik ULP Selong</p>
+          <footer className="p-4 text-center text-white bg-main/50">
+            <p>&copy; 2025 SIEKAS</p>
           </footer>
         </div>
       </SidebarLayout>
